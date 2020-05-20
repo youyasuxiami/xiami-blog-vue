@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: 'Vue Admin Template',
+  title: 'xiami-blog-vue',
 
   /**
    * @type {boolean} true | false
