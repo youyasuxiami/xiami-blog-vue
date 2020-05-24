@@ -17,8 +17,7 @@
           name="username"
           type="text"
           tabindex="1"
-          auto-complete="on"
-        />
+          auto-complete="on"></el-input>
       </el-form-item>
 
       <el-form-item prop="password">
@@ -34,8 +33,7 @@
           name="password"
           tabindex="2"
           auto-complete="on"
-          @keyup.enter.native="handleLogin"
-        />
+          @keyup.enter.native="handleLogin"></el-input>
         <span class="show-pwd" @click="showPwd">
           <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
         </span>
