@@ -78,6 +78,14 @@ const actions = {
       removeToken()
       resolve()
     })
+  },
+
+  // 设置头像(解决上传头像后不及时更新头像的问题)
+  setAvatar({ commit }, avatar) {
+    return new Promise(resolve => {
+      commit('SET_AVATAR', avatar)
+      resolve()
+    })
   }
 }
 
