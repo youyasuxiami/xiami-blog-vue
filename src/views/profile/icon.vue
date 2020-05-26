@@ -65,18 +65,19 @@
                 console.log('path: ', jsonData.data.path)
                 console.log('field: ' + field)
                 // // 更新头像
-                // modifyIcon({
-                //     username: this.$store.getters.name,
-                //     path: jsonData.data.path
-                // }).then(response => {
-                //     this.$message({
-                //         message: response.message,
-                //         type: 'success'
-                //     })
-                //     // 更新 vuex 中的头像
-                //     this.$store.dispatch('user/setAvatar', jsonData.data.path)
-                // }).catch(() => {
-                // })
+                modifyIcon({
+                    username: this.$store.getters.name,
+                    path: jsonData.data.path
+                }).then(response => {
+                    this.$message({
+                        message: response.message,
+                        type: 'success'
+                    })
+                  console.log(jsonData.data.path)
+                    // 更新 vuex 中的头像
+                    this.$store.dispatch('user/setAvatar', jsonData.data.path)
+                }).catch(() => {
+                })
             },
             /**
              * 上传失败
