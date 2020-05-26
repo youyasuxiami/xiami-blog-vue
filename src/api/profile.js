@@ -28,7 +28,7 @@ export function update(data) {
  */
 export function modifyIcon(data) {
   return request({
-    url: '/profile/modify/icon',
+    url: '/api/profile/modify/icon',
     method: 'post',
     data
   })
