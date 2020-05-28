@@ -22,7 +22,15 @@ export function logout(token) {
   return request({
     url: '/user/logout',
     method: 'post',
-    params: { token }
+    params: {token}
 
+  })
+}
+
+export function getList(params) {
+  return request({
+    url: '/api/profile/users',
+    method: 'get',
+    params
   })
 }
