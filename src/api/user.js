@@ -34,3 +34,12 @@ export function getList(params) {
     params
   })
 }
+
+export function fetchList(query) {
+  return request({
+    url: '/api/profile/users',
+    method: 'get',
+    params: query
+  })
+}
+
