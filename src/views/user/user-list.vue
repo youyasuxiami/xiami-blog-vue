@@ -44,13 +44,15 @@
         <template slot-scope="scope">{{ scope.row.email }}</template>
       </el-table-column>
       <el-table-column class-name="status-col" label="创建时间" width="110" align="center">
-        <template slot-scope="scope">{{ scope.row.createTime }}</template>
+<!--        <template slot-scope="scope">{{ scope.row.createTime }}</template>-->
+        <template slot-scope="scope">{{ scope.row.createTime | formatDate('yyyy-MM-dd') }}</template>
+
       </el-table-column>
       <el-table-column class-name="status-col" label="更新时间" width="110" align="center">
-        <template slot-scope="scope">{{ scope.row.updateTime }}</template>
+        <template slot-scope="scope">{{ scope.row.updateTime | formatDate('yyyy-MM-dd') }}</template>
       </el-table-column>
       <el-table-column class-name="status-col" label="最新登录时间" width="110" align="center">
-        <template slot-scope="scope">{{ scope.row.loginTime }}</template>
+        <template slot-scope="scope">{{ scope.row.loginTime | formatDate('yyyy-MM-dd') }}</template>
       </el-table-column>
       <el-table-column class-name="status-col" label="备注" width="110" align="center">
         <template slot-scope="scope">{{ scope.row.ps }}</template>
@@ -73,14 +75,16 @@
       </el-table-column>
     </el-table>
 <!--    分页-->
-    <div style="text-align: center;margin-top: 30px;">
-      <el-pagination
-        background
-        layout="prev, pager, next"
-        :total="total"
-        @current-change="current_change">
-      </el-pagination>
-    </div>
+<!--    <div style="text-align: center;margin-top: 30px;">-->
+<!--      <el-pagination-->
+<!--        background-->
+<!--        layout="prev, pager, next"-->
+<!--        :total="total"-->
+
+<!--      >-->
+<!--&lt;!&ndash;        @current-change="current_change"&ndash;&gt;-->
+<!--      </el-pagination>-->
+<!--    </div>-->
   </div>
 </template>
 
