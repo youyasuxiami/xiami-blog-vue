@@ -27,19 +27,4 @@ export function logout(token) {
   })
 }
 
-export function getList(params) {
-  return request({
-    url: '/api/profile/users',
-    method: 'get',
-    params
-  })
-}
-
-export function fetchList(query) {
-  return request({
-    url: '/api/profile/users',
-    method: 'get',
-    params: query
-  })
-}
 
