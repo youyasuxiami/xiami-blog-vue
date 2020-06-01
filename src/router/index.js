@@ -82,19 +82,6 @@ export const constantRoutes = [
   {
     path: '/user',
     component: Layout,
-    redirect: '/user/manage',
-    meta: { title: '用户管理测试', icon: 'user' },
-    children: [
-      {
-        path: 'manage',
-        component: () => import('@/views/user/user-test'),
-        meta: { title: '用户管理列表测试', icon: '' }
-      },
-    ]
-  },
-  {
-    path: '/user',
-    component: Layout,
     redirect: '/user/manageTest',
     meta: { title: '用户管理测试', icon: 'user' },
     children: [
@@ -105,6 +92,22 @@ export const constantRoutes = [
       },
     ]
   },
+
+  {
+    path: '/user',
+    component: Layout,
+    redirect: '/user/userList',
+    meta: { title: '用户管理', icon: 'star' },
+    children: [
+      {
+        path: 'userList',
+        component: () => import('@/views/profile/info'),
+        meta: { title: '用户管理', icon: 'elemt' }
+      },
+    ]
+  },
+
+
 
   {
     path: '/example',
