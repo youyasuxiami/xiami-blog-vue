@@ -52,9 +52,10 @@
 
         <el-col :span="15" >
           <div style="margin-left: 20px">
-            <img alt="如果看不清楚，请单击图片刷新！" class="pointer" :src="src" @click="refreshCode">
+<!--            <img alt="如果看不清楚，请单击图片刷新！" class="pointer" :src="src" @click="refreshCode">-->
+            <img alt="如果看不清楚，请单击图片刷新！" class="pointer" :src="src">
             &nbsp;&nbsp;&nbsp;&nbsp;
-            <a href="javascript:;" @click="refreshCode" style="vertical-align: 18px;color: blue;">看不清</a>
+<!--            <a href="javascript:;" @click="refreshCode" style="vertical-align: 18px;color: blue;">看不清</a>-->
           </div>
         </el-col>
       </el-row>
@@ -131,7 +132,7 @@
         this.$refs.loginForm.validate(valid => {
           if (valid) {
             this.loading = true
-            this.$store.dispatch('user/login', this.loginForm).then(() => {
+            this.$store.dispatch('Login', this.loginForm).then(() => {
               this.$router.push({ path: this.redirect || '/' })
               this.loading = false
             }).catch(() => {
