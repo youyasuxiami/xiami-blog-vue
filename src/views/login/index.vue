@@ -30,7 +30,7 @@
           ref="password"
           v-model="loginForm.password"
           :type="passwordType"
-          placeholder="Password"
+          placeholder="请输入密码"
           name="password"
           tabindex="2"
           auto-complete="on"
@@ -44,18 +44,23 @@
       <el-row>
         <el-col :span="9">
           <el-form-item prop="yzm">
-            <el-input>
-
-            </el-input>
+            <el-input
+              ref="username"
+              v-model="loginForm.yzm"
+              placeholder="验证码"
+              name="yzm"
+              type="text"
+              tabindex="1"
+              auto-complete="on"></el-input>
           </el-form-item>
         </el-col>
 
-        <el-col :span="15" >
+        <el-col :span="15">
           <div style="margin-left: 20px">
-<!--            <img alt="如果看不清楚，请单击图片刷新！" class="pointer" :src="src" @click="refreshCode">-->
-            <img alt="如果看不清楚，请单击图片刷新！" class="pointer" :src="src">
+            <!--            <img alt="如果看不清楚，请单击图片刷新！" class="pointer" :src="src" @click="refreshCode">-->
+            <img alt="如果看不清楚，请单击图片刷新！" class="pointer" :src="src" @click="refreshCode">
             &nbsp;&nbsp;&nbsp;&nbsp;
-<!--            <a href="javascript:;" @click="refreshCode" style="vertical-align: 18px;color: blue;">看不清</a>-->
+            <!--            <a href="javascript:;" @click="refreshCode" style="vertical-align: 18px;color: blue;">看不清</a>-->
           </div>
         </el-col>
       </el-row>
@@ -82,26 +87,35 @@
     data() {
       const validateUsername = (rule, value, callback) => {
         if (!validUsername(value)) {
-          callback(new Error('Please enter the correct user name'))
+          callback(new Error('用户名不能为空'))
         } else {
           callback()
         }
       }
       const validatePassword = (rule, value, callback) => {
         if (value.length < 6) {
-          callback(new Error('The password can not be less than 6 digits'))
+          callback(new Error('密码不能小于6位'))
+        } else {
+          callback()
+        }
+      }
+      const validatePwd = (rule, value, callback) => {
+        if (value.length < 1) {
+          callback(new Error('验证码不能为空'))
         } else {
           callback()
         }
       }
       return {
         loginForm: {
-          username: 'admin',
-          password: '111111'
+          username: '',
+          password: '',
+          yzm: ''
         },
         loginRules: {
           username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-          password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+          password: [{ required: true, trigger: 'blur', validator: validatePassword }],
+          // pwz: [{ required: true, trigger: 'blur', validator: validatePwd() }]
         },
         loading: false,
         passwordType: 'password',
@@ -143,6 +157,9 @@
             return false
           }
         })
+      },
+      refreshCode() {
+        this.src = 'captcha.jpg?t=' + new Date().getTime()
       }
     }
   }
