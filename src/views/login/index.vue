@@ -43,12 +43,12 @@
 
       <el-row>
         <el-col :span="9">
-          <el-form-item prop="yzm">
+          <el-form-item prop="captcha">
             <el-input
               ref="username"
-              v-model="loginForm.yzm"
+              v-model="loginForm.captcha"
               placeholder="验证码"
-              name="yzm"
+              name="captcha"
               type="text"
               tabindex="1"
               auto-complete="on"></el-input>
@@ -85,37 +85,32 @@
   export default {
     name: 'Login',
     data() {
-      const validateUsername = (rule, value, callback) => {
-        if (!validUsername(value)) {
-          callback(new Error('用户名不能为空'))
-        } else {
-          callback()
-        }
-      }
-      const validatePassword = (rule, value, callback) => {
-        if (value.length < 6) {
-          callback(new Error('密码不能小于6位'))
-        } else {
-          callback()
-        }
-      }
-      const validatePwd = (rule, value, callback) => {
-        if (value.length < 1) {
-          callback(new Error('验证码不能为空'))
-        } else {
-          callback()
-        }
-      }
+      // const validateUsername = (rule, value, callback) => {
+      //   if (!validUsername(value)) {
+      //     callback(new Error('用户名不能为空'))
+      //   } else {
+      //     callback()
+      //   }
+      // }
+      // const validatePassword = (rule, value, callback) => {
+      //   if (value.length < 6) {
+      //     callback(new Error('密码不能小于6位'))
+      //   } else {
+      //     callback()
+      //   }
+      // }
       return {
         loginForm: {
           username: '',
           password: '',
-          yzm: ''
+          captcha: ''
         },
         loginRules: {
-          username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-          password: [{ required: true, trigger: 'blur', validator: validatePassword }],
-          // pwz: [{ required: true, trigger: 'blur', validator: validatePwd() }]
+          // username: [{ required: true, trigger: 'blur', validator: validateUsername }],
+          // password: [{ required: true, trigger: 'blur', validator: validatePassword }],
+          username: [{ required: true, message: "请输入用户名", trigger: "blur" }],
+          password: [{ required: true,message: "请输入密码", trigger: 'blur'}],
+          captcha: [{ required: true,message: "请输入验证码", trigger: 'blur'}],
         },
         loading: false,
         passwordType: 'password',
@@ -144,17 +139,18 @@
       },
       handleLogin() {
         this.$refs.loginForm.validate(valid => {
-          if (valid) {
+          if (!valid) {
+            return false
+          } else {
             this.loading = true
-            this.$store.dispatch('Login', this.loginForm).then(() => {
+            this.$store.dispatch('user/Login', this.loginForm).then((data) => {
+
+
               this.$router.push({ path: this.redirect || '/' })
               this.loading = false
             }).catch(() => {
               this.loading = false
             })
-          } else {
-            console.log('error submit!!')
-            return false
           }
         })
       },
