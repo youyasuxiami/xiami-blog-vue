@@ -30,7 +30,7 @@
           ref="password"
           v-model="loginForm.password"
           :type="passwordType"
-          placeholder="Password"
+          placeholder="请输入密码"
           name="password"
           tabindex="2"
           auto-complete="on"
@@ -43,19 +43,24 @@
 
       <el-row>
         <el-col :span="9">
-          <el-form-item prop="yzm">
-            <el-input>
-
-            </el-input>
+          <el-form-item prop="captcha">
+            <el-input
+              ref="username"
+              v-model="loginForm.captcha"
+              placeholder="验证码"
+              name="captcha"
+              type="text"
+              tabindex="1"
+              auto-complete="on"></el-input>
           </el-form-item>
         </el-col>
 
-        <el-col :span="15" >
+        <el-col :span="15">
           <div style="margin-left: 20px">
-<!--            <img alt="如果看不清楚，请单击图片刷新！" class="pointer" :src="src" @click="refreshCode">-->
-            <img alt="如果看不清楚，请单击图片刷新！" class="pointer" :src="src">
+            <!--            <img alt="如果看不清楚，请单击图片刷新！" class="pointer" :src="src" @click="refreshCode">-->
+            <img alt="如果看不清楚，请单击图片刷新！" class="pointer" :src="src" @click="refreshCode">
             &nbsp;&nbsp;&nbsp;&nbsp;
-<!--            <a href="javascript:;" @click="refreshCode" style="vertical-align: 18px;color: blue;">看不清</a>-->
+            <!--            <a href="javascript:;" @click="refreshCode" style="vertical-align: 18px;color: blue;">看不清</a>-->
           </div>
         </el-col>
       </el-row>
@@ -80,28 +85,32 @@
   export default {
     name: 'Login',
     data() {
-      const validateUsername = (rule, value, callback) => {
-        if (!validUsername(value)) {
-          callback(new Error('Please enter the correct user name'))
-        } else {
-          callback()
-        }
-      }
-      const validatePassword = (rule, value, callback) => {
-        if (value.length < 6) {
-          callback(new Error('The password can not be less than 6 digits'))
-        } else {
-          callback()
-        }
-      }
+      // const validateUsername = (rule, value, callback) => {
+      //   if (!validUsername(value)) {
+      //     callback(new Error('用户名不能为空'))
+      //   } else {
+      //     callback()
+      //   }
+      // }
+      // const validatePassword = (rule, value, callback) => {
+      //   if (value.length < 6) {
+      //     callback(new Error('密码不能小于6位'))
+      //   } else {
+      //     callback()
+      //   }
+      // }
       return {
         loginForm: {
-          username: 'admin',
-          password: '111111'
+          username: '',
+          password: '',
+          captcha: ''
         },
         loginRules: {
-          username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-          password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+          // username: [{ required: true, trigger: 'blur', validator: validateUsername }],
+          // password: [{ required: true, trigger: 'blur', validator: validatePassword }],
+          username: [{ required: true, message: "请输入用户名", trigger: "blur" }],
+          password: [{ required: true,message: "请输入密码", trigger: 'blur'}],
+          captcha: [{ required: true,message: "请输入验证码", trigger: 'blur'}],
         },
         loading: false,
         passwordType: 'password',
@@ -130,19 +139,23 @@
       },
       handleLogin() {
         this.$refs.loginForm.validate(valid => {
-          if (valid) {
+          if (!valid) {
+            return false
+          } else {
             this.loading = true
-            this.$store.dispatch('Login', this.loginForm).then(() => {
+            this.$store.dispatch('user/Login', this.loginForm).then((data) => {
+
+
               this.$router.push({ path: this.redirect || '/' })
               this.loading = false
             }).catch(() => {
               this.loading = false
             })
-          } else {
-            console.log('error submit!!')
-            return false
           }
         })
+      },
+      refreshCode() {
+        this.src = 'captcha.jpg?t=' + new Date().getTime()
       }
     }
   }
