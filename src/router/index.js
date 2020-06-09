@@ -39,7 +39,7 @@ export const constantRoutes = [
 
   {
     path: '/404',
-    component: () => import('@/views/404'),
+    component: () => import('@/views/404moban'),
     hidden: true
   },
 
@@ -83,32 +83,20 @@ export const constantRoutes = [
     path: '/user',
     component: Layout,
     redirect: '/user/manageTest',
-    meta: { title: '用户管理测试', icon: 'user' },
+    meta: { title: '用户管理', icon: 'user' },
     children: [
       {
         path: 'manageTest',
         component: () => import('@/views/user/user-list'),
-        meta: { title: '用户管理列表', icon: '' }
+        meta: { title: '用户管理', icon: '' }
       },
+      // {
+      //   path: 'manageTest',
+      //   component: () => import('@/views/user/user-list'),
+      //   meta: { title: '用户管理统计图', icon: '' }
+      // },
     ]
   },
-
-  {
-    path: '/user',
-    component: Layout,
-    redirect: '/user/userList',
-    meta: { title: '用户管理', icon: 'star' },
-    children: [
-      {
-        path: 'userList',
-        component: () => import('@/views/profile/info'),
-        meta: { title: '用户管理', icon: 'elemt' }
-      },
-    ]
-  },
-
-
-
   {
     path: '/example',
     component: Layout,
