@@ -65,6 +65,10 @@
           </el-button>
         </el-form-item>
       </el-form>
+
+      <el-row>
+        <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-plus" @click="handleAddUser">新增</el-button>
+      </el-row>
     </div>
 
     <el-table
@@ -142,14 +146,15 @@
     <!--      </el-pagination>-->
     <!--    </div>-->
     <!--    <pagination v-show="total>0" :total="total" :page.sync="this.pageNum" :limit.sync="this.pageSize" @pagination="getList" />-->
-    <pagination v-show="total>0" :total="total" :page.sync="pageNum" :limit.sync="pageSize" @pagination="fetchData" ref="handleSizeChange"/>
+    <pagination v-show="total>0" :total="total" :page.sync="pageNum" :limit.sync="pageSize" @pagination="fetchData"
+                ref="handleSizeChange"/>
 
   </div>
 </template>
 
 <script>
-  import { getList } from '@/api/sys'
-  import { getTypeValue } from '@/utils/dictionary'
+  import {getList} from '@/api/sys'
+  import {getTypeValue} from '@/utils/dictionary'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
   export default {
@@ -160,6 +165,7 @@
         pageNum: 1,
         pageSize: 10,
         total: 0,
+        dialogFormVisible:false,//默认不弹窗
         searchForm: {
           name: '',
           nickName: '',
@@ -170,13 +176,28 @@
           // pageNum: 1,//暂时json
           // pageSize: 10,//暂时json
         },
+        dataForm:{
+          nickName:"",
+          password:"",
+          name:"",
+          sex:"",
+          age:"",
+          phone:"",
+          email:"",
+          avatar:"",
+          createTime:"",
+          updateTime:"",
+          loginTime:"",
+          ps:"",
+          status:"",
+        },
         roleList: [],//角色数组
         sexList: [],//性别数组
         accountStatusList: [],//账号状态数组
         currentPage: 1
       }
     },
-    components: { Pagination },
+    components: {Pagination},
     created() {
       // 获取列表数据
       this.fetchData()
@@ -232,10 +253,23 @@
           this.total = response.data.total
           this.listLoading = false
         })
+      },
+
+      // 新增用户
+      handleAddUser() {
+        this.dataForm()//初始化
+
+        alert("11111")
       }
     }
   }
 </script>
+<style>
+  .m-add-btn
+  {
+    margin-bottom: 10px;
+  }
+</style>
 
 
 

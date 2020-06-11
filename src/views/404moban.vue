@@ -36,10 +36,10 @@
       message() {
         return '啊哦~ 你所访问的页面不存在'
       },
-      methods: {
-        goBack() {
-          this.$router.go(-1);
-        }
+    },
+    methods: {
+      goBack() {
+        this.$router.go(-1);
       }
     }
   }

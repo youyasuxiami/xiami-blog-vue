@@ -1,7 +1,13 @@
 <template>
   <div class="login-container login-wrap">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on"
-             label-position="left">
+    <el-form ref="loginForm"
+             :model="loginForm"
+             :rules="loginRules"
+             class="login-form"
+             auto-complete="on"
+             label-position="left"
+             @keyup.enter.native="handleLogin"
+    >
 
       <div class="title-container">
         <h3 class="title">虾米的个人博客</h3>
