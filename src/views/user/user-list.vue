@@ -67,7 +67,8 @@
       </el-form>
 
       <el-row>
-        <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-plus" @click="handleAddUser">新增</el-button>
+        <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-plus" @click="handleAddUser">新增
+        </el-button>
       </el-row>
     </div>
 
@@ -148,7 +149,8 @@
     <!--    <pagination v-show="total>0" :total="total" :page.sync="this.pageNum" :limit.sync="this.pageSize" @pagination="getList" />-->
     <pagination v-show="total>0" :total="total" :page.sync="pageNum" :limit.sync="pageSize" @pagination="fetchData"
                 ref="handleSizeChange"/>
-
+    <!--    引入组件-->
+    <user-add-update-view v-if="dialogFormVisible" ref="userAddUpdateView"></user-add-update-view>
   </div>
 </template>
 
@@ -156,6 +158,8 @@
   import {getList} from '@/api/sys'
   import {getTypeValue} from '@/utils/dictionary'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+  import userAddUpdateView from '@/views/user/user-add-update-view'
+
 
   export default {
     data() {
@@ -165,7 +169,11 @@
         pageNum: 1,
         pageSize: 10,
         total: 0,
-        dialogFormVisible:false,//默认不弹窗
+        roleList: [],//角色数组
+        sexList: [],//性别数组
+        accountStatusList: [],//账号状态数组
+        currentPage: 1,
+        dialogFormVisible: false,//默认不弹窗
         searchForm: {
           name: '',
           nickName: '',
@@ -176,28 +184,24 @@
           // pageNum: 1,//暂时json
           // pageSize: 10,//暂时json
         },
-        dataForm:{
-          nickName:"",
-          password:"",
-          name:"",
-          sex:"",
-          age:"",
-          phone:"",
-          email:"",
-          avatar:"",
-          createTime:"",
-          updateTime:"",
-          loginTime:"",
-          ps:"",
-          status:"",
+        dataForm: {
+          nickName: "",
+          password: "",
+          name: "",
+          sex: "",
+          age: "",
+          phone: "",
+          email: "",
+          avatar: "",
+          createTime: "",
+          updateTime: "",
+          loginTime: "",
+          ps: "",
+          status: "",
         },
-        roleList: [],//角色数组
-        sexList: [],//性别数组
-        accountStatusList: [],//账号状态数组
-        currentPage: 1
       }
     },
-    components: {Pagination},
+    components: {Pagination, userAddUpdateView},
     created() {
       // 获取列表数据
       this.fetchData()
@@ -257,16 +261,16 @@
 
       // 新增用户
       handleAddUser() {
-        this.dataForm()//初始化
-
-        alert("11111")
+        this.dialogFormVisible = true
+        // this.$nextTick(() => {
+        //   this.$refs.userAddUpdateView.init(row, "detail");
+        // });
       }
     }
   }
 </script>
 <style>
-  .m-add-btn
-  {
+  .m-add-btn {
     margin-bottom: 10px;
   }
 </style>
