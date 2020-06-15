@@ -79,15 +79,19 @@
       border
       fit
       highlight-current-row
+    @sort-change="sortChange"
     >
+<!--      :default-sort = "{prop: 'name', order: 'createTime'}"-->
       <el-table-column align="center" label="序号" width="95" :index="table_index"
-                       type="index">
+                       type="index" sortable="true">
         <!--        <template slot-scope="scope">{{ scope.$index }}</template>-->
       </el-table-column>
       <!--      <el-table-column align="center" label="ID" width="95">-->
       <!--        <template slot-scope="scope">{{ scope.row.id }}</template>-->
       <!--      </el-table-column>-->
-      <el-table-column label="用户名">
+
+<!--      <el-table-column label="用户名"  min-width="90px" align="center" sortable :sort-method="sortDevName">-->
+      <el-table-column label="用户名"  min-width="90px" align="center" prop="name" sortable="custom">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top" align="center">
             <span>{{scope.row.name}}</span>
@@ -95,7 +99,7 @@
               {{ scope.row.name }}
             </div>
           </el-popover>
-        </template>
+        </template>'
       </el-table-column>
 
       <el-table-column label="昵称" align="center">
@@ -106,6 +110,12 @@
               {{scope.row.nickName}}
             </div>
           </el-popover>
+        </template>
+      </el-table-column>
+
+      <el-table-column prop="avatar" label="头像" align="center">
+        <template slot-scope="scope">
+          <img  :src="scope.row.avatar" alt="" style="width: 50px;height: 50px">
         </template>
       </el-table-column>
 
@@ -132,15 +142,15 @@
         </template>
       </el-table-column>
 
-      <el-table-column class-name="status-col" label="创建时间" align="center" width="160">
+      <el-table-column class-name="status-col" label="创建时间" align="center" width="160" sortable  prop="createTime">
         <template slot-scope="scope">{{ scope.row.createTime }}</template>
       </el-table-column>
 
-      <el-table-column class-name="status-col" label="更新时间" align="center" width="160">
+      <el-table-column class-name="status-col" label="更新时间" align="center" width="160" sortable  prop="updateTime">
         <template slot-scope="scope">{{ scope.row.updateTime }}</template>
       </el-table-column>
 
-      <el-table-column class-name="status-col" label="最新登录时间" align="center" width="160">
+      <el-table-column class-name="status-col" label="最新登录时间" align="center" width="160" sortable  prop="loginTime">
         <template slot-scope="scope">{{ scope.row.loginTime }}</template>
       </el-table-column>
 
@@ -303,6 +313,40 @@
 
     },
     methods: {
+      sortDevName(str1, str2) {
+        let res = 0
+        for (let i = 0; ;i++) {
+          if (!str1[i] || !str2[i]) {
+            res = str1.length - str2.length
+            break
+          }
+          const char1 = str1[i]
+          const char1Type = this.getChartType(char1)
+          const char2 = str2[i]
+          const char2Type = this.getChartType(char2)
+          // 类型相同的逐个比较字符
+          if (char1Type[0] === char2Type[0]) {
+            if (char1 === char2) {
+              continue
+            } else {
+              if (char1Type[0] === 'zh') {
+                res = char1.localeCompare(char2)
+              } else if (char1Type[0] === 'en') {
+                res = char1.charCodeAt(0) - char2.charCodeAt(0)
+              } else {
+                res = char1 - char2
+              }
+              break
+            }
+          } else {
+            // 类型不同的，直接用返回的数字相减
+            res = char1Type[1] - char2Type[1]
+            break
+          }
+        }
+        return res
+      },
+
       table_index(index) {
         return (this.pageNum - 1) * this.pageSize + index + 1
       },
