@@ -1,0 +1,44 @@
+{
+  "id": "1883959",
+  "name": "个人博客",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "86350",
+      "name": "管理系统",
+      "font_class": "guanlixitong",
+      "unicode": "e6d4",
+      "unicode_decimal": 59092
+    },
+    {
+      "icon_id": "2018844",
+      "name": "博客",
+      "font_class": "boke",
+      "unicode": "e611",
+      "unicode_decimal": 58897
+    },
+    {
+      "icon_id": "3557347",
+      "name": "用户",
+      "font_class": "yonghu",
+      "unicode": "e6ef",
+      "unicode_decimal": 59119
+    },
+    {
+      "icon_id": "4294219",
+      "name": "角色",
+      "font_class": "jiaose",
+      "unicode": "e69e",
+      "unicode_decimal": 59038
+    },
+    {
+      "icon_id": "6353166",
+      "name": "菜单",
+      "font_class": "menu-two",
+      "unicode": "e60d",
+      "unicode_decimal": 58893
+    }
+  ]
+}

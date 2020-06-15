@@ -25,6 +25,8 @@ import '@/permission' // permission control
  * please remove it before going online! ! !
  */
 import { mockXHR } from '../mock'
+
+import '@/assets/router_icons/iconfont.css'
 if (process.env.NODE_ENV === 'production') {
   mockXHR()
 }

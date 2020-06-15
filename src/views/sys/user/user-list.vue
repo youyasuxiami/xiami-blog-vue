@@ -66,10 +66,10 @@
         </el-form-item>
       </el-form>
 
-      <el-row>
-        <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-plus" @click="handleAddUser">新增
-        </el-button>
-      </el-row>
+      <!--      <el-row>-->
+      <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-plus" @click="handleAddEditUser">新增
+      </el-button>
+      <!--      </el-row>-->
     </div>
 
     <el-table
@@ -87,50 +87,131 @@
       <!--      <el-table-column align="center" label="ID" width="95">-->
       <!--        <template slot-scope="scope">{{ scope.row.id }}</template>-->
       <!--      </el-table-column>-->
-      <el-table-column label="用户名" align="center">
-        <template slot-scope="scope">{{ scope.row.name }}</template>
+      <el-table-column label="用户名">
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top" align="center">
+            <span>{{scope.row.name}}</span>
+            <div slot="reference" class="m-popover">
+              {{ scope.row.name }}
+            </div>
+          </el-popover>
+        </template>
       </el-table-column>
+
       <el-table-column label="昵称" align="center">
-        <template slot-scope="scope">{{ scope.row.nickName }}</template>
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <span>{{scope.row.nickName}}</span>
+            <div slot="reference" class="m-popover">
+              {{scope.row.nickName}}
+            </div>
+          </el-popover>
+        </template>
       </el-table-column>
+
       <el-table-column label="性别" align="center">
         <template slot-scope="{row}">{{ row.sex }}</template>
       </el-table-column>
+
       <el-table-column class-name="status-col" label="年龄" align="center">
         <template slot-scope="{row}">{{ row.age }}</template>
       </el-table-column>
+
       <el-table-column class-name="status-col" label="联系方式" width="110" align="center">
         <template slot-scope="scope">{{ scope.row.phone }}</template>
       </el-table-column>
-      <el-table-column class-name="status-col" label="电子邮箱" width="150" align="center">
-        <template slot-scope="scope">{{ scope.row.email }}</template>
+
+      <el-table-column class-name="status-col" label="电子邮箱" width="200" align="center">
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <span>{{scope.row.email}}</span>
+            <div slot="reference" class="m-popover">
+              {{scope.row.email}}
+            </div>
+          </el-popover>
+        </template>
       </el-table-column>
+
       <el-table-column class-name="status-col" label="创建时间" align="center" width="160">
         <template slot-scope="scope">{{ scope.row.createTime }}</template>
       </el-table-column>
+
       <el-table-column class-name="status-col" label="更新时间" align="center" width="160">
         <template slot-scope="scope">{{ scope.row.updateTime }}</template>
       </el-table-column>
+
       <el-table-column class-name="status-col" label="最新登录时间" align="center" width="160">
         <template slot-scope="scope">{{ scope.row.loginTime }}</template>
       </el-table-column>
+
       <el-table-column class-name="status-col" label="备注" align="center" width="110">
-        <template slot-scope="scope">{{ scope.row.ps }}</template>
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <span>{{scope.row.ps}}</span>
+            <div slot="reference" class="m-popover">
+              {{scope.row.ps}}
+            </div>
+          </el-popover>
+        </template>
       </el-table-column>
       <el-table-column class-name="status-col" label="账号状态" align="center">
         <template slot-scope="scope">{{ scope.row.status }}</template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
-        <template slot-scope="{row,$index}">
-          <el-button size="mini" type="primary">
+      <el-table-column label="操作" align="center" width="320" class-name="small-padding fixed-width">
+        <template slot-scope="scope">
+          <el-button size="mini" type="primary" @click="handleAddEditUser(scope.row,'edit')">
             编辑
           </el-button>
-          <el-button size="mini" type="success">
-            发布
+
+          <el-button size="mini" type="primary"@click="handleAddEditUser(scope.row,'view')">
+            详情
           </el-button>
+
+          &nbsp;
+          <span v-if="scope.row.status=='启用'">
+            <el-button size="mini" type="warning">
+            禁用
+          </el-button>
+          </span>
+
+          <span v-else>
+            <el-button size="mini" type="success">
+            启用
+          </el-button>
+          </span>
+          &nbsp;
+
+
           <el-button size="mini" type="danger">
             删除
           </el-button>
+
+
+
+            <!--                        年度计划申请的按钮-->
+<!--            <div v-if="type!='7'&&type!='2'&&type!='3'">-->
+<!--              &nbsp;-->
+<!--              <el-button size="mini" type="primary" @click="handleDetail(scope.$index, scope.row)">查看-->
+<!--              </el-button>-->
+
+<!--              &nbsp;-->
+<!--              <span v-if="scope.row.statusName=='已归档'">-->
+<!--                                    <el-button size="mini" type="primary" @click="handleReset(scope.$index, scope.row)">-->
+<!--                                        变更-->
+<!--                                    </el-button>-->
+<!--                                </span>-->
+<!--              <span v-if="scope.row.statusName=='已保存' ||scope.row.statusName=='退回'">-->
+<!--                                    <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">-->
+<!--                                        编辑-->
+<!--                                    </el-button>-->
+<!--                            </span>-->
+<!--              &nbsp;-->
+<!--              <el-button size="mini" type="primary" @click="handleChart(scope.$index, scope.row)">流程图-->
+<!--              </el-button>-->
+<!--            </div>-->
+
+
+
         </template>
       </el-table-column>
     </el-table>
@@ -150,16 +231,15 @@
     <pagination v-show="total>0" :total="total" :page.sync="pageNum" :limit.sync="pageSize" @pagination="fetchData"
                 ref="handleSizeChange"/>
     <!--    引入组件-->
-    <user-add-update-view v-if="dialogFormVisible" ref="userAddUpdateView"></user-add-update-view>
+    <user-add-update-view v-if="dialogFormVisible" ref="userAddUpdateView" @refreshDataList="fetchData"></user-add-update-view>
   </div>
 </template>
 
 <script>
-  import {getList} from '@/api/sys'
-  import {getTypeValue} from '@/utils/dictionary'
-  import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-  import userAddUpdateView from '@/views/user/user-add-update-view'
-
+  import { getList } from '@/api/sys'
+  import { getTypeValue } from '@/utils/dictionary'
+  import Pagination from '@/components/Pagination/index' // secondary package based on el-pagination
+  import userAddUpdateView from '@/views/sys/user/user-add-update-view'
 
   export default {
     data() {
@@ -185,23 +265,23 @@
           // pageSize: 10,//暂时json
         },
         dataForm: {
-          nickName: "",
-          password: "",
-          name: "",
-          sex: "",
-          age: "",
-          phone: "",
-          email: "",
-          avatar: "",
-          createTime: "",
-          updateTime: "",
-          loginTime: "",
-          ps: "",
-          status: "",
-        },
+          name: '',
+          nickName: '',
+          password: '',
+          sex: '',
+          age: '',
+          phone: '',
+          email: '',
+          avatar: '',
+          createTime: '',
+          updateTime: '',
+          loginTime: '',
+          ps: '',
+          status: ''
+        }
       }
     },
-    components: {Pagination, userAddUpdateView},
+    components: { Pagination, userAddUpdateView },
     created() {
       // 获取列表数据
       this.fetchData()
@@ -259,23 +339,24 @@
         })
       },
 
-      // 新增用户
-      handleAddUser() {
+      // 新增/编辑用户
+      handleAddEditUser(row,param) {
         this.dialogFormVisible = true
-        // this.$nextTick(() => {
-        //   this.$refs.userAddUpdateView.init(row, "detail");
-        // });
+        this.$nextTick(() => {
+          this.$refs.userAddUpdateView.init(row,param)
+        })
       }
     }
   }
 </script>
-<style>
+<style lang="scss" scoped>
   .m-add-btn {
     margin-bottom: 10px;
   }
+
+  .m-popover {
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+  }
 </style>
-
-
-
-
-
