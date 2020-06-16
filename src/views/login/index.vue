@@ -84,7 +84,19 @@
     </el-form>
   </div>
 </template>
-
+<script type="text/javascript" charset="utf-8"  src="https://files.cnblogs.com/files/liuzhou1/L2Dwidget.0.min.js"></script>
+<script type="text/javascript" charset="utf-8"  src="https://files.cnblogs.com/files/liuzhou1/L2Dwidget.min.js"></script>
+<script type="text/javascript">
+  L2Dwidget.init({"display": {
+      "superSample": 2,
+      "width": 200,
+      "height": 400,
+      "position": "right",
+      "hOffset": 0,
+      "vOffset": 0
+    }
+  });
+</script>
 <script>
   import { validUsername } from '@/utils/validate'
 
@@ -114,9 +126,9 @@
         loginRules: {
           // username: [{ required: true, trigger: 'blur', validator: validateUsername }],
           // password: [{ required: true, trigger: 'blur', validator: validatePassword }],
-          username: [{ required: true, message: "请输入用户名", trigger: "blur" }],
-          password: [{ required: true,message: "请输入密码", trigger: 'blur'}],
-          captcha: [{ required: true,message: "请输入验证码", trigger: 'blur'}],
+          username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
+          password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
+          captcha: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
         },
         loading: false,
         passwordType: 'password',
@@ -151,7 +163,6 @@
             this.loading = true
             this.$store.dispatch('user/Login', this.loginForm).then((data) => {
 
-
               this.$router.push({ path: this.redirect || '/' })
               this.loading = false
             }).catch(() => {
@@ -168,6 +179,9 @@
 </script>
 
 <style lang="scss">
+  #live2dcanvas {
+    border: 0 !important;
+  }
   /* 修复input 背景不协调 和光标变色 */
   /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 

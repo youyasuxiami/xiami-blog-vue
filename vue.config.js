@@ -1,4 +1,4 @@
-'use strict'
+// 'use strict'
 const path = require('path')
 const defaultSettings = require('./src/settings.js')
 
@@ -52,7 +52,7 @@ module.exports = {
         // target:'http://jsonplaceholder.typicode.com',
         // target:'http://172.16.96.19:8084',
         ws:false,
-        target:'http://localhost:8084',
+        target:'http://localhost:8085',
         changeOrigin:true,
         pathRewrite:{
           '/':''

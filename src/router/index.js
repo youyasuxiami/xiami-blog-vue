@@ -63,32 +63,42 @@ export const constantRoutes = [
       {
         path: 'info',
         component: () => import('@/views/profile/info'),
-        meta: { title: '修改信息', icon: '' }
+        meta: { title: '修改信息', icon: 'profile' }
       },
       {
         path: 'password',
         component: () => import('@/views/profile/password'),
-        meta: { title: '修改密码', icon: '' }
+        meta: { title: '修改密码', icon: 'password' }
       },
       {
         path: 'icon',
         name: 'ProfileIcon',
         component: () => import('@/views/profile/icon'),
-        meta: { title: '修改头像' }
+        meta: { title: '修改头像' , icon: 'avatar' }
       }
 
     ]
   },
   {
-    path: '/user',
+    path: '/sys',
     component: Layout,
-    redirect: '/user/manageTest',
-    meta: { title: '用户管理', icon: 'user' },
+    redirect: '/sys/user/userList',
+    meta: { title: '系统管理', icon: 'setting' },
     children: [
       {
-        path: 'manageTest',
-        component: () => import('@/views/user/user-list'),
-        meta: { title: '用户管理', icon: '' }
+        path: '/user/userList',
+        component: () => import('@/views/sys/user/user-list'),
+        meta: { title: '用户管理', icon: 'sys-user' }
+      },
+      {
+        path: '/menu/menuList',
+        component: () => import('@/views/sys/user/user-list'),
+        meta: { title: '菜单管理', icon: 'menu' }
+      },
+      {
+        path: '/role/roleList',
+        component: () => import('@/views/sys/user/user-list'),
+        meta: { title: '角色管理', icon: 'role' }
       },
       // {
       //   path: 'manageTest',
