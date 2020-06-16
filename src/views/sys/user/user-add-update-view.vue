@@ -218,11 +218,9 @@
           }
         })
       },
-      updateData() {
+      updateData: function() {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
-            console.log('accountStatusList------')
-            console.log(this.accountStatusList)
             for (var i in this.accountStatusList) {
               if (this.accountStatusList[i].value === this.temp.status) {
                 this.temp.status = this.accountStatusList[i].code

@@ -79,9 +79,9 @@
       border
       fit
       highlight-current-row
-    @sort-change="sortChange"
     >
-<!--      :default-sort = "{prop: 'name', order: 'createTime'}"-->
+      <!--    @sort-change="sortChange"-->
+      <!--      :default-sort = "{prop: 'name', order: 'createTime'}"-->
       <el-table-column align="center" label="序号" width="95" :index="table_index"
                        type="index" sortable="true">
         <!--        <template slot-scope="scope">{{ scope.$index }}</template>-->
@@ -90,8 +90,8 @@
       <!--        <template slot-scope="scope">{{ scope.row.id }}</template>-->
       <!--      </el-table-column>-->
 
-<!--      <el-table-column label="用户名"  min-width="90px" align="center" sortable :sort-method="sortDevName">-->
-      <el-table-column label="用户名"  min-width="90px" align="center" prop="name" sortable="custom">
+      <!--      <el-table-column label="用户名"  min-width="90px" align="center" sortable :sort-method="sortDevName">-->
+      <el-table-column label="用户名" min-width="90px" align="center" prop="name" sortable="custom">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top" align="center">
             <span>{{scope.row.name}}</span>
@@ -99,7 +99,8 @@
               {{ scope.row.name }}
             </div>
           </el-popover>
-        </template>'
+        </template>
+        '
       </el-table-column>
 
       <el-table-column label="昵称" align="center">
@@ -115,7 +116,7 @@
 
       <el-table-column prop="avatar" label="头像" align="center">
         <template slot-scope="scope">
-          <img  :src="scope.row.avatar" alt="" style="width: 50px;height: 50px">
+          <img :src="scope.row.avatar" alt="" style="width: 50px;height: 50px">
         </template>
       </el-table-column>
 
@@ -142,15 +143,15 @@
         </template>
       </el-table-column>
 
-      <el-table-column class-name="status-col" label="创建时间" align="center" width="160" sortable  prop="createTime">
+      <el-table-column class-name="status-col" label="创建时间" align="center" width="160" sortable prop="createTime">
         <template slot-scope="scope">{{ scope.row.createTime }}</template>
       </el-table-column>
 
-      <el-table-column class-name="status-col" label="更新时间" align="center" width="160" sortable  prop="updateTime">
+      <el-table-column class-name="status-col" label="更新时间" align="center" width="160" sortable prop="updateTime">
         <template slot-scope="scope">{{ scope.row.updateTime }}</template>
       </el-table-column>
 
-      <el-table-column class-name="status-col" label="最新登录时间" align="center" width="160" sortable  prop="loginTime">
+      <el-table-column class-name="status-col" label="最新登录时间" align="center" width="160" sortable prop="loginTime">
         <template slot-scope="scope">{{ scope.row.loginTime }}</template>
       </el-table-column>
 
@@ -173,53 +174,51 @@
             编辑
           </el-button>
 
-          <el-button size="mini" type="primary"@click="handleAddEditUser(scope.row,'view')">
+          <el-button size="mini" type="primary" @click="handleAddEditUser(scope.row,'view')">
             详情
           </el-button>
 
           &nbsp;
           <span v-if="scope.row.status=='启用'">
-            <el-button size="mini" type="warning">
+            <el-button size="mini" type="warning" @click="handleUpdateUserStatus(scope.row)">
             禁用
           </el-button>
           </span>
 
           <span v-else>
-            <el-button size="mini" type="success">
+            <el-button size="mini" type="success" @click="handleUpdateUserStatus(scope.row)">
             启用
           </el-button>
           </span>
           &nbsp;
 
 
-          <el-button size="mini" type="danger">
+          <el-button size="mini" type="danger" @click="handleDeleteUser(scope.row)">
             删除
           </el-button>
 
 
+          <!--                        年度计划申请的按钮-->
+          <!--            <div v-if="type!='7'&&type!='2'&&type!='3'">-->
+          <!--              &nbsp;-->
+          <!--              <el-button size="mini" type="primary" @click="handleDetail(scope.$index, scope.row)">查看-->
+          <!--              </el-button>-->
 
-            <!--                        年度计划申请的按钮-->
-<!--            <div v-if="type!='7'&&type!='2'&&type!='3'">-->
-<!--              &nbsp;-->
-<!--              <el-button size="mini" type="primary" @click="handleDetail(scope.$index, scope.row)">查看-->
-<!--              </el-button>-->
-
-<!--              &nbsp;-->
-<!--              <span v-if="scope.row.statusName=='已归档'">-->
-<!--                                    <el-button size="mini" type="primary" @click="handleReset(scope.$index, scope.row)">-->
-<!--                                        变更-->
-<!--                                    </el-button>-->
-<!--                                </span>-->
-<!--              <span v-if="scope.row.statusName=='已保存' ||scope.row.statusName=='退回'">-->
-<!--                                    <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">-->
-<!--                                        编辑-->
-<!--                                    </el-button>-->
-<!--                            </span>-->
-<!--              &nbsp;-->
-<!--              <el-button size="mini" type="primary" @click="handleChart(scope.$index, scope.row)">流程图-->
-<!--              </el-button>-->
-<!--            </div>-->
-
+          <!--              &nbsp;-->
+          <!--              <span v-if="scope.row.statusName=='已归档'">-->
+          <!--                                    <el-button size="mini" type="primary" @click="handleReset(scope.$index, scope.row)">-->
+          <!--                                        变更-->
+          <!--                                    </el-button>-->
+          <!--                                </span>-->
+          <!--              <span v-if="scope.row.statusName=='已保存' ||scope.row.statusName=='退回'">-->
+          <!--                                    <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">-->
+          <!--                                        编辑-->
+          <!--                                    </el-button>-->
+          <!--                            </span>-->
+          <!--              &nbsp;-->
+          <!--              <el-button size="mini" type="primary" @click="handleChart(scope.$index, scope.row)">流程图-->
+          <!--              </el-button>-->
+          <!--            </div>-->
 
 
         </template>
@@ -241,7 +240,8 @@
     <pagination v-show="total>0" :total="total" :page.sync="pageNum" :limit.sync="pageSize" @pagination="fetchData"
                 ref="handleSizeChange"/>
     <!--    引入组件-->
-    <user-add-update-view v-if="dialogFormVisible" ref="userAddUpdateView" @refreshDataList="fetchData"></user-add-update-view>
+    <user-add-update-view v-if="dialogFormVisible" ref="userAddUpdateView"
+                          @refreshDataList="fetchData"></user-add-update-view>
   </div>
 </template>
 
@@ -250,6 +250,7 @@
   import { getTypeValue } from '@/utils/dictionary'
   import Pagination from '@/components/Pagination/index' // secondary package based on el-pagination
   import userAddUpdateView from '@/views/sys/user/user-add-update-view'
+  import { updateUserStatus, deleteUser } from '@/api/sys'
 
   export default {
     data() {
@@ -315,7 +316,7 @@
     methods: {
       sortDevName(str1, str2) {
         let res = 0
-        for (let i = 0; ;i++) {
+        for (let i = 0; ; i++) {
           if (!str1[i] || !str2[i]) {
             res = str1.length - str2.length
             break
@@ -384,11 +385,91 @@
       },
 
       // 新增/编辑用户
-      handleAddEditUser(row,param) {
+      handleAddEditUser(row, param) {
         this.dialogFormVisible = true
         this.$nextTick(() => {
-          this.$refs.userAddUpdateView.init(row,param)
+          this.$refs.userAddUpdateView.init(row, param)
         })
+      },
+
+      //禁用0、启用1
+      handleUpdateUserStatus(row) {
+        let status = ''
+        if (row.status == '启用') {
+          status = '0'//传给后端，0表示禁用
+        } else if (row.status == '禁用') {
+          status = '1'//传给后端，1表示启用
+        }
+
+        let params = {
+          id: row.id,
+          status: status
+        }
+        updateUserStatus(params).then((data) => {
+          console.log('data')
+          console.log(data)
+          if (data.code == '20000') {
+            this.$notify({
+              title: '成功',
+              message: data.message,
+              type: 'success',
+              duration: 2000
+            })
+            this.fetchData()
+
+          } else {
+            this.$notify({
+              title: '失败',
+              message: data.message,
+              type: 'error',
+              duration: 2000
+            })
+          }
+        })
+      },
+
+      handleDeleteUser(row) {
+
+        let params = {
+          id: row.id
+        }
+        this.$confirm(
+          `确定提交操作?`,
+          "提示",
+          {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning"
+          }
+        )
+          .then(() => {
+            this.$http({
+              url: "/power-grid/cardReturned/replenishSave",
+              method: "post",
+              data: this.$http.adornData({
+                orderId: this.code,
+                msisdns: msisdns.toString(),
+                resourcesTypeId:this.resourcesTypeId//资源类型
+              })
+            }).then(data => {
+              console.log("提交返回的数据")
+              console.log(data)
+              if (data.data.flag) {
+                this.$message({
+                  message: data.data.msg,
+                  type: "success",
+                  duration: 1500,
+                  onClose: () => {
+                    this.visible = false;
+                    this.$emit("refreshDataList");
+                  }
+                });
+              } else {
+                this.$message.error(data.data.msg);
+              }
+            });
+          })
+          .catch(() => {});
       }
     }
   }
@@ -400,7 +481,7 @@
 
   .m-popover {
     overflow: hidden;
-    text-overflow:ellipsis;
+    text-overflow: ellipsis;
     white-space: nowrap;
   }
 </style>

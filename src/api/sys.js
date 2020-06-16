@@ -15,6 +15,24 @@ export function addUser(data) {
   })
 }
 
+export function updateUserStatus(params) {
+  return request({
+    url: '/user/updateUserStatus',
+    method: 'post',
+    params
+  })
+}
+
+export function deleteUser(params) {
+  return request({
+    url: '/user/deleteUser',
+    method: 'post',
+    params
+  })
+}
+
+
+
 
 
 
