@@ -69,6 +69,41 @@
       <!--      <el-row>-->
       <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-plus" @click="handleAddEditUser">新增
       </el-button>
+
+<!--      <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-upload" @click="handleAddEditUser">导入-->
+<!--      </el-button>-->
+
+<!--      <el-upload-->
+<!--        class="upload-demo"-->
+<!--        action-->
+<!--        :show-file-list="false"-->
+<!--        ref="import"-->
+<!--        :http-request="importFile"-->
+<!--      >-->
+<!--        &lt;!&ndash;                        :before-upload="beforeImport"&ndash;&gt;-->
+<!--        <el-button size="mini" type="primary">导 入</el-button>-->
+
+<!--      </el-upload>-->
+
+      <el-upload
+        style="display: inline-block;"
+        ref="upload"
+        action="https://jsonplaceholder.typicode.com/posts/"
+        :show-file-list="false"
+        :multiple="false"
+        accept=".xls, .xlsx"
+        :before-upload="beforeUpload"
+        :on-success="uploadSuccess"
+        :auto-upload="true"><!--        默认true，自动提交-->
+        <el-button slot="trigger" size="small" type="primary" icon="el-icon-upload">批量导入</el-button>
+<!--        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>-->
+<!--        <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>-->
+
+      </el-upload>
+
+      <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-download" @click="handleAddEditUser">导出
+      </el-button>
+
       <!--      </el-row>-->
     </div>
 
@@ -191,34 +226,9 @@
           </el-button>
           </span>
           &nbsp;
-
-
           <el-button size="mini" type="danger" @click="handleDeleteUser(scope.row)">
             删除
           </el-button>
-
-
-          <!--                        年度计划申请的按钮-->
-          <!--            <div v-if="type!='7'&&type!='2'&&type!='3'">-->
-          <!--              &nbsp;-->
-          <!--              <el-button size="mini" type="primary" @click="handleDetail(scope.$index, scope.row)">查看-->
-          <!--              </el-button>-->
-
-          <!--              &nbsp;-->
-          <!--              <span v-if="scope.row.statusName=='已归档'">-->
-          <!--                                    <el-button size="mini" type="primary" @click="handleReset(scope.$index, scope.row)">-->
-          <!--                                        变更-->
-          <!--                                    </el-button>-->
-          <!--                                </span>-->
-          <!--              <span v-if="scope.row.statusName=='已保存' ||scope.row.statusName=='退回'">-->
-          <!--                                    <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">-->
-          <!--                                        编辑-->
-          <!--                                    </el-button>-->
-          <!--                            </span>-->
-          <!--              &nbsp;-->
-          <!--              <el-button size="mini" type="primary" @click="handleChart(scope.$index, scope.row)">流程图-->
-          <!--              </el-button>-->
-          <!--            </div>-->
 
 
         </template>
@@ -443,33 +453,46 @@
           }
         )
           .then(() => {
-            this.$http({
-              url: "/power-grid/cardReturned/replenishSave",
-              method: "post",
-              data: this.$http.adornData({
-                orderId: this.code,
-                msisdns: msisdns.toString(),
-                resourcesTypeId:this.resourcesTypeId//资源类型
-              })
-            }).then(data => {
-              console.log("提交返回的数据")
-              console.log(data)
-              if (data.data.flag) {
-                this.$message({
-                  message: data.data.msg,
-                  type: "success",
-                  duration: 1500,
-                  onClose: () => {
-                    this.visible = false;
-                    this.$emit("refreshDataList");
-                  }
-                });
+            deleteUser(params).then((data) => {
+              if (data.code == '20000') {
+                this.$notify({
+                  title: '成功',
+                  message: data.message,
+                  type: 'success',
+                  duration: 2000
+                })
+                this.fetchData()
+
               } else {
-                this.$message.error(data.data.msg);
+                this.$notify({
+                  title: '失败',
+                  message: data.message,
+                  type: 'error',
+                  duration: 2000
+                })
               }
-            });
+            })
           })
-          .catch(() => {});
+      },
+
+      beforeUpload(file) {
+        //判断文件格式
+        let hz = file.name.split(".")[1];
+        if (hz != "xlsx" && hz != "xls") {
+          this.$alert("只能上传EXCEL文件！");
+          return false;
+        }
+      },
+      uploadSuccess(response) {
+        if (response.respCode == 0) {
+          this.$message({
+            type: "success",
+            message: "添加成功!"
+          });
+          this.$store.dispatch("teacher/getTeacherList", this.infoQ);
+        } else {
+          this.$alert("添加失败!" + response.message);
+        }
       }
     }
   }
