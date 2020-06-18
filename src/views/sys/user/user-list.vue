@@ -70,34 +70,40 @@
       <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-plus" @click="handleAddEditUser">新增
       </el-button>
 
-<!--      <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-upload" @click="handleAddEditUser">导入-->
-<!--      </el-button>-->
+      <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-download" @click="handleDownload">下载模板
+      </el-button>
 
-<!--      <el-upload-->
-<!--        class="upload-demo"-->
-<!--        action-->
-<!--        :show-file-list="false"-->
-<!--        ref="import"-->
-<!--        :http-request="importFile"-->
-<!--      >-->
-<!--        &lt;!&ndash;                        :before-upload="beforeImport"&ndash;&gt;-->
-<!--        <el-button size="mini" type="primary">导 入</el-button>-->
+      <!--      <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-upload" @click="handleAddEditUser">导入-->
+      <!--      </el-button>-->
 
-<!--      </el-upload>-->
+      <!--      <el-upload-->
+      <!--        class="upload-demo"-->
+      <!--        action-->
+      <!--        :show-file-list="false"-->
+      <!--        ref="import"-->
+      <!--        :http-request="importFile"-->
+      <!--      >-->
+      <!--        &lt;!&ndash;                        :before-upload="beforeImport"&ndash;&gt;-->
+      <!--        <el-button size="mini" type="primary">导 入</el-button>-->
+
+      <!--      </el-upload>-->
 
       <el-upload
         style="display: inline-block;"
-        ref="upload"
-        action="https://jsonplaceholder.typicode.com/posts/"
         :show-file-list="false"
         :multiple="false"
         accept=".xls, .xlsx"
-        :before-upload="beforeUpload"
-        :on-success="uploadSuccess"
-        :auto-upload="true"><!--        默认true，自动提交-->
+        :http-request="importFile"
+
+      >
+<!--        ref="upload"-->
+        <!--        action="https://jsonplaceholder.typicode.com/posts/"-->
+        <!--        :auto-upload="true"--><!--        默认true，自动提交-->
+        <!--        :before-upload="beforeUpload"-->
+        <!--        :on-success="uploadSuccess"-->
         <el-button slot="trigger" size="small" type="primary" icon="el-icon-upload">批量导入</el-button>
-<!--        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>-->
-<!--        <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>-->
+        <!--        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>-->
+        <!--        <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>-->
 
       </el-upload>
 
@@ -256,11 +262,11 @@
 </template>
 
 <script>
-  import { getList } from '@/api/sys'
-  import { getTypeValue } from '@/utils/dictionary'
+  import {getList} from '@/api/sys'
+  import {getTypeValue} from '@/utils/dictionary'
   import Pagination from '@/components/Pagination/index' // secondary package based on el-pagination
   import userAddUpdateView from '@/views/sys/user/user-add-update-view'
-  import { updateUserStatus, deleteUser } from '@/api/sys'
+  import {updateUserStatus, deleteUser} from '@/api/sys'
 
   export default {
     data() {
@@ -302,7 +308,7 @@
         }
       }
     },
-    components: { Pagination, userAddUpdateView },
+    components: {Pagination, userAddUpdateView},
     created() {
       // 获取列表数据
       this.fetchData()
@@ -324,40 +330,6 @@
 
     },
     methods: {
-      sortDevName(str1, str2) {
-        let res = 0
-        for (let i = 0; ; i++) {
-          if (!str1[i] || !str2[i]) {
-            res = str1.length - str2.length
-            break
-          }
-          const char1 = str1[i]
-          const char1Type = this.getChartType(char1)
-          const char2 = str2[i]
-          const char2Type = this.getChartType(char2)
-          // 类型相同的逐个比较字符
-          if (char1Type[0] === char2Type[0]) {
-            if (char1 === char2) {
-              continue
-            } else {
-              if (char1Type[0] === 'zh') {
-                res = char1.localeCompare(char2)
-              } else if (char1Type[0] === 'en') {
-                res = char1.charCodeAt(0) - char2.charCodeAt(0)
-              } else {
-                res = char1 - char2
-              }
-              break
-            }
-          } else {
-            // 类型不同的，直接用返回的数字相减
-            res = char1Type[1] - char2Type[1]
-            break
-          }
-        }
-        return res
-      },
-
       table_index(index) {
         return (this.pageNum - 1) * this.pageSize + index + 1
       },
@@ -438,6 +410,7 @@
         })
       },
 
+      //删除用户
       handleDeleteUser(row) {
 
         let params = {
@@ -475,6 +448,11 @@
           })
       },
 
+      //下载模板
+      handleDownload(){
+
+      },
+
       beforeUpload(file) {
         //判断文件格式
         let hz = file.name.split(".")[1];
@@ -493,6 +471,36 @@
         } else {
           this.$alert("添加失败!" + response.message);
         }
+      },
+      // 导入
+      importFile(param) {
+          let uploadData = new FormData();
+          uploadData.append("file", param.file)
+          this.$http({
+            url: "/user/importExcel",
+            headers: {"Content-type": "multipart/form-data"},
+            method: "post",
+            data: uploadData
+          }).then((data) => {
+            if (data.data.flag) {
+              this.$message({
+                type: "success",
+                message: "导入成功"
+              });
+              this.monthly = this.dataForm.monthly
+              // 获取列表数据
+              this.getDataList()
+
+
+            } else if (data.data.code == "506") {
+              this.$message.error(data.data.msg);
+            } else {
+              this.$message.error(data.data.msg);
+            }
+          })
+
+
+
       }
     }
   }
