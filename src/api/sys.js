@@ -31,6 +31,21 @@ export function deleteUser(params) {
   })
 }
 
+/**
+ * 批量导入用户
+ * @param params
+ * @returns {AxiosPromise}
+ */
+export function addUsers(data) {
+  return request({
+    url: '/user/importExcel',
+    method: 'post',
+    headers: {"Content-type": "multipart/form-data"},
+    data
+  })
+}
+
+
 
 
 
