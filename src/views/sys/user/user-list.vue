@@ -70,26 +70,13 @@
       <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-plus" @click="handleAddEditUser">新增
       </el-button>
 
-      <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-download" @click="handleDownload">下载模板
+      <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-download">
+        <a  href="/file/download?fileName=用户表.xlsx">下载模板</a>
       </el-button>
-
-      <!--      <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-upload" @click="handleAddEditUser">导入-->
-      <!--      </el-button>-->
-
-      <!--      <el-upload-->
-      <!--        class="upload-demo"-->
-      <!--        action-->
-      <!--        :show-file-list="false"-->
-      <!--        ref="import"-->
-      <!--        :http-request="importFile"-->
-      <!--      >-->
-      <!--        &lt;!&ndash;                        :before-upload="beforeImport"&ndash;&gt;-->
-      <!--        <el-button size="mini" type="primary">导 入</el-button>-->
-
-      <!--      </el-upload>-->
 
       <el-upload
         style="display: inline-block;"
+        action
         :show-file-list="false"
         :multiple="false"
         accept=".xls, .xlsx"
@@ -266,7 +253,7 @@
   import {getTypeValue} from '@/utils/dictionary'
   import Pagination from '@/components/Pagination/index' // secondary package based on el-pagination
   import userAddUpdateView from '@/views/sys/user/user-add-update-view'
-  import {updateUserStatus, deleteUser} from '@/api/sys'
+  import {updateUserStatus, deleteUser,addUsers} from '@/api/sys'
 
   export default {
     data() {
@@ -448,11 +435,6 @@
           })
       },
 
-      //下载模板
-      handleDownload(){
-
-      },
-
       beforeUpload(file) {
         //判断文件格式
         let hz = file.name.split(".")[1];
@@ -476,28 +458,59 @@
       importFile(param) {
           let uploadData = new FormData();
           uploadData.append("file", param.file)
-          this.$http({
-            url: "/user/importExcel",
-            headers: {"Content-type": "multipart/form-data"},
-            method: "post",
-            data: uploadData
-          }).then((data) => {
-            if (data.data.flag) {
-              this.$message({
-                type: "success",
-                message: "导入成功"
-              });
-              this.monthly = this.dataForm.monthly
-              // 获取列表数据
-              this.getDataList()
+        addUsers(uploadData).then((data) => {
+          if (data.code == '20000') {
+            this.$notify({
+              title: '成功',
+              message: data.message,
+              type: 'success',
+              duration: 2000
+            })
+            this.fetchData()
+
+          } else {
+            this.$notify({
+              title: '失败',
+              message: data.message,
+              type: 'error',
+              duration: 2000
+            })
+          }
+        })
 
 
-            } else if (data.data.code == "506") {
-              this.$message.error(data.data.msg);
-            } else {
-              this.$message.error(data.data.msg);
-            }
-          })
+
+
+
+
+
+
+
+        // this.$http({
+        //     url: "/user/importExcel",
+        //     headers: {"Content-type": "multipart/form-data"},
+        //     method: "post",
+        //     data: uploadData
+        //   }).then((data) => {
+        //     console.log("--------------")
+        //     console.log(data)
+        //     return false
+        //     if (data.data.flag) {
+        //       this.$message({
+        //         type: "success",
+        //         message: "导入成功"
+        //       });
+        //       this.monthly = this.dataForm.monthly
+        //       // 获取列表数据
+        //       this.getDataList()
+        //
+        //
+        //     } else if (data.data.code == "506") {
+        //       this.$message.error(data.data.msg);
+        //     } else {
+        //       this.$message.error(data.data.msg);
+        //     }
+        //   })
 
 
 
