@@ -45,6 +45,16 @@ export function addUsers(data) {
   })
 }
 
+export function exportUsers(params) {
+  return request({
+    url: '/user/exportUserToExcel',
+    method: 'get',
+    params,
+    headers: { "Content-type": "multipart/form-data" },
+    responseType: "blob"
+  })
+}
+
 
 
 

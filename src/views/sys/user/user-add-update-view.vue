@@ -10,6 +10,24 @@
         :rules="rule"
       >
         <!--        <el-row :gutter="10">-->
+        <el-row class="demo-avatar demo-basic">
+          <el-col :span="12">
+            <el-form-item label="头像" prop="status">
+              <pan-thumb :image="temp.avatar" @click.native="toggleShow"/>
+              <image-cropper
+                v-model="show"
+                field="multipartFile"
+                :size="50"
+                :url="url"
+                :headers="headers"
+                img-format="png"
+                @crop-success="cropSuccess"
+                @crop-upload-success="cropUploadSuccess"
+                @crop-upload-fail="cropUploadFail"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-row>
           <el-col :span="12">
             <el-form-item label="用户名" prop="name">
@@ -101,6 +119,9 @@
 <script>
   import { addUser } from '@/api/sys'
   import { getTypeValue } from '@/utils/dictionary'
+  import ImageCropper from 'vue-image-crop-upload'
+  import PanThumb from '@/components/PanThumb'
+  import { modifyIcon } from '@/api/profile'
 
   export default {
     data() {
@@ -110,9 +131,17 @@
         addUpdateVisible: true,
         accountStatusList: [],//账号状态数组
         viewDisabled: false,//false：表示可以编辑
-        searchForm: {
-          name: 'zhengjin'
+        show: false,//默认不显示头像修改框
+        url: process.env.VUE_APP_BASE_API + '/upload',
+        // params: {
+        //   access_token: getToken()
+        // },
+        headers: {
+          smail: '*_~'
         },
+        // searchForm: {
+        //   name: 'zhengjin'
+        // },
         temp: {
           name: '',
           nickName: '',
@@ -121,7 +150,8 @@
           phone: '',
           email: '',
           ps: '',
-          status: ''
+          status: '',
+          avatar: ''
         },
         textMap: {
           add: '申请',
@@ -153,6 +183,7 @@
         }
       }
     },
+    components: { ImageCropper, PanThumb },
     methods: {
       init(row, param) {
         this.viewDisabled = false //可以编辑
@@ -185,6 +216,7 @@
           console.log('add')
           this.dialogStatus = 'add'
           this.$refs.dataForm.resetFields()//对该表单项进行重置，将其值重置为初始值并移除校验结果
+          this.temp.avatar="http://youyasumi-oss.oss-cn-beijing.aliyuncs.com/76e11fce-e7fd-4985-84ec-2332b9dfef84.png"
           // this.$refs.dataForm.clearValidate()//清除校验结果
         }
       },
@@ -193,7 +225,7 @@
           if (valid) {
             // this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
             // this.temp.author = 'vue-element-admin'
-            addUser(this.temp).then(() => {
+            addUser(this.temp).then(data => {
               if (data.code == '20000') {
                 this.$notify({
                   title: '成功',
@@ -227,6 +259,22 @@
               }
             }
             addUser(this.temp).then((data) => {
+
+              // // 更新头像
+              // modifyIcon({
+              //   username: this.temp.name,
+              //   path: jsonData.data.path
+              // }).then(response => {
+              //   this.$message({
+              //     message: response.message,
+              //     type: 'success'
+              //   })
+              //   console.log(jsonData.data.path)
+              //   // 更新 vuex 中的头像
+              //   // this.$store.dispatch('user/setAvatar', jsonData.data.path)
+              // }).catch(() => {
+              // })
+
               if (data.code == '20000') {
                 this.$notify({
                   title: '成功',
@@ -239,6 +287,9 @@
                     this.$emit('refreshDataList')
                   }
                 })
+                if (this.temp.name == 'zhengjin') {
+                  this.$store.dispatch('user/setAvatar', this.temp.avatar)
+                }
               } else {
                 this.$notify({
                   title: '失败',
@@ -250,6 +301,40 @@
             })
           }
         })
+      },
+      toggleShow() {
+        this.show = !this.show
+      },
+      /**
+       *
+       * @param image
+       * @param field
+       */
+      cropSuccess(image, field) {
+        console.log('-------- crop success --------')
+        this.temp.avatar = image
+      },
+      /**
+       * 上传成功
+       * @param jsonData 服务器返回数据，已进行 JSON 转码
+       * @param field
+       */
+      cropUploadSuccess(jsonData, field) {
+        console.log('-------- upload success --------')
+        console.log(jsonData)
+        console.log('path: ', jsonData.data.path)
+        console.log('field: ' + field)
+        this.temp.avatar = jsonData.data.path
+      },
+      /**
+       * 上传失败
+       * @param status 服务器返回的失败状态码
+       * @param field
+       */
+      cropUploadFail(status, field) {
+        console.log('-------- upload fail --------')
+        console.log(status)
+        console.log('field: ' + field)
       }
     },
 

@@ -12,7 +12,7 @@ export function login(data) {
 export function getInfo() {
   return request({
     url: '/info',
-    method: 'get'
+    method: 'get',
     // ,
     // params: { access_token: token }
   })

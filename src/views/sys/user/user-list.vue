@@ -94,7 +94,11 @@
 
       </el-upload>
 
-      <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-download" @click="handleAddEditUser">导出
+<!--      <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-download">-->
+<!--        <a  :href="'/user/exportUserToExcel?name='+searchForm.name+'&nickName='+searchForm.nickName-->
+<!--        +'&sex='+searchForm.sex+'&accountStatus='+searchForm.accountStatus+'&roleId='+searchForm.roleId+''">导出</a>-->
+<!--      </el-button>-->
+      <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-download" @click="exportExcel">导出
       </el-button>
 
       <!--      </el-row>-->
@@ -249,7 +253,7 @@
 </template>
 
 <script>
-  import {getList} from '@/api/sys'
+  import {getList,exportUsers} from '@/api/sys'
   import {getTypeValue} from '@/utils/dictionary'
   import Pagination from '@/components/Pagination/index' // secondary package based on el-pagination
   import userAddUpdateView from '@/views/sys/user/user-add-update-view'
@@ -359,6 +363,41 @@
         this.$nextTick(() => {
           this.$refs.userAddUpdateView.init(row, param)
         })
+      },
+      // 导出
+      exportExcel(){
+
+        // 请求参数
+        // this.searchForm.pageNum = this.pageNum
+        // this.searchForm.pageSize = this.pageSize
+        let datas = this.searchForm
+
+        // this.listLoading = true
+        // getList(formData).then(response => {//这是formData表单请求
+        exportUsers(datas).then(data => {
+          if (data) {
+            //调用成功，在html中创建一个a元素
+            let aTag = document.createElement("a");
+            //创建一个blob对象
+            let blob = new Blob([data], {
+              type: "application/vnd.ms-excel"
+            }); // 这个content是下载的文件内容，自己修改
+            console.log("blob", blob);
+            aTag.download = `用户表.xlsx`; // 下载的文件名
+            // aTag.style.display = "none";
+            aTag.href = window.URL.createObjectURL(blob); //创建一个URL对象
+            document.body.appendChild(aTag);
+            aTag.click();
+            window.URL.revokeObjectURL(blob); //释放URL对象
+            document.body.removeChild(aTag);
+          } else {
+            console.log("-----------")
+          }
+        })
+          // .then(response => {//这是json字符串请求
+          // console.log(response)
+        // })
+        // window.location.href = "/user/exportUserToExcel"
       },
 
       //禁用0、启用1
@@ -515,7 +554,16 @@
 
 
       }
+    },
+    watch:{
+      total(){
+        if(this.total==(this.pageNum-1)*this.pageSize&& this.total!=0){
+          this.pageNum-=1;
+          this.fetchData()//获取列表数据
+        }
+      }
     }
+
   }
 </script>
 <style lang="scss" scoped>

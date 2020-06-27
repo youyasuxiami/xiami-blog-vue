@@ -86,7 +86,7 @@ export default {
         scrollTo(0, 800)
       }
     }
-  }
+  },
 }
 </script>
 
