@@ -9,8 +9,19 @@
       label-width="120px"
     >
       <el-input v-model="form.id" type="hidden"/>
-      <el-form-item label="头像">
-        <img :src="form.avatar" width="60" height="60">
+      <el-form-item label="头像" prop="status">
+        <pan-thumb :image="form.avatar" @click.native="toggleShow"/>
+        <image-cropper
+          v-model="show"
+          field="multipartFile"
+          :size="50"
+          :url="url"
+          :headers="headers"
+          img-format="png"
+          @crop-success="cropSuccess"
+          @crop-upload-success="cropUploadSuccess"
+          @crop-upload-fail="cropUploadFail"
+        />
       </el-form-item>
       <el-form-item label="用户名" >
         <el-input v-model="form.name" disabled></el-input>
@@ -44,7 +55,8 @@
 </template>
 <script>
   import { info,update } from '../../api/profile'
-
+  import ImageCropper from 'vue-image-crop-upload'
+  import PanThumb from '@/components/PanThumb'
   export default {
     name: 'ProfileInfo',
     data() {
@@ -60,9 +72,26 @@
           loginTime: '',
           status: '',
           ps: '',
-        }
+        },
+        show: false,//默认不显示头像修改框
+        url: process.env.VUE_APP_BASE_API + '/upload',
+        // params: {
+        //   access_token: getToken()
+        // },
+        headers: {
+          smail: '*_~'
+        },
       }
     },
+    show: false,//默认不显示头像修改框
+    url: process.env.VUE_APP_BASE_API + '/upload',
+    // params: {
+    //   access_token: getToken()
+    // },
+    headers: {
+      smail: '*_~'
+    },
+    components: { ImageCropper, PanThumb },
     created() {
       this.fetchData()
     },
@@ -84,6 +113,43 @@
         }).catch(() => {
           this.formLoading = false
         })
+        if (this.form.name == this.$store.getters.name) {
+          this.$store.dispatch('user/setAvatar', this.form.avatar)
+        }
+      },
+      toggleShow() {
+        this.show = !this.show
+      },
+      /**
+       *
+       * @param image
+       * @param field
+       */
+      cropSuccess(image, field) {
+        console.log('-------- crop success --------')
+        this.form.avatar = image
+      },
+      /**
+       * 上传成功
+       * @param jsonData 服务器返回数据，已进行 JSON 转码
+       * @param field
+       */
+      cropUploadSuccess(jsonData, field) {
+        console.log('-------- upload success --------')
+        console.log(jsonData)
+        console.log('path: ', jsonData.data.path)
+        console.log('field: ' + field)
+        this.form.avatar = jsonData.data.path
+      },
+      /**
+       * 上传失败
+       * @param status 服务器返回的失败状态码
+       * @param field
+       */
+      cropUploadFail(status, field) {
+        console.log('-------- upload fail --------')
+        console.log(status)
+        console.log('field: ' + field)
       }
     }
   }

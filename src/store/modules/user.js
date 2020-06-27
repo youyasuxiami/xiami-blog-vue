@@ -23,6 +23,7 @@ const mutations = {
 const actions = {
   // user login
   Login({ commit }, userInfo) {
+    console.log("login")
     const { username, password ,captcha} = userInfo
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password,captcha:captcha }).then(response => {
@@ -62,6 +63,8 @@ const actions = {
     return new Promise((resolve, reject) => {
       logout(state.token).then(() => {
         commit('SET_TOKEN', '')
+        commit('SET_NAME', '')
+        commit('SET_AVATAR', '')
         removeToken()
         resetRouter()
         resolve()
