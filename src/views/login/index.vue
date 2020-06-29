@@ -57,7 +57,7 @@
               name="captcha"
               type="text"
               tabindex="1"
-              auto-complete="on"></el-input>
+              auto-complete="off"></el-input>
           </el-form-item>
         </el-col>
 
@@ -84,18 +84,20 @@
     </el-form>
   </div>
 </template>
-<script type="text/javascript" charset="utf-8"  src="https://files.cnblogs.com/files/liuzhou1/L2Dwidget.0.min.js"></script>
-<script type="text/javascript" charset="utf-8"  src="https://files.cnblogs.com/files/liuzhou1/L2Dwidget.min.js"></script>
+<script type="text/javascript" charset="utf-8"
+        src="https://files.cnblogs.com/files/liuzhou1/L2Dwidget.0.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="https://files.cnblogs.com/files/liuzhou1/L2Dwidget.min.js"></script>
 <script type="text/javascript">
-  L2Dwidget.init({"display": {
-      "superSample": 2,
-      "width": 200,
-      "height": 400,
-      "position": "right",
-      "hOffset": 0,
-      "vOffset": 0
+  L2Dwidget.init({
+    'display': {
+      'superSample': 2,
+      'width': 200,
+      'height': 400,
+      'position': 'right',
+      'hOffset': 0,
+      'vOffset': 0
     }
-  });
+  })
 </script>
 <script>
   import { validUsername } from '@/utils/validate'
@@ -182,6 +184,7 @@
   #live2dcanvas {
     border: 0 !important;
   }
+
   /* 修复input 背景不协调 和光标变色 */
   /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
