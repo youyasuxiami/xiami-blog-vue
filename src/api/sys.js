@@ -55,6 +55,24 @@ export function exportUsers(params) {
   })
 }
 
+export function getMenuList(params) {
+  return request({
+    url: "/menu/menuList",
+    method: 'get',
+    params
+  })
+}
+
+export function getRoleList(params) {
+  return request({
+    url: "/role/roleList",
+    method: 'get',
+    params
+  })
+}
+
+
+
 
 
 

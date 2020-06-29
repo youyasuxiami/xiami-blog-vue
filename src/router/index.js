@@ -92,12 +92,12 @@ export const constantRoutes = [
       },
       {
         path: '/menu/menuList',
-        component: () => import('@/views/sys/user/user-list'),
+        component: () => import('@/views/sys/menu/menu-list'),
         meta: { title: '菜单管理', icon: 'menu' }
       },
       {
         path: '/role/roleList',
-        component: () => import('@/views/sys/user/user-list'),
+        component: () => import('@/views/sys/role/role-list'),
         meta: { title: '角色管理', icon: 'role' }
       },
       // {
