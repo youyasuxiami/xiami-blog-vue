@@ -2,6 +2,7 @@
   <div class="navbar">
     <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
 
+<!--    面包屑导航-->
     <breadcrumb class="breadcrumb-container" />
 
     <div class="right-menu">

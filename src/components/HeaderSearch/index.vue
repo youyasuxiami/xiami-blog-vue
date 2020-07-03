@@ -54,9 +54,9 @@ export default {
       }
     }
   },
-  mounted() {
-    this.searchPool = this.generateRoutes(this.routes)
-  },
+  // mounted() {
+  //   this.searchPool = this.generateRoutes(this.routes)
+  // },
   methods: {
     click() {
       this.show = !this.show
