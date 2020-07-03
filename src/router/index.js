@@ -49,73 +49,82 @@ export const constantRoutes = [
     redirect: '/dashboard',
     children: [{
       path: 'dashboard',
-      name: 'Dashboard',
+      name: '首页',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: '首页', icon: 'dashboard' }
+      meta: { title: '首页', icon: 'dashboard' , affix: true }
     }]
-  },
+  }
+  // ,
+  // // 404 page must be placed at the end !!!
+  // { path: '*', redirect: '/404', hidden: true }
+]
+
+export const asyncRoutes = [
   {
     path: '/profile',
+    name:'个人信息',
     component: Layout,
     redirect: '/profile/info',
-    meta: { title: '个人信息', icon: 'user' },
+    meta: { title: '个人信息', icon: 'user'},
     children: [
       {
         path: 'info',
+        name:'修改信息',
         component: () => import('@/views/profile/info'),
-        meta: { title: '修改信息', icon: 'profile' }
+        meta: { title: '修改信息', icon: 'profile' , affix: false }
       },
       {
         path: 'password',
+        name:'修改密码',
         component: () => import('@/views/profile/password'),
-        meta: { title: '修改密码', icon: 'password' }
+        meta: { title: '修改密码', icon: 'password', affix: false }
       },
       {
         path: 'icon',
-        name: 'ProfileIcon',
+        name: '修改头像',
         component: () => import('@/views/profile/icon'),
-        meta: { title: '修改头像' , icon: 'avatar' }
+        meta: { title: '修改头像' , icon: 'avatar' , affix: false }
       }
 
     ]
   },
   {
     path: '/sys',
+    name: '系统管理',
     component: Layout,
-    redirect: '/sys/user/userList',
+    redirect: '/user/userList',
     meta: { title: '系统管理', icon: 'setting' },
     children: [
       {
         path: '/user/userList',
+        name: '用户管理',
         component: () => import('@/views/sys/user/user-list'),
-        meta: { title: '用户管理', icon: 'sys-user' }
+        meta: { title: '用户管理', icon: 'sys-user' , affix: false }
       },
       {
         path: '/menu/menuList',
+        name: '菜单管理',
         component: () => import('@/views/sys/menu/menu-list'),
-        meta: { title: '菜单管理', icon: 'menu' }
+        meta: { title: '菜单管理', icon: 'menu', affix: false }
       },
       {
         path: '/role/roleList',
+        name: '角色管理',
         component: () => import('@/views/sys/role/role-list'),
-        meta: { title: '角色管理', icon: 'role' }
+        meta: { title: '角色管理', icon: 'role' , affix: false }
       },
-      // {
-      //   path: 'manageTest',
-      //   component: () => import('@/views/user/user-list'),
-      //   meta: { title: '用户管理统计图', icon: '' }
-      // },
     ]
   },
-  // 404 page must be placed at the end !!!
+
   { path: '*', redirect: '/404', hidden: true }
 ]
-
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes
 })
+
+
 
 const router = createRouter()
 
