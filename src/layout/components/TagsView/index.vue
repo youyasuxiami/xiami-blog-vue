@@ -17,7 +17,7 @@
           class="el-icon-close"></i></span>
       </router-link>
     </scroll-pane>
-    <div style="position: absolute;right: 0px;">
+    <div style="position: absolute;right: 5px;">
       <el-dropdown @command="handleCommand">
         <el-button type="primary" size="small">
           标签选项<i class="el-icon-arrow-down el-icon--right"></i>

@@ -13,8 +13,10 @@ const mutations = {
     state.sidebar.opened = !state.sidebar.opened
     state.sidebar.withoutAnimation = false
     if (state.sidebar.opened) {
+      //打开
       Cookies.set('sidebarStatus', 1)
     } else {
+      //关闭
       Cookies.set('sidebarStatus', 0)
     }
   },

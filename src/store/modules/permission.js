@@ -14,7 +14,7 @@ function hasPermission(roles, route) {
 }
 
 /**
- * Filter asynchronous routing tables by recursion
+ * 根据角色筛选菜单
  * @param routes asyncRoutes
  * @param roles
  */
@@ -46,6 +46,10 @@ const mutations = {
   }
 }
 
+/**
+ * 获取要显示的菜单
+ * @type {{generateRoutes({commit: *}, *=): *}}
+ */
 const actions = {
   generateRoutes({ commit }, roles) {
     return new Promise(resolve => {
