@@ -72,6 +72,15 @@ export function getRoleList(params) {
 }
 
 
+export function addMenu(data) {
+  return request({
+    url: '/menu/addMenu',
+    method: 'post',
+    data
+  })
+}
+
+
 
 
 

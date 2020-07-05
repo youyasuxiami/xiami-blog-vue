@@ -34,7 +34,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="菜单路径" align="center">
+      <el-table-column label="菜单路径" align="center" min-width="200px">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
             <span>{{scope.row.url}}</span>
@@ -45,11 +45,12 @@
         </template>
       </el-table-column>
 
-      <el-table-column class-name="status-col" label="类型" width="90px" align="center">
+      <el-table-column class-name="status-col" label="类型" width="100px" align="center">
         <template slot-scope="scope">
-            <el-tag v-if="scope.row.type == '0'" type=""effect="dark">目录</el-tag>
-            <el-tag v-if="scope.row.type == '1'" type="success"effect="dark">菜单</el-tag>
-            <el-tag v-if="scope.row.type == '2'" type="warning"effect="dark">按钮</el-tag>
+            <el-tag v-if="scope.row.type == '0'" type=""effect="dark">一级菜单</el-tag>
+            <el-tag v-if="scope.row.type == '1'" type="success"effect="dark">二级菜单</el-tag>
+            <el-tag v-if="scope.row.type == '2'" type="warning"effect="dark">三级菜单</el-tag>
+            <el-tag v-if="scope.row.type == '3'" type="warning"effect="dark">按钮</el-tag>
         </template>
       </el-table-column>
 

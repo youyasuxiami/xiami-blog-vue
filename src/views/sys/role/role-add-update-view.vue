@@ -11,23 +11,24 @@
       >
         <el-row>
           <el-col :span="12">
-            <el-form-item label="角色名称" prop="name">
+            <el-form-item label="角色名称" prop="roleName">
               <el-input v-model="temp.roleName" :disabled="viewDisabled"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="角色描述" prop="nickName">
+            <el-form-item label="角色描述" prop="roleDesc">
               <el-input v-model="temp.roleDesc" :disabled="viewDisabled"/>
             </el-form-item>
           </el-col>
         </el-row>
-<!--        菜单-->
+        <!--        菜单-->
         <el-tree
+          ref="tree"
           :data="menuData"
           show-checkbox
           node-key="id"
-          :default-expanded-keys="[2, 3]"
-          :default-checked-keys="[5]"
+          :default-expanded-keys=menuKeys
+          :default-checked-keys=menuKeys
           :props="defaultProps">
         </el-tree>
       </el-form>
@@ -73,6 +74,7 @@
         show: false,//默认不显示头像修改框
         url: process.env.VUE_APP_BASE_API + '/upload',
         menuData: [],
+        menuKeys: [],//节点
         defaultProps: {
           children: 'children',
           label: 'name'
@@ -87,15 +89,8 @@
         //   name: 'zhengjin'
         // },
         temp: {
-          name: '',
-          nickName: '',
-          sex: '0',
-          age: '',
-          phone: '',
-          email: '',
-          ps: '',
-          status: '',
-          avatar: ''
+          roleName: '',
+          roleDesc: ''
         },
         textMap: {
           add: '申请',
@@ -103,26 +98,11 @@
           view: '查看'
         },
         rule: {
-          name: [
+          roleName: [
             { required: true, message: '用户名不能为空', trigger: 'blur' }
           ],
-          nickName: [
+          roleDesc: [
             { required: true, message: '昵称不能为空', trigger: 'blur' }
-          ],
-          sex: [
-            { required: true, message: '性别不能为空', trigger: 'blur' }
-          ],
-          age: [
-            { required: true, message: '年龄不能为空', trigger: 'blur' }
-          ],
-          phone: [
-            { required: true, message: '联系方式不能为空', trigger: 'blur' }
-          ],
-          email: [
-            { required: true, message: '电子邮箱不能为空', trigger: 'blur' }
-          ],
-          status: [
-            { required: true, message: '账号状态不能为空', trigger: 'blur' }
           ]
         }
       }
@@ -163,13 +143,19 @@
           console.log('add')
           this.dialogStatus = 'add'
           this.$refs.dataForm.resetFields()//对该表单项进行重置，将其值重置为初始值并移除校验结果
-          this.temp.avatar="http://youyasumi-oss.oss-cn-beijing.aliyuncs.com/76e11fce-e7fd-4985-84ec-2332b9dfef84.png"
+          this.temp.avatar = 'http://youyasumi-oss.oss-cn-beijing.aliyuncs.com/76e11fce-e7fd-4985-84ec-2332b9dfef84.png'
           // this.$refs.dataForm.clearValidate()//清除校验结果
         }
       },
       addData() {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
+            console.log('---------------')
+            console.log(this.$refs.tree.getCheckedKeys())//完全选中
+            console.log(this.$refs.tree.getHalfCheckedKeys())//半选中
+            console.log(this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys()))
+
+            return false
             // this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
             // this.temp.author = 'vue-element-admin'
             addUser(this.temp).then(data => {
@@ -252,39 +238,8 @@
       toggleShow() {
         this.show = !this.show
       },
-      /**
-       *
-       * @param image
-       * @param field
-       */
-      cropSuccess(image, field) {
-        console.log('-------- crop success --------')
-        this.temp.avatar = image
-      },
-      /**
-       * 上传成功
-       * @param jsonData 服务器返回数据，已进行 JSON 转码
-       * @param field
-       */
-      cropUploadSuccess(jsonData, field) {
-        console.log('-------- upload success --------')
-        console.log(jsonData)
-        console.log('path: ', jsonData.data.path)
-        console.log('field: ' + field)
-        this.temp.avatar = jsonData.data.path
-      },
-      /**
-       * 上传失败
-       * @param status 服务器返回的失败状态码
-       * @param field
-       */
-      cropUploadFail(status, field) {
-        console.log('-------- upload fail --------')
-        console.log(status)
-        console.log('field: ' + field)
-      },
       //获得菜单
-      getMenuData(){
+      getMenuData() {
         // 请求参数
         // this.searchForm.pageNum = this.pageNum
         // this.searchForm.pageSize = this.pageSize
@@ -292,13 +247,12 @@
 
         this.listLoading = true
         getMenuList({}).then(data => {//这是json字符串请求
-          console.log("data")
+          console.log('data')
           console.log(data)
           if (data) {
             // console.log('菜单',JSON.parse(data.data))
             // let record = JSON.parse(data.data)
             this.menuData = data.data.data
-
 
             // if(this.editVisible || this.detailVisible){
             //   this.getMenuId()
@@ -311,7 +265,7 @@
           // this.total = response.data.total
           this.listLoading = false
         })
-      },
+      }
       //获取已选择菜单的id
       // getMenuId () {
       //   console.log('获取菜单id')
