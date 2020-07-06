@@ -57,11 +57,8 @@
   </div>
 </template>
 <script>
-  import { getMenuList } from '@/api/sys'
+  import { getMenuList,addRole } from '@/api/sys'
   import { getTypeValue } from '@/utils/dictionary'
-  import ImageCropper from 'vue-image-crop-upload'
-  import PanThumb from '@/components/PanThumb'
-  import { modifyIcon } from '@/api/profile'
 
   export default {
     data() {
@@ -75,6 +72,7 @@
         url: process.env.VUE_APP_BASE_API + '/upload',
         menuData: [],
         menuKeys: [],//节点
+        menusSelect: [],//选中的菜单
         defaultProps: {
           children: 'children',
           label: 'name'
@@ -107,7 +105,6 @@
         }
       }
     },
-    components: { ImageCropper, PanThumb },
     methods: {
       init(row, param) {
         this.viewDisabled = false //可以编辑
@@ -150,15 +147,17 @@
       addData() {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
-            console.log('---------------')
             console.log(this.$refs.tree.getCheckedKeys())//完全选中
             console.log(this.$refs.tree.getHalfCheckedKeys())//半选中
             console.log(this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys()))
-
-            return false
+            this.menusSelect = this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys())
             // this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
             // this.temp.author = 'vue-element-admin'
-            addUser(this.temp).then(data => {
+            addRole({
+              roleName: this.temp.roleName,
+              roleDesc: this.temp.roleDesc,
+              menusSelect: this.menusSelect
+            }).then(data => {
               if (data.code == '20000') {
                 this.$notify({
                   title: '成功',

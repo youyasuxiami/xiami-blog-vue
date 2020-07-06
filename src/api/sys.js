@@ -80,6 +80,19 @@ export function addMenu(data) {
   })
 }
 
+/**
+ * 添加角色
+ * @param data
+ * @returns {AxiosPromise}
+ */
+export function addRole(data) {
+  return request({
+    url: '/role/addRole',
+    method: 'post',
+    data
+  })
+}
+
 
 
 

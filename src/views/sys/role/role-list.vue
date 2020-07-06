@@ -159,7 +159,6 @@
         console.log(`当前页: ${val}`)
       },
       fetchData() {
-
         // 请求参数
         this.searchForm.pageNum = this.pageNum
         this.searchForm.pageSize = this.pageSize
