@@ -57,7 +57,7 @@
   </div>
 </template>
 <script>
-  import { getMenuList,addRole } from '@/api/sys'
+  import { getMenuList, addRole, getMenusByRoleId } from '@/api/sys'
   import { getTypeValue } from '@/utils/dictionary'
 
   export default {
@@ -117,20 +117,20 @@
           console.log('编辑/查看')
           this.dialogStatus = param
           this.temp = Object.assign({}, row) // copy obj
-          switch (this.temp.sex) {
-            case '男':
-              this.temp.sex = '0'
-              break
-            case '女':
-              this.temp.sex = '1'
-              break
-          }
-
+          //根据角色id获取角色拥有的菜单
+          getMenusByRoleId({ id: row.id }).then(data => {//这是json字符串请求
+            if (data.code == '20000') {
+              this.menuKeys=data.data
+              // this.$refs.tree.setCheckedKeys(data.data)
+            }else{
+              console.log("获取根据角色获取菜单失败")
+            }
+          })
+          // 显示顶部文字
           switch (param) {
             case 'edit':
               console.log('edit')
               break
-
             case 'view':
               console.log('view')
               this.viewDisabled = true //不可编辑
@@ -151,8 +151,6 @@
             console.log(this.$refs.tree.getHalfCheckedKeys())//半选中
             console.log(this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys()))
             this.menusSelect = this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys())
-            // this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-            // this.temp.author = 'vue-element-admin'
             addRole({
               roleName: this.temp.roleName,
               roleDesc: this.temp.roleDesc,
@@ -166,7 +164,6 @@
                   duration: 2000,
                   onClose: () => {
                     this.visible = false
-                    // this.isDisabled = false;
                     this.$emit('refreshDataList')
                   }
                 })
@@ -185,27 +182,16 @@
       updateData: function() {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
-            for (var i in this.accountStatusList) {
-              if (this.accountStatusList[i].value === this.temp.status) {
-                this.temp.status = this.accountStatusList[i].code
-              }
-            }
-            addUser(this.temp).then((data) => {
-
-              // // 更新头像
-              // modifyIcon({
-              //   username: this.temp.name,
-              //   path: jsonData.data.path
-              // }).then(response => {
-              //   this.$message({
-              //     message: response.message,
-              //     type: 'success'
-              //   })
-              //   console.log(jsonData.data.path)
-              //   // 更新 vuex 中的头像
-              //   // this.$store.dispatch('user/setAvatar', jsonData.data.path)
-              // }).catch(() => {
-              // })
+            // console.log(this.$refs.tree.getCheckedKeys())//完全选中
+            // console.log(this.$refs.tree.getHalfCheckedKeys())//半选中
+            // console.log(this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys()))
+            this.menusSelect = this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys())
+            addRole({
+              id:this.temp.id,
+              roleName: this.temp.roleName,
+              roleDesc: this.temp.roleDesc,
+              menusSelect: this.menusSelect
+            }).then((data) => {
 
               if (data.code == '20000') {
                 this.$notify({
@@ -219,9 +205,6 @@
                     this.$emit('refreshDataList')
                   }
                 })
-                if (this.temp.name == 'zhengjin') {
-                  this.$store.dispatch('user/setAvatar', this.temp.avatar)
-                }
               } else {
                 this.$notify({
                   title: '失败',

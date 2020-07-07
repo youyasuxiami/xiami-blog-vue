@@ -93,6 +93,19 @@ export function addRole(data) {
   })
 }
 
+/**
+ * 添加角色
+ * @param data
+ * @returns {AxiosPromise}
+ */
+export function getMenusByRoleId(params) {
+  return request({
+    url: '/role/getMenusByRoleId',
+    method: 'get',
+    params
+  })
+}
+
 
 
 
