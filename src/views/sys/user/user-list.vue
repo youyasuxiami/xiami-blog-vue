@@ -226,8 +226,6 @@
           <el-button size="mini" type="danger" @click="handleDeleteUser(scope.row)">
             删除
           </el-button>
-
-
         </template>
       </el-table-column>
     </el-table>
@@ -438,12 +436,11 @@
 
       //删除用户
       handleDeleteUser(row) {
-
         let params = {
           id: row.id
         }
         this.$confirm(
-          `确定提交操作?`,
+          `确定删除该用户?`,
           "提示",
           {
             confirmButtonText: "确定",

@@ -92,7 +92,7 @@
             详情
           </el-button>
           &nbsp;
-          <el-button size="mini" type="danger" @click="handleDeleteUser(scope.row)">
+          <el-button size="mini" type="danger" @click="handleDeleteRole(scope.row)">
             删除
           </el-button>
         </template>
@@ -107,7 +107,7 @@
 </template>
 
 <script>
-  import {getRoleList} from '@/api/sys'
+  import {getRoleList,deleteRole} from '@/api/sys'
   import {getTypeValue} from '@/utils/dictionary'
   import Pagination from '@/components/Pagination/index' // secondary package based on el-pagination
   import roleAddUpdateView from '@/views/sys/role/role-add-update-view'
@@ -263,13 +263,13 @@
       },
 
       //删除用户
-      handleDeleteUser(row) {
+      handleDeleteRole(row) {
 
         let params = {
           id: row.id
         }
         this.$confirm(
-          `确定提交操作?`,
+          `确定删除该角色?`,
           "提示",
           {
             confirmButtonText: "确定",
@@ -278,7 +278,7 @@
           }
         )
           .then(() => {
-            deleteUser(params).then((data) => {
+            deleteRole(params).then((data) => {
               if (data.code == '20000') {
                 this.$notify({
                   title: '成功',

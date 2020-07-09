@@ -7,7 +7,7 @@ import { getToken } from '@/utils/auth'
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   withCredentials: true, //让ajax携带cookie
-  timeout: 5000 // request timeout
+  timeout: 60000 // request timeout
 })
 
 // request interceptor

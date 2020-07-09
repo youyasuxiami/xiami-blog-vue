@@ -71,7 +71,6 @@ export function getRoleList(params) {
   })
 }
 
-
 export function addMenu(data) {
   return request({
     url: '/menu/addMenu',
@@ -94,13 +93,26 @@ export function addRole(data) {
 }
 
 /**
- * 添加角色
+ * 根据角色Id获取菜单列表
  * @param data
  * @returns {AxiosPromise}
  */
 export function getMenusByRoleId(params) {
   return request({
     url: '/role/getMenusByRoleId',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 删除一个角色
+ * @param params
+ * @returns {AxiosPromise}
+ */
+export function deleteRole(params) {
+  return request({
+    url: '/role/deleteRole',
     method: 'get',
     params
   })

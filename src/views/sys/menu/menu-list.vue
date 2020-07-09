@@ -45,7 +45,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column class-name="status-col" label="类型" width="100px" align="center">
+      <el-table-column class-name="status-col" label="菜单类型" width="100px" align="center">
         <template slot-scope="scope">
             <el-tag v-if="scope.row.type == '0'" type=""effect="dark">一级菜单</el-tag>
             <el-tag v-if="scope.row.type == '1'" type="success"effect="dark">二级菜单</el-tag>
@@ -89,15 +89,15 @@
     <pagination v-show="total>0" :total="total" :page.sync="pageNum" :limit.sync="pageSize" @pagination="fetchData"
                 ref="handleSizeChange"/>
     <!--    引入组件-->
-    <user-add-update-view v-if="dialogFormVisible" ref="userAddUpdateView"
-                          @refreshDataList="fetchData"></user-add-update-view>
+    <menu-add-update-view v-if="dialogFormVisible" ref="userAddUpdateView"
+                          @refreshDataList="fetchData"></menu-add-update-view>
   </div>
 </template>
 
 <script>
   import { getMenuList } from '@/api/sys'
   import Pagination from '@/components/Pagination/index' // secondary package based on el-pagination
-  import userAddUpdateView from '@/views/sys/menu/menu-add-update-view'
+  import menuAddUpdateView from '@/views/sys/menu/menu-add-update-view'
   // import {updateUserStatus, deleteUser,addUsers} from '@/api/sys'
 
   export default {
@@ -132,7 +132,7 @@
         }
       }
     },
-    components: { Pagination, userAddUpdateView },
+    components: { Pagination, menuAddUpdateView },
     created() {
       // 获取列表数据
       this.fetchData()

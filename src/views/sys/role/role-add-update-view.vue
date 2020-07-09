@@ -110,6 +110,7 @@
         this.viewDisabled = false //可以编辑
         this.visible = true
         this.menuData = []
+        this.menuKeys = []//默认选中的和默认展开的
         this.getMenuData()
 
         // this.dialogStatus = param

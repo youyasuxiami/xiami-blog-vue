@@ -12,7 +12,7 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="菜单类型" prop="type">
-              <el-select v-model="temp.type" placeholder="请选择" clearable class="m-max-width" :disabled="viewDisabled">
+              <el-select v-model="temp.type" placeholder="请选择" clearable class="m-max-width" :disabled="viewDisabled||checkDisabled">
                 <el-option :label="item.value" :value="item.code" v-for="item in menuTypeList"
                            :key="item.index"></el-option>
               </el-select>
@@ -22,11 +22,12 @@
 
         <el-row>
           <el-col :span="24">
-            <el-form-item label="父级菜单" prop="id" v-if="temp.type !== '0'">
+            <el-form-item label="父级菜单" prop="id" v-if="temp.type !=='0'&&temp.type !== '一级菜单'">
+<!--              viewDisabled:true代表不可编辑-->
               <el-input
                 v-model="temp.fatherMenuName"
                 clearable
-                :disabled="viewDisabled"
+                :disabled="viewDisabled||checkDisabled"
                 @focus="showTree"
               ></el-input>
               <el-tree
@@ -59,7 +60,7 @@
         </el-row>
         <el-row>
           <el-col :span="24">
-            <el-form-item label="权限" prop="perms" v-if="temp.type !== '0'&&temp.type !== '1'&&temp.type !== '2'">
+            <el-form-item label="权限" prop="perms" v-if="temp.type !== '0'&&temp.type !== '1'&&temp.type !== '2'&&temp.type !== '一级菜单'&&temp.type !== '二级菜单'&&temp.type !== '三级菜单'">
               <el-input v-model="temp.perms" :disabled="viewDisabled"/>
             </el-form-item>
           </el-col>
@@ -109,6 +110,7 @@
         addUpdateVisible: true,
         menuTypeList: [],//菜单类型数组
         viewDisabled: false,//false：表示可以编辑
+        checkDisabled: false,//false：表示可以菜单类型/父级菜单编辑,在详情和编辑页面要设置为true,表示不可编辑
         // show: false,//默认不显示头像修改框
         // url: process.env.VUE_APP_BASE_API + '/upload',
         // params: {
@@ -168,6 +170,7 @@
     methods: {
       init(row, param) {
         this.viewDisabled = false //可以编辑
+        this.checkDisabled = false //可以编辑
         this.visible = true
         this.menuData = []
         this.getMenuData()  //获得所有菜单
@@ -177,29 +180,38 @@
           console.log('编辑/查看')
           this.dialogStatus = param
           this.temp = Object.assign({}, row) // copy obj
-          switch (this.temp.sex) {
-            case '男':
-              this.temp.sex = '0'
+          switch (this.temp.type) {
+            case 0:
+              this.temp.type = '一级菜单'
               break
-            case '女':
-              this.temp.sex = '1'
+            case 1:
+              this.temp.type = '二级菜单'
+              break
+            case 2:
+              this.temp.type = '三级菜单'
+              break
+            case 3:
+              this.temp.type = '按钮'
               break
           }
 
           switch (param) {
             case 'edit':
               console.log('edit')
+              this.checkDisabled = true //不可编辑
               break
 
             case 'view':
               console.log('view')
               this.viewDisabled = true //不可编辑
+              this.checkDisabled = true //不可编辑
               break
           }
         } else {
           console.log('add')
           this.dialogStatus = 'add'
           this.$refs.dataForm.resetFields()//对该表单项进行重置，将其值重置为初始值并移除校验结果
+          console.log(this.temp.type)
           this.temp.fatherMenuName = ''
         }
       },
@@ -237,12 +249,13 @@
       updateData: function() {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
+
+
             for (var i in this.menuTypeList) {
-              if (this.menuTypeList[i].value === this.temp.status) {
-                this.temp.status = this.menuTypeList[i].code
+              if (this.menuTypeList[i].value === this.temp.type) {
+                this.temp.type = this.menuTypeList[i].code
               }
             }
-            alert('..............')
             addMenu(this.temp).then((data) => {
 
               // // 更新头像
