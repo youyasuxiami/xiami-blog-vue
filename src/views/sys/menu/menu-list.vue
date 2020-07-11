@@ -15,11 +15,6 @@
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
       row-key="id"
     >
-<!--      <el-table-column align="center" label="序号" width="50" :index="table_index"-->
-<!--                       type="index" sortable="true">-->
-<!--      </el-table-column>-->
-      <el-table-column type="selection" width="55" align="center"></el-table-column>
-
       <el-table-column label="菜单名称" min-width="150px" align="center" prop="name" sortable="custom">
       </el-table-column>
 
@@ -95,7 +90,7 @@
 </template>
 
 <script>
-  import { getMenuList } from '@/api/sys'
+  import { getMenuList,deleteMenu } from '@/api/sys'
   import Pagination from '@/components/Pagination/index' // secondary package based on el-pagination
   import menuAddUpdateView from '@/views/sys/menu/menu-add-update-view'
   // import {updateUserStatus, deleteUser,addUsers} from '@/api/sys'
@@ -225,7 +220,7 @@
           }
         )
           .then(() => {
-            deleteUser(params).then((data) => {
+            deleteMenu(params).then((data) => {
               if (data.code == '20000') {
                 this.$notify({
                   title: '成功',
@@ -240,7 +235,7 @@
                   title: '失败',
                   message: data.message,
                   type: 'error',
-                  duration: 2000
+                  duration: 4000
                 })
               }
             })

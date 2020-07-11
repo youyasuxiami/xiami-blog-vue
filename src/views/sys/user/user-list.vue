@@ -101,6 +101,8 @@
       <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-download" @click="exportExcel">导出
       </el-button>
 
+      <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-delete" @click="handleDeleteUsers">批量删除
+      </el-button>
       <!--      </el-row>-->
     </div>
 
@@ -111,7 +113,12 @@
       border
       fit
       highlight-current-row
+      @selection-change="handleSelectionChange"
     >
+      <el-table-column
+        type="selection"
+        width="55">
+      </el-table-column>
       <!--    @sort-change="sortChange"-->
       <!--      :default-sort = "{prop: 'name', order: 'createTime'}"-->
       <el-table-column align="center" label="序号" width="95" :index="table_index"
@@ -251,11 +258,10 @@
 </template>
 
 <script>
-  import {getList,exportUsers} from '@/api/sys'
+  import {getList,updateUserStatus, deleteUser,addUsers,exportUsers,deleteUsers} from '@/api/sys'
   import {getTypeValue} from '@/utils/dictionary'
   import Pagination from '@/components/Pagination/index' // secondary package based on el-pagination
   import userAddUpdateView from '@/views/sys/user/user-add-update-view'
-  import {updateUserStatus, deleteUser,addUsers} from '@/api/sys'
 
   export default {
     data() {
@@ -270,6 +276,7 @@
         accountStatusList: [],//账号状态数组
         currentPage: 1,
         dialogFormVisible: false,//默认不弹窗
+        multipleSelection: [],//用于存放选中的数据的id
         searchForm: {
           name: '',
           nickName: '',
@@ -550,6 +557,34 @@
 
 
 
+      },
+      //获得选中的行的id
+      handleSelectionChange(val) {
+        this.multipleSelection=[]
+        for (let i=0;i<val.length;i++) {
+          this.multipleSelection.push(val[i].id);
+        }
+      },
+      handleDeleteUsers(){
+        deleteUsers({ids: (this.multipleSelection)+''}).then(data =>{
+          if (data.code == '20000') {
+            this.$notify({
+              title: '成功',
+              message: data.message,
+              type: 'success',
+              duration: 2000
+            })
+            this.fetchData()
+
+          } else {
+            this.$notify({
+              title: '失败',
+              message: data.message,
+              type: 'error',
+              duration: 2000
+            })
+          }
+        })
       }
     },
     watch:{

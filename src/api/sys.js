@@ -1,5 +1,6 @@
 import request from '@/utils/request'
 
+// 用户管理 START **********************
 export function getList(params) {
   return request({
     url: "/user/searchList",
@@ -55,6 +56,47 @@ export function exportUsers(params) {
   })
 }
 
+/**
+ * 批量删除用户
+ * @param params
+ * @returns {AxiosPromise}
+ */
+export function deleteUsers(params) {
+  return request({
+    url: '/user/deleteUsers',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 获取所有的角色
+ * @param params
+ * @returns {AxiosPromise}
+ */
+export function getRoles(params) {
+  return request({
+    url: '/user/getRoles',
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 获取一个用户所拥有的的角色
+ * @param params
+ * @returns {AxiosPromise}
+ */
+export function getCheckedRoles(params) {
+  return request({
+    url: '/user/getCheckedRoles',
+    method: 'get',
+    params
+  })
+}
+// 用户管理 END **********************
+
+// 菜单管理 START **********************
 export function getMenuList(params) {
   return request({
     url: "/menu/menuList",
@@ -71,6 +113,11 @@ export function getRoleList(params) {
   })
 }
 
+/**
+ * 添加菜单
+ * @param data
+ * @returns {AxiosPromise}
+ */
 export function addMenu(data) {
   return request({
     url: '/menu/addMenu',
@@ -78,7 +125,33 @@ export function addMenu(data) {
     data
   })
 }
+/**
+ * 删除一个菜单
+ * @param params
+ * @returns {AxiosPromise}
+ */
+export function deleteMenu(params) {
+  return request({
+    url: '/menu/deleteMenu',
+    method: 'get',
+    params
+  })
+}
+/**
+ * 批量删除菜单
+ * @param params
+ * @returns {AxiosPromise}
+ */
+export function deleteMenus(params) {
+  return request({
+    url: '/menu/deleteMenus',
+    method: 'get',
+    params
+  })
+}
+// 菜单管理 END **********************
 
+// 角色管理 START **********************
 /**
  * 添加角色
  * @param data
@@ -117,6 +190,8 @@ export function deleteRole(params) {
     params
   })
 }
+// 角色管理 END **********************
+
 
 
 

@@ -91,6 +91,23 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="角色选择" prop="role">
+              <el-checkbox-group
+                v-model="checkedRoles"
+              >
+                <el-checkbox v-for="role in roles"
+                             :label="role.id"
+                             :key="role.id"
+                             :disabled="viewDisabled"
+                >
+                  {{role.roleName}}
+                </el-checkbox>
+              </el-checkbox-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
       <!-- 表单  end-->
 
@@ -117,14 +134,20 @@
   </div>
 </template>
 <script>
-  import { addUser } from '@/api/sys'
+  import { addUser, getRoles, getCheckedRoles } from '@/api/sys'
   import { getTypeValue } from '@/utils/dictionary'
   import ImageCropper from 'vue-image-crop-upload'
   import PanThumb from '@/components/PanThumb'
-  import { modifyIcon } from '@/api/profile'
 
   export default {
     data() {
+      var validateCheckedRoles = (rule, value, callback) => {
+        if (this.checkedRoles.length == 0) {
+          callback(new Error('请选择角色'))
+        } else {
+          callback()
+        }
+      }
       return {
         visible: true,
         dialogStatus: '',
@@ -139,9 +162,8 @@
         headers: {
           smail: '*_~'
         },
-        // searchForm: {
-        //   name: 'zhengjin'
-        // },
+        checkedRoles: [],
+        roles: [],
         temp: {
           name: '',
           nickName: '',
@@ -158,6 +180,7 @@
           edit: '编辑',
           view: '查看'
         },
+
         rule: {
           name: [
             { required: true, message: '用户名不能为空', trigger: 'blur' }
@@ -179,6 +202,10 @@
           ],
           status: [
             { required: true, message: '账号状态不能为空', trigger: 'blur' }
+          ],
+          role: [
+            // { required: true, message: '角色必选，请选择角色', trigger: 'blur' }
+            { validator: validateCheckedRoles, trigger: 'blur' }
           ]
         }
       }
@@ -193,6 +220,8 @@
           console.log('编辑/查看')
           this.dialogStatus = param
           this.temp = Object.assign({}, row) // copy obj
+          console.log('获得编辑的this.temp')
+          console.log(this.temp)
           switch (this.temp.sex) {
             case '男':
               this.temp.sex = '0'
@@ -204,19 +233,22 @@
 
           switch (param) {
             case 'edit':
-              console.log('edit')
+              this.getChecked()//获取选中的角色数组
+              console.log('编辑界面')
               break
 
             case 'view':
-              console.log('view')
+              this.getChecked()//获取选中的角色数组
+              console.log('查看界面')
               this.viewDisabled = true //不可编辑
               break
           }
         } else {
-          console.log('add')
+          console.log('新增界面')
           this.dialogStatus = 'add'
           this.$refs.dataForm.resetFields()//对该表单项进行重置，将其值重置为初始值并移除校验结果
-          this.temp.avatar="http://youyasumi-oss.oss-cn-beijing.aliyuncs.com/76e11fce-e7fd-4985-84ec-2332b9dfef84.png"
+          this.checkedRoles = []
+          this.temp.avatar = 'http://youyasumi-oss.oss-cn-beijing.aliyuncs.com/76e11fce-e7fd-4985-84ec-2332b9dfef84.png'
           // this.$refs.dataForm.clearValidate()//清除校验结果
         }
       },
@@ -225,6 +257,7 @@
           if (valid) {
             // this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
             // this.temp.author = 'vue-element-admin'
+            this.temp.roleIds = this.checkedRoles
             addUser(this.temp).then(data => {
               if (data.code == '20000') {
                 this.$notify({
@@ -258,6 +291,7 @@
                 this.temp.status = this.accountStatusList[i].code
               }
             }
+            this.temp.roleIds = this.checkedRoles
             addUser(this.temp).then((data) => {
 
               // // 更新头像
@@ -335,13 +369,31 @@
         console.log('-------- upload fail --------')
         console.log(status)
         console.log('field: ' + field)
+      },
+      getChecked() {
+        getCheckedRoles({ id: this.temp.id }).then(res => {
+          console.log('获取选中的角色id')
+          console.log(res)
+          this.checkedRoles = res.data
+        })
+
       }
     },
-
     created() {
       // // 获取账号状态下拉框
       getTypeValue('account_status').then(res => {
         this.accountStatusList = res.data
+      })
+
+      getRoles().then(res => {
+        this.checkedRoles = []
+        this.roles = res.data
+        // for (let i = 0; i < res.data.length; i++) {
+        //   //如果选中，就加入checkedRoles数组
+        //   if (res.data[i].checked) {
+        //     this.checkedRoles.push(res.data[i].id)
+        //   }
+        // }
       })
     }
   }
