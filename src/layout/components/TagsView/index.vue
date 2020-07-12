@@ -146,15 +146,15 @@
       },
       // 关闭当前标签
       closeSelectedTag(view) {
-        // this.$store.dispatch('tagsView/delView', view).then(({ visitedViews }) => {
-        //   if (this.isActive(view)) {
-        //     this.toLastView(visitedViews, view)
-        //   }
-        // })
+        this.$store.dispatch('tagsView/delView', view).then(({ visitedViews }) => {
+          if (this.isActive(view)) {
+            this.toLastView(visitedViews, view)
+          }
+        })
         // 调用全局挂载的方法
-        this.$store.dispatch('tagsView/delView', this.$route)
+        // this.$store.dispatch('tagsView/delView', this.$route)
         // 返回上一步路由
-        this.$router.go(-1)
+        // this.$router.go(-1)
       },
       // 关闭其他标签
       closeOthersTags() {

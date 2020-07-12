@@ -84,21 +84,21 @@
     </el-form>
   </div>
 </template>
-<script type="text/javascript" charset="utf-8"
-        src="https://files.cnblogs.com/files/liuzhou1/L2Dwidget.0.min.js"></script>
-<script type="text/javascript" charset="utf-8" src="https://files.cnblogs.com/files/liuzhou1/L2Dwidget.min.js"></script>
-<script type="text/javascript">
-  L2Dwidget.init({
-    'display': {
-      'superSample': 2,
-      'width': 200,
-      'height': 400,
-      'position': 'right',
-      'hOffset': 0,
-      'vOffset': 0
-    }
-  })
-</script>
+<!--<script type="text/javascript" charset="utf-8"-->
+<!--        src="https://files.cnblogs.com/files/liuzhou1/L2Dwidget.0.min.js"></script>-->
+<!--<script type="text/javascript" charset="utf-8" src="https://files.cnblogs.com/files/liuzhou1/L2Dwidget.min.js"></script>-->
+<!--<script type="text/javascript">-->
+<!--  L2Dwidget.init({-->
+<!--    'display': {-->
+<!--      'superSample': 2,-->
+<!--      'width': 200,-->
+<!--      'height': 400,-->
+<!--      'position': 'right',-->
+<!--      'hOffset': 0,-->
+<!--      'vOffset': 0-->
+<!--    }-->
+<!--  })-->
+<!--</script>-->
 <script>
   import { validUsername } from '@/utils/validate'
 
@@ -138,14 +138,14 @@
         src: 'captcha.jpg'
       }
     },
-    watch: {
-      $route: {
-        handler: function(route) {
-          this.redirect = route.query && route.query.redirect
-        },
-        immediate: true
-      }
-    },
+    // watch: {
+    //   $route: {
+    //     handler: function(route) {
+    //       this.redirect = route.query && route.query.redirect
+    //     },
+    //     immediate: true
+    //   }
+    // },
     methods: {
       showPwd() {
         if (this.passwordType === 'password') {
@@ -165,7 +165,7 @@
             this.loading = true
             this.$store.dispatch('user/Login', this.loginForm).then((data) => {
 
-              this.$router.push({ path: this.redirect || '/' })
+              this.$router.push({ path:'/' })
               this.loading = false
             }).catch(() => {
               this.loading = false

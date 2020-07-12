@@ -46,9 +46,28 @@ export function addUsers(data) {
   })
 }
 
+/**
+ * 导出当前页数据
+ * @param params
+ * @returns {AxiosPromise}
+ */
 export function exportUsers(params) {
   return request({
     url: '/user/exportUserToExcel',
+    method: 'get',
+    params,
+    headers: { "Content-type": "multipart/form-data" },
+    responseType: "blob"
+  })
+}
+/**
+ * 导出全部数据
+ * @param params
+ * @returns {AxiosPromise}
+ */
+export function exportAllUsers(params) {
+  return request({
+    url: '/user/exportAllUserToExcel',
     method: 'get',
     params,
     headers: { "Content-type": "multipart/form-data" },

@@ -15,7 +15,7 @@
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
       row-key="id"
     >
-      <el-table-column label="菜单名称" min-width="150px" align="center" prop="name" sortable="custom">
+      <el-table-column label="菜单名称" min-width="150px" align="center" prop="name" >
       </el-table-column>
 
       <el-table-column label="菜单ID" align="center" >
@@ -57,7 +57,7 @@
         <template slot-scope="scope">{{ scope.row.perms }}</template>
       </el-table-column>
 
-      <el-table-column class-name="status-col" label="排序号" align="center" width="160" sortable prop="createTime">
+      <el-table-column class-name="status-col" label="排序号" align="center" width="160"  prop="createTime">
         <template slot-scope="scope">{{ scope.row.orderNum }}</template>
       </el-table-column>
 

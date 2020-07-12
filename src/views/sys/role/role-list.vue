@@ -50,7 +50,7 @@
                        type="index" sortable="true">
       </el-table-column>
 
-      <el-table-column label="角色名称" min-width="90px" align="center" prop="name" sortable="custom">
+      <el-table-column label="角色名称" min-width="90px" align="center" prop="name">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top" align="center">
             <span>{{scope.row.roleName}}</span>
