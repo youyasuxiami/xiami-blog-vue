@@ -155,6 +155,11 @@
           console.log("response")
           console.log(response)
           this.list = response.data.data
+          localStorage.setItem("accessRoutes", JSON.stringify(this.list));
+          console.log("获得所有的菜单")
+          console.log(this.list)
+          let accessRoutes=JSON.parse(localStorage.getItem("accessRoutes"))
+          console.log(accessRoutes)
           this.total = response.data.total
           this.listLoading = false
         })

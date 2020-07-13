@@ -33,7 +33,11 @@ router.beforeEach(async(to, from, next) => {
         try {
           // get user info
           const { roles } = await store.dispatch('user/getInfo')
-          const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
+          const accessRoutes = await store.dispatch('permission/generateRoutes', roles)//获取该用户的所有菜单
+          console.log("获得路由表")
+          console.log(accessRoutes)
+          console.log(accessRoutes)
+          // router.addRoutes(JSON.parse(localStorage.getItem("accessRoutes")))
           router.addRoutes(accessRoutes)
           next({ ...to, replace: true })
 

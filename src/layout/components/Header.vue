@@ -16,7 +16,6 @@
           background-color="#373D41"
           text-color="#fff"
           active-text-color="#ffd04b">
-          <el-menu-item index="/" class="is-active">首页</el-menu-item>
           <el-menu-item index="/enterpriseManager">个人信息</el-menu-item>
           <el-menu-item index="/orderManager">系统管理</el-menu-item>
         </el-menu>
