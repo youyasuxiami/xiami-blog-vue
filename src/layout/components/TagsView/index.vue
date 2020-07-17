@@ -38,6 +38,8 @@
   import path from 'path'
 
   export default {
+    inject: ['reload'],
+
     components: { ScrollPane },
     data() {
       return {
@@ -45,7 +47,8 @@
         top: 0,
         left: 0,
         selectedTag: {},
-        affixTags: []
+        affixTags: [],
+        isRouterAlive: true
       }
     },
     computed: {
@@ -74,6 +77,18 @@
       this.addTags()
     },
     methods: {
+      // refresh(){
+      //   // 刷新
+      //   // 1、先改变keep-alive规则，添加到不缓存名单
+      //   // this.$store.dispatch("tagsView/addUnCacheViews", this.$route);
+      //   this.$store.dispatch("tagsView/addCachedView", this.$route);
+      //
+      //   // 2、调用Home.vue的reload函数，通过切换router-view的v-if达到重新加载效果
+      //   this.reload();
+      //   // 3、然后再当前页从不缓存名单中移除
+      //   // this.$store.dispatch("tagsView/delUnCacheView", this.$route);
+      //   this.$store.dispatch("tagsView/delCachedView", this.$route);
+      // },
       isActive(route) {
         return route.path === this.$route.path
       },
@@ -113,6 +128,7 @@
       addTags() {
         const { name } = this.$route
         if (name) {
+          console.log("111")
           this.$store.dispatch('tagsView/addView', this.$route)
         }
         return false
@@ -132,17 +148,20 @@
           }
         })
       },
-      refreshSelectedTag(view) {
-        // console.log("11111111")
-        // this.$store.dispatch('tagsView/delCachedView', this.$route).then(() => {
-        //   const { fullPath } = this.$route
-        //   this.$nextTick(() => {
-        //     this.$router.replace({
-        //       path: '/redirect' + fullPath
-        //     })
-        //   })
-        // })
-        location.reload()
+      refreshSelectedTag() {
+        this.$store.dispatch('tagsView/delCachedView', this.$route).then(() => {
+          const { fullPath } = this.$route
+          this.reload()
+          console.log("this.$route")
+          console.log(this.$route)
+          this.$nextTick(() => {
+            this.$router.replace({
+              redirect: fullPath
+              // path:'/user/userList',
+              // params:new Date
+            })
+          })
+        })
       },
       // 关闭当前标签
       closeSelectedTag(view) {
@@ -220,6 +239,7 @@
         switch (command) {
           case 'refreshSelectedTag':
             this.refreshSelectedTag(this.selectedTag)
+            // this.refresh()
             break
           case 'closeSelectedTag':
             this.closeSelectedTag(this.selectedTag)

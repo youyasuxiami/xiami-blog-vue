@@ -7,26 +7,51 @@
     <div class="main-container" >
       <navbar style="position: absolute;top: 70px;width: 100%;"/>
       <tags-view style="position: absolute;top: 113px;width: 100%;"/>
-      <app-main style="position:absolute;top: 153px;overflow-y: scroll;height:100px;padding-bottom: 70px;"  />
+      <div class="app-main"style="position:absolute;top: 153px;overflow-y: scroll;height:100px;padding-bottom: 70px;">
+        <transition name="fade-transform" mode="out-in">
+<!--          <keep-alive :include="visitedView" :exclude="cachedView">-->
+<!--          <keep-alive :include="cachedView">-->
+          <keep-alive :include="cachedView">
+<!--          <keep-alive >-->
+
+<!--          <keep-alive :include="visitedView" >-->
+<!--          <keep-alive  :exclude="uncachedView" >-->
+<!--            <router-view :key="key" v-if="isRouterAlive" ></router-view>-->
+            <router-view  :key="key" v-if="isRouterAlive" ></router-view>
+          </keep-alive>
+        </transition>
+      </div>
+<!--      <app-main style="position:absolute;top: 153px;overflow-y: scroll;height:100px;padding-bottom: 70px;"  />-->
     </div>
   </div>
 </template>
 
 <script>
-  import { Navbar, Sidebar, AppMain, TagsView, Header } from './components'
+  // import { Navbar, Sidebar, AppMain, TagsView, Header } from './components'
+  import { Navbar, Sidebar, TagsView, Header } from './components'
   import ResizeMixin from './mixin/ResizeHandler'
   import { mapState } from 'vuex'
 
   export default {
     name: 'Layout',
+    data(){
+      return {
+        isRouterAlive: true
+      }
+    },
     components: {
       Navbar,
       Sidebar,
-      AppMain,
+      // AppMain,
       TagsView,
       Header
     },
     mixins: [ResizeMixin],
+    provide() {
+      return {
+        reload: this.reload
+      };
+    },
     computed: {
       ...mapState({
         sidebar: state => state.app.sidebar,
@@ -51,11 +76,26 @@
           withoutAnimation: this.sidebar.withoutAnimation,
           mobile: this.device === 'mobile'
         }
+      },
+      key() {
+        return this.$route.path
+      },
+      visitedView(){
+        return this.$store.state.tagsView.visitedViews;
+      },
+      cachedView() {
+        return this.$store.state.tagsView.cachedViews;
       }
     },
     methods: {
       handleClickOutside() {
         this.$store.dispatch('app/closeSideBar', { withoutAnimation: false })
+      },
+      reload() {
+        this.isRouterAlive = false;
+        this.$nextTick(function() {
+          this.isRouterAlive = true;
+        });
       }
     }
   }
@@ -103,5 +143,12 @@
 
   .mobile .fixed-header {
     width: 100%;
+  }
+  .app-main {
+    /*50 = navbar  */
+    min-height: calc(100vh - 50px);
+    width: 100%;
+    position: relative;
+    overflow: hidden;
   }
 </style>
