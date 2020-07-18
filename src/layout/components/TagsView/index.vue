@@ -43,7 +43,7 @@
     components: { ScrollPane },
     data() {
       return {
-        visible: false,
+        visible: true,
         top: 0,
         left: 0,
         selectedTag: {},
@@ -77,19 +77,14 @@
       this.addTags()
     },
     methods: {
-      // refresh(){
-      //   // 刷新
-      //   // 1、先改变keep-alive规则，添加到不缓存名单
-      //   // this.$store.dispatch("tagsView/addUnCacheViews", this.$route);
-      //   this.$store.dispatch("tagsView/addCachedView", this.$route);
-      //
-      //   // 2、调用Home.vue的reload函数，通过切换router-view的v-if达到重新加载效果
-      //   this.reload();
-      //   // 3、然后再当前页从不缓存名单中移除
-      //   // this.$store.dispatch("tagsView/delUnCacheView", this.$route);
-      //   this.$store.dispatch("tagsView/delCachedView", this.$route);
-      // },
+      refresh(){
+        // 调用Home.vue的reload函数，通过切换router-view的v-if达到重新加载效果
+        this.reload();
+      },
       isActive(route) {
+        console.log("---------")
+        console.log(route.path)
+        console.log(this.$route.path)
         return route.path === this.$route.path
       },
       isAffix(tag) {
@@ -128,8 +123,8 @@
       addTags() {
         const { name } = this.$route
         if (name) {
-          console.log("111")
           this.$store.dispatch('tagsView/addView', this.$route)
+          this.selectedTag=this.$route
         }
         return false
       },
@@ -170,16 +165,10 @@
             this.toLastView(visitedViews, view)
           }
         })
-        // 调用全局挂载的方法
-        // this.$store.dispatch('tagsView/delView', this.$route)
-        // 返回上一步路由
-        // this.$router.go(-1)
       },
       // 关闭其他标签
       closeOthersTags() {
-        this.$router.push(this.selectedTag)
-        this.$store.dispatch('tagsView/delOthersViews', this.$route).then(() => {
-        // this.$store.dispatch('tagsView/delOthersViews', this.selectedTag).then(() => {
+        this.$store.dispatch('tagsView/delOthersViews', this.selectedTag).then(() => {
           this.moveToCurrentTag()
         })
       },
@@ -207,23 +196,6 @@
           }
         }
       },
-      // openMenu(tag, e) {
-      //   const menuMinWidth = 105
-      //   const offsetLeft = this.$el.getBoundingClientRect().left // container margin left
-      //   const offsetWidth = this.$el.offsetWidth // container width
-      //   const maxLeft = offsetWidth - menuMinWidth // left boundary
-      //   const left = e.clientX - offsetLeft + 15 // 15: margin right
-      //
-      //   if (left > maxLeft) {
-      //     this.left = maxLeft
-      //   } else {
-      //     this.left = left
-      //   }
-      //
-      //   this.top = e.clientY
-      //   this.visible = true
-      //   this.selectedTag = tag
-      // },
       closeMenu() {
         this.visible = false
       },
@@ -232,14 +204,10 @@
       },
       // 选项卡下拉
       handleCommand(command) {
-        // @click="refreshSelectedTag(selectedTag)"刷新
-        // @click="closeSelectedTag(selectedTag)"关闭当前标签
-        // @click="closeOthersTags"关闭其他标签
-        // @click="closeAllTags(selectedTag)"关闭所有标签
         switch (command) {
           case 'refreshSelectedTag':
-            this.refreshSelectedTag(this.selectedTag)
-            // this.refresh()
+            // this.refreshSelectedTag(this.selectedTag)
+            this.refresh()
             break
           case 'closeSelectedTag':
             this.closeSelectedTag(this.selectedTag)

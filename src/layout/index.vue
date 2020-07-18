@@ -2,22 +2,14 @@
   <div :class="classObj" class="app-wrapper">
     <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside"/>
     <Header style="background: #373D41;height: 70px; position: fixed;top: 0;" ></Header>
-<!--    304156-->
     <sidebar class="sidebar-container"/>
     <div class="main-container" >
       <navbar style="position: absolute;top: 70px;width: 100%;"/>
       <tags-view style="position: absolute;top: 113px;width: 100%;"/>
       <div class="app-main"style="position:absolute;top: 153px;overflow-y: scroll;height:100px;padding-bottom: 70px;">
         <transition name="fade-transform" mode="out-in">
-<!--          <keep-alive :include="visitedView" :exclude="cachedView">-->
-<!--          <keep-alive :include="cachedView">-->
-          <keep-alive :include="cachedView">
-<!--          <keep-alive >-->
-
-<!--          <keep-alive :include="visitedView" >-->
-<!--          <keep-alive  :exclude="uncachedView" >-->
-<!--            <router-view :key="key" v-if="isRouterAlive" ></router-view>-->
-            <router-view  :key="key" v-if="isRouterAlive" ></router-view>
+          <keep-alive v-if="isRouterAlive">
+            <router-view  :key="key"></router-view>
           </keep-alive>
         </transition>
       </div>
@@ -80,12 +72,6 @@
       key() {
         return this.$route.path
       },
-      visitedView(){
-        return this.$store.state.tagsView.visitedViews;
-      },
-      cachedView() {
-        return this.$store.state.tagsView.cachedViews;
-      }
     },
     methods: {
       handleClickOutside() {

@@ -1,27 +1,22 @@
 const state = {
   visitedViews: [],
-  cachedViews: [],
-  uncachedView: []
+  cachedViews: []
 }
 
 const mutations = {
   ADD_VISITED_VIEW: (state, view) => {
     if (state.visitedViews.some(v => v.path === view.path)) return
-    console.log("33333333")
     state.visitedViews.push(
       Object.assign({}, view, {
         title: view.meta.title || 'no-name'
       })
     )
-    console.log("添加完成1")
   },
   ADD_CACHED_VIEW: (state, view) => {
     if (state.cachedViews.includes(view.name)) return
-    console.log("44444444")
     if (!view.meta.noCache) {
       state.cachedViews.push(view.name)
     }
-    console.log("添加完成2")
   },
 
   DEL_VISITED_VIEW: (state, view) => {
@@ -69,37 +64,17 @@ const mutations = {
       }
     }
   },
-  // 添加不缓存页面名单
-  ADD_UNCACHE_VIEWS: (state, view) => {
-    // console.log("////////")
-    // state.uncachedView = [...state.uncachedView, ...views];
-    if (state.uncachedView.includes(view.name)) return
-    else {
-      state.uncachedView.push(view.name)
-    }
-
-  },
-  // 移除指定不缓存页面名单
-  DEL_UNCACHE_VIEW: (state, view) => {
-    state.uncachedView = []
-    console.log("删除缓存成功")
-    // state.uncachedView = state.uncachedView.filter(item => item != view);
-  }
 }
 
 const actions = {
   addView({ dispatch }, view) {
-    console.log("2222")
     dispatch('addVisitedView', view)
     dispatch('addCachedView', view)
-    console.log("添加完成")
   },
   addVisitedView({ commit }, view) {
-    console.log("添加1")
     commit('ADD_VISITED_VIEW', view)
   },
   addCachedView({ commit }, view) {
-    console.log("添加2")
     commit('ADD_CACHED_VIEW', view)
   },
 
@@ -187,19 +162,6 @@ const actions = {
   DEL_ALL_CACHED_VIEWS: state => {
     state.cachedViews = []
   },
-  // 移除指定不缓存页面名单
-  // delUnCacheView({ commit, state }, view) {
-  //   return new Promise(resolve => {
-  //     commit('DEL_UNCACHE_VIEW', view);
-  //     resolve([...state.uncachedView]);
-  //   });
-  // },
-  delUnCacheView({ commit, state }, view) {
-    return new Promise(resolve => {
-      commit('DEL_UNCACHE_VIEW', view)
-      resolve([...state.uncachedView])
-    })
-  }
 }
 
 export default {
