@@ -5,10 +5,18 @@ import { asyncRoutes, constantRoutes } from '@/router'
  * @param roles
  * @param route
  */
-function hasPermission(roles, route) {
-  console.log('**********')
-  if (route.meta && route.meta.roles) {
-    return roles.some(role => route.meta.roles.includes(role))
+function hasPermission(urls, route) {
+  // console.log('**********')
+  // if (route.meta && route.meta.roles) {
+  //   return roles.some(role => route.meta.urls.includes(role))
+  // } else {
+  //   return false
+  // }
+  if (urls) {
+    console.log("urls数组是否包含url")
+    console.log(urls.includes(route.path))
+    return urls.includes(route.path)
+    // return urls.some(ulr => route.url==ulr)
   } else {
     return false
   }
@@ -19,16 +27,16 @@ function hasPermission(roles, route) {
  * @param routes asyncRoutes
  * @param roles
  */
-export function filterAsyncRoutes(routes, roles) {
+export function filterAsyncRoutes(routes, urls) {
   const res = []
   console.log('打印所有的路由')
   console.log(routes)
 // routes代表所有的菜单
   routes.forEach(route => {
     const tmp = { ...route }
-    if (hasPermission(roles, tmp)) {
+    if (hasPermission(urls, tmp)) {
       if (tmp.children) {
-        tmp.children = filterAsyncRoutes(tmp.children, roles)
+        tmp.children = filterAsyncRoutes(tmp.children, urls)
       }
       //把符合角色的菜单过滤出来
       res.push(tmp)
@@ -55,7 +63,7 @@ const mutations = {
  * @type {{generateRoutes({commit: *}, *=): *}}
  */
 const actions = {
-  generateRoutes({ commit }, roles) {
+  generateRoutes({ commit }, urls) {
     return new Promise(resolve => {
       let accessedRoutes
       // if (roles.includes('admin')) {
@@ -64,7 +72,7 @@ const actions = {
       //   //获取符合角色的菜单（要显示出来的菜单）：参数：所有菜单、该登录用户拥有的角色
       //   accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
       // }
-      accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
+      accessedRoutes = filterAsyncRoutes(asyncRoutes, urls)
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)
     })

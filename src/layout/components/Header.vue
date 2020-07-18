@@ -16,8 +16,9 @@
           background-color="#373D41"
           text-color="#fff"
           active-text-color="#ffd04b">
-          <el-menu-item index="/enterpriseManager">个人信息</el-menu-item>
-          <el-menu-item index="/orderManager">系统管理</el-menu-item>
+                    <el-menu-item index="/enterpriseManager">个人信息</el-menu-item>
+                    <el-menu-item index="/orderManager">系统管理</el-menu-item>
+<!--          <el-menu-item :index="item.path" :key="item.path" v-for="item in firstMenu">{{item.name}}</el-menu-item>-->
         </el-menu>
       </div>
       <div class="topbar-account topbar-btn">
@@ -27,16 +28,46 @@
   </el-row>
 </template>
 <script>
+  import { getFirstMenus } from '@/api/menu'
+
   export default {
     data() {
       return {
-        activeIndex: '/'
+        activeIndex: '/',
+        firstMenu: [] //一级菜单数组
       }
     },
+    // created() {
+    //   this.getFirstMenuList()
+    // },
     methods: {
       handleSelect(index) {
-        // alert('1111111')
+        alert(this.$route.path)
         // this.defaultActiveIndex = index
+      },
+      getFirstMenuList() {
+        getFirstMenus().then((data) => {
+          console.log('data')
+          console.log(data)
+          if (data.code == '20000') {
+            this.$notify({
+              title: '成功',
+              message: data.message,
+              type: 'success',
+              duration: 2000
+            })
+            this.fetchData()
+
+          } else {
+            this.$notify({
+              title: '失败',
+              message: data.message,
+              type: 'error',
+              duration: 2000
+            })
+          }
+        })
+
       }
     }
   }

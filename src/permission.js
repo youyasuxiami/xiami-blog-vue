@@ -32,8 +32,13 @@ router.beforeEach(async(to, from, next) => {
       } else {
         try {
           // get user info
-          const { roles } = await store.dispatch('user/getInfo')
-          const accessRoutes = await store.dispatch('permission/generateRoutes', roles)//获取该用户的所有菜单
+          const { urls } = await store.dispatch('user/getInfo')
+          //1、给个默认的一级菜单（如果没有默认的，给个默认）
+
+
+          //2、根据选中的一级菜单获取所有的子菜单
+          console.log("111111")
+          const accessRoutes = await store.dispatch('permission/generateRoutes', urls)//获取该用户的所有菜单
           console.log("获得路由表")
           console.log(accessRoutes)
           console.log(accessRoutes)

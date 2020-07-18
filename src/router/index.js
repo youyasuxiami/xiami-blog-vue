@@ -68,35 +68,35 @@ export const asyncRoutes = [
     meta: {
       title: '个人信息',
       icon: 'user'
-      // ,
-      // roles: ['admin', 'dev']
+      ,
+      roles: ['admin', 'dev']
     },
     children: [
       {
-        path: 'info',
+        path: '/profile/info',
         name:'修改信息',
         component: () => import('@/views/profile/info'),
         meta: {
           title: '修改信息',
           icon: 'profile' ,
           affix: false
-          // ,
-          // roles: ['dev']
+          ,
+          roles: ['dev']
         }
       },
       {
-        path: 'password',
+        path: '/profile/password',
         name:'修改密码',
         component: () => import('@/views/profile/password'),
         meta: { title: '修改密码',
           icon: 'password',
           affix: false
-          // ,
-          // roles: ['dev']
+          ,
+          roles: ['dev']
         }
       },
       {
-        path: 'icon',
+        path: '/profile/icon',
         name: '修改头像',
         component: () => import('@/views/profile/icon'),
         meta: { title: '修改头像' , icon: 'avatar' , affix: false }
@@ -108,24 +108,24 @@ export const asyncRoutes = [
     path: '/sys',
     name: '系统管理',
     component: Layout,
-    redirect: '/user/userList',
+    // redirect: '/user/userList',
     meta: { title: '系统管理', icon: 'setting', roles: ['admin']
     },
     children: [
       {
-        path: '/user/userList',
+        path: '/sys/user/userList',
         name: '用户管理',
         component: () => import('@/views/sys/user/user-list'),
         meta: { title: '用户管理', icon: 'sys-user' , affix: false , roles: ['admin']}
       },
       {
-        path: '/menu/menuList',
+        path: '/sys/menu/menuList',
         name: '菜单管理',
         component: () => import('@/views/sys/menu/menu-list'),
         meta: { title: '菜单管理', icon: 'menu', affix: false , roles: ['admin']}
       },
       {
-        path: '/role/roleList',
+        path: '/sys/role/roleList',
         name: '角色管理',
         component: () => import('@/views/sys/role/role-list'),
         meta: { title: '角色管理', icon: 'role' , affix: false , roles: ['admin']}
