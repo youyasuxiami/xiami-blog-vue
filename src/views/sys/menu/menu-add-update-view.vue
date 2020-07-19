@@ -14,7 +14,7 @@
             <el-form-item label="菜单类型" prop="type">
               <el-select v-model="temp.type" placeholder="请选择" clearable class="m-max-width" :disabled="viewDisabled||checkDisabled">
                 <el-option :label="item.value" :value="item.code" v-for="item in menuTypeList"
-                           :key="item.index"></el-option>
+                           :key="item.index1"></el-option>
               </el-select>
             </el-form-item>
           </el-col>

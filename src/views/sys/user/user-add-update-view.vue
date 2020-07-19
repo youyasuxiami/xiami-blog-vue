@@ -77,7 +77,7 @@
             <el-form-item label="账号状态" prop="status">
               <el-select v-model="temp.status" placeholder="请选择" clearable class="m-max-width" :disabled="viewDisabled">
                 <el-option :label="item.value" :value="item.code" v-for="item in accountStatusList"
-                           :key="item.index"></el-option>
+                           :key="item.index1"></el-option>
               </el-select>
             </el-form-item>
           </el-col>

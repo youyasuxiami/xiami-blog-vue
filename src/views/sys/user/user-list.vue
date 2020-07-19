@@ -25,14 +25,14 @@
         <el-form-item label="性别">
           <el-select v-model="searchForm.sex" placeholder="请选择" clearable>
             <el-option :label="item.value" :value="item.code" v-for="item in sexList"
-                       :key="item.index"></el-option>
+                       :key="item.index1"></el-option>
           </el-select>
         </el-form-item>
 
         <el-form-item label="账号状态">
           <el-select v-model="searchForm.accountStatus" placeholder="请选择" clearable>
             <el-option :label="item.value" :value="item.code" v-for="item in accountStatusList"
-                       :key="item.index"></el-option>
+                       :key="item.index1"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="创建时间" prop="yearApply">
