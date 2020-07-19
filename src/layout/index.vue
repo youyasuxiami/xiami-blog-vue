@@ -1,10 +1,10 @@
 <template>
   <div :class="classObj" class="app-wrapper">
     <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside"/>
-    <Header style="background: #373D41;height: 70px; position: fixed;top: 0;" ></Header>
+    <Header style="background: #373D41;height: 60px; position: fixed;top: 0;" ></Header>
     <sidebar class="sidebar-container"/>
     <div class="main-container" >
-      <navbar style="position: absolute;top: 70px;width: 100%;"/>
+      <navbar style="position: absolute;top: 60px;width: 100%;"/>
       <tags-view style="position: absolute;top: 113px;width: 100%;"/>
       <div class="app-main"style="position:absolute;top: 153px;overflow-y: scroll;height:100px;padding-bottom: 70px;">
         <transition name="fade-transform" mode="out-in">

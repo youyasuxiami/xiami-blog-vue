@@ -16,9 +16,7 @@
           background-color="#373D41"
           text-color="#fff"
           active-text-color="#ffd04b">
-                    <el-menu-item index="/enterpriseManager">个人信息</el-menu-item>
-                    <el-menu-item index="/orderManager">系统管理</el-menu-item>
-<!--          <el-menu-item :index="item.path" :key="item.path" v-for="item in firstMenu">{{item.name}}</el-menu-item>-->
+          <el-menu-item :index="item.id.toString()" :key="item.id" v-for="item in firstMenu">{{item.name}}</el-menu-item>
         </el-menu>
       </div>
       <div class="topbar-account topbar-btn">
@@ -28,43 +26,47 @@
   </el-row>
 </template>
 <script>
-  import { getFirstMenus } from '@/api/menu'
-
+  import { getFirstMenus,getMenusByFirstMenuId } from '@/api/menu'
+  import router from '@/router'
+  import store from '@/store'
   export default {
     data() {
       return {
-        activeIndex: '/',
+        activeIndex: '101',
         firstMenu: [] //一级菜单数组
       }
     },
-    // created() {
-    //   this.getFirstMenuList()
-    // },
+    created() {
+      this.getFirstMenuList()
+    },
     methods: {
       handleSelect(index) {
-        alert(this.$route.path)
-        // this.defaultActiveIndex = index
+        this.activeIndex = index
+        let urls;
+        //  this.$store.dispatch('user/getInfo',{"firstMenuId":this.activeIndex}).then(data=>{
+        //    urls=data.urls;
+        //  })
+        getMenusByFirstMenuId({"firstMenuId":this.activeIndex}).then(async(data) => {
+
+          if (data.code == '20000') {
+            urls = data.data.urls
+            console.log("urls")
+            const accessRoutes = await store.dispatch('permission/generateRoutes', urls)//获取该用户的所有菜单
+            console.log("获取路由表")
+            console.log(accessRoutes)
+            router.addRoutes(accessRoutes)
+          } else {
+            console.log("失败")
+          }
+        })
       },
       getFirstMenuList() {
         getFirstMenus().then((data) => {
-          console.log('data')
-          console.log(data)
           if (data.code == '20000') {
-            this.$notify({
-              title: '成功',
-              message: data.message,
-              type: 'success',
-              duration: 2000
-            })
-            this.fetchData()
-
+            this.firstMenu=data.data
+            console.log("成功")
           } else {
-            this.$notify({
-              title: '失败',
-              message: data.message,
-              type: 'error',
-              duration: 2000
-            })
+            console.log("失败")
           }
         })
 
@@ -99,7 +101,7 @@
 
   .container .topbar-wrap .topbar-logos {
     float: left;
-    width: 128px;
+    width: 149px;
     line-height: 48px;
     font-size: 14px;
   }

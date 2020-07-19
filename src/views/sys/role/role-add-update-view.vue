@@ -230,8 +230,6 @@
 
         this.listLoading = true
         getMenuList({}).then(data => {//这是json字符串请求
-          console.log('data')
-          console.log(data)
           if (data) {
             // console.log('菜单',JSON.parse(data.data))
             // let record = JSON.parse(data.data)

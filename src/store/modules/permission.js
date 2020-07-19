@@ -13,8 +13,6 @@ function hasPermission(urls, route) {
   //   return false
   // }
   if (urls) {
-    console.log("urls数组是否包含url")
-    console.log(urls.includes(route.path))
     return urls.includes(route.path)
     // return urls.some(ulr => route.url==ulr)
   } else {
@@ -29,8 +27,6 @@ function hasPermission(urls, route) {
  */
 export function filterAsyncRoutes(routes, urls) {
   const res = []
-  console.log('打印所有的路由')
-  console.log(routes)
 // routes代表所有的菜单
   routes.forEach(route => {
     const tmp = { ...route }

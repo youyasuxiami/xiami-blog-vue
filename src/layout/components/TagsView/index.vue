@@ -82,9 +82,6 @@
         this.reload();
       },
       isActive(route) {
-        console.log("---------")
-        console.log(route.path)
-        console.log(this.$route.path)
         return route.path === this.$route.path
       },
       isAffix(tag) {
@@ -147,8 +144,6 @@
         this.$store.dispatch('tagsView/delCachedView', this.$route).then(() => {
           const { fullPath } = this.$route
           this.reload()
-          console.log("this.$route")
-          console.log(this.$route)
           this.$nextTick(() => {
             this.$router.replace({
               redirect: fullPath

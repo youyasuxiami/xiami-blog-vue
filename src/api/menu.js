@@ -7,3 +7,11 @@ export function getFirstMenus(params) {
     params
   })
 }
+export function getMenusByFirstMenuId(params) {
+  return request({
+    url: '/info',
+    method: 'get',
+    params
+  })
+}
+

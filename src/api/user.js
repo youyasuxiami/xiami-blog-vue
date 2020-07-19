@@ -9,10 +9,11 @@ export function login(data) {
 }
 
 // export function getInfo(token) {
-export function getInfo() {
+export function getInfo(params) {
   return request({
     url: '/info',
     method: 'get',
+    params
     // ,
     // params: { access_token: token }
   })

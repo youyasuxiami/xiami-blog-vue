@@ -367,8 +367,6 @@
        */
       cropUploadFail(status, field) {
         console.log('-------- upload fail --------')
-        console.log(status)
-        console.log('field: ' + field)
       },
       getChecked() {
         getCheckedRoles({ id: this.temp.id }).then(res => {
