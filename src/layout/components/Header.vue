@@ -19,8 +19,49 @@
           <el-menu-item :index="item.id.toString()" :key="item.id" v-for="item in firstMenu">{{item.name}}</el-menu-item>
         </el-menu>
       </div>
-      <div class="topbar-account topbar-btn">
-
+      <div class="right-menu">
+        <template v-if="device!=='mobile'">
+<!--          缩放-->
+          <screenfull id="screenfull" class="right-menu-item hover-effect" />
+          <!-- 消息中心 -->
+          <div class="right-menu-item" style="position: relative">
+            <el-tooltip
+              effect="dark"
+              :content="message?`有${message}条未读消息`:`消息中心`"
+              placement="bottom"
+            >
+              <router-link to="/tabs">
+                <i class="el-icon-bell"></i>
+              </router-link>
+            </el-tooltip>
+            <span class="btn-bell-badge" v-if="message"></span>
+          </div>
+          <el-tooltip content="字体大小" effect="dark" placement="bottom">
+            <size-select id="size-select" class="right-menu-item hover-effect" />
+          </el-tooltip>
+        </template>
+        <el-dropdown class="avatar-container" trigger="click">
+          <div class="avatar-wrapper">
+            <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+            <i class="el-icon-caret-bottom" />
+          </div>
+          <el-dropdown-menu slot="dropdown" class="user-dropdown">
+            <router-link to="/">
+              <el-dropdown-item>
+                首页
+              </el-dropdown-item>
+            </router-link>
+            <router-link to="/profile/info">
+              <el-dropdown-item>用户信息</el-dropdown-item>
+            </router-link>
+            <router-link to="/profile/password">
+              <el-dropdown-item>修改密码</el-dropdown-item>
+            </router-link>
+            <el-dropdown-item divided>
+              <span style="display:block;" @click="logout">退出登录</span>
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
       </div>
     </el-col>
   </el-row>
@@ -29,12 +70,28 @@
   import { getFirstMenus,getMenusByFirstMenuId } from '@/api/menu'
   import router from '@/router'
   import store from '@/store'
+  import Screenfull from '@/components/Screenfull'
+  import SizeSelect from '@/components/SizeSelect'
+  import { mapGetters } from 'vuex'
+
   export default {
     data() {
       return {
         activeIndex: '101',
-        firstMenu: [] //一级菜单数组
+        firstMenu: [], //一级菜单数组
+        message: 2
       }
+    },
+    components:{
+      Screenfull,
+      SizeSelect
+    },
+    computed: {
+      ...mapGetters([
+        'sidebar',
+        'avatar',
+        'device'
+      ])
     },
     created() {
       this.getFirstMenuList()
@@ -70,7 +127,12 @@
           }
         })
 
+      },
+      async logout() {
+        await this.$store.dispatch('user/logout')
+        this.$router.push(`/login?redirect=${this.$route.fullPath}`)
       }
+
     }
   }
 </script>
@@ -134,6 +196,67 @@
 
   .icon-user:before {
     content: "\ec52";
+  }
+  .right-menu {
+    float: right;
+    height: 100%;
+    line-height: 50px;
+
+    &:focus {
+      outline: none;
+    }
+
+    .right-menu-item {
+      display: inline-block;
+      padding: 0 8px;
+      height: 100%;
+      font-size: 18px;
+      color: #fff;
+      vertical-align: text-bottom;
+
+      &.hover-effect {
+        cursor: pointer;
+        transition: background .3s;
+
+        &:hover {
+          background: rgba(0, 0, 0, .025)
+        }
+      }
+    }
+
+    .avatar-container {
+      margin-right: 30px;
+
+      .avatar-wrapper {
+        margin-top: 5px;
+        position: relative;
+
+        .user-avatar {
+          cursor: pointer;
+          width: 40px;
+          height: 40px;
+          border-radius: 10px;
+        }
+
+        .el-icon-caret-bottom {
+          cursor: pointer;
+          position: absolute;
+          right: -20px;
+          top: 25px;
+          font-size: 12px;
+        }
+      }
+    }
+  }
+  .btn-bell-badge {
+    position: absolute;
+    right: 5px;
+    top: 10px;
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+    background: #f56c6c;
+    color: #fff;
   }
 
 </style>

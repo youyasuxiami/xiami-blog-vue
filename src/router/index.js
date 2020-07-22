@@ -31,17 +31,6 @@ import Layout from '@/layout'
  * all roles can be accessed
  */
 export const constantRoutes = [
-  {
-    path: '/login',
-    component: () => import('@/views/login/index'),
-    hidden: true
-  },
-
-  {
-    path: '/404',
-    component: () => import('@/views/error/404moban'),
-    hidden: true
-  },
 
   {
     path: '/',
@@ -51,57 +40,108 @@ export const constantRoutes = [
       path: 'dashboard',
       name: '首页',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: '首页', icon: 'dashboard' , affix: true }
-    }]
-  }
-  // ,
-  // // 404 page must be placed at the end !!!
-  // { path: '*', redirect: '/404', hidden: true }
-]
-
-export const asyncRoutes = [
+      meta: { title: '首页', icon: 'dashboard', affix: true }
+    },
+      {
+        path: '/tabs',
+        name: '选项卡',
+        component: () => import('@/views/tabs/Tabs'),
+        hidden: true,
+        meta: {
+          title: '未读消息'
+        }
+      },
+      {
+        path: '/404',
+        component: () => import('@/views/error/404moban'),
+        hidden: true
+      }
+    ]
+  },
   {
     path: '/profile',
-    name:'个人信息',
+    name: '个人信息',
     component: Layout,
+    hidden: true,
     redirect: '/profile/info',
     meta: {
       title: '个人信息',
       icon: 'user'
-      ,
-      roles: ['admin', 'dev']
     },
     children: [
       {
         path: '/profile/info',
-        name:'修改信息',
+        name: '修改信息',
         component: () => import('@/views/profile/info'),
+        hidden: true,
         meta: {
           title: '修改信息',
-          icon: 'profile' ,
+          icon: 'profile',
           affix: false
-          ,
-          roles: ['dev']
         }
       },
       {
         path: '/profile/password',
-        name:'修改密码',
+        name: '修改密码',
         component: () => import('@/views/profile/password'),
-        meta: { title: '修改密码',
+        hidden: true,
+        meta: {
+          title: '修改密码',
           icon: 'password',
           affix: false
-          ,
-          roles: ['dev']
         }
       },
       {
         path: '/profile/icon',
         name: '修改头像',
         component: () => import('@/views/profile/icon'),
-        meta: { title: '修改头像' , icon: 'avatar' , affix: false }
+        hidden: true,
+        meta: { title: '修改头像', icon: 'avatar', affix: false }
       }
+    ]
+  },
+  {
+    path: '/login',
+    component: () => import('@/views/login/index'),
+    hidden: true
+  },
+  {
+    path: '*',
+    redirect: '/404'
+  }
+]
 
+export const asyncRoutes = [
+  {
+    path: '/blog',
+    name: '博客管理',
+    component: Layout,
+    redirect: '/blog/info',
+    meta: {
+      title: '博客管理',
+      icon: 'user'
+    },
+    children: [
+      {
+        path: '/blog/info',
+        name: '博客列表',
+        component: () => import('@/views/profile/info'),
+        meta: {
+          title: '博客列表',
+          icon: 'profile',
+          affix: false
+        }
+      },
+      {
+        path: '/blog/comment',
+        name: '评论管理',
+        component: () => import('@/views/profile/info'),
+        meta: {
+          title: '评论管理',
+          icon: 'password',
+          affix: false
+        }
+      }
     ]
   },
   {
@@ -109,27 +149,28 @@ export const asyncRoutes = [
     name: '系统管理',
     component: Layout,
     // redirect: '/user/userList',
-    meta: { title: '系统管理', icon: 'setting', roles: ['admin']
+    meta: {
+      title: '系统管理', icon: 'setting', roles: ['admin']
     },
     children: [
       {
         path: '/sys/user/userList',
         name: '用户管理',
         component: () => import('@/views/sys/user/user-list'),
-        meta: { title: '用户管理', icon: 'sys-user' , affix: false , roles: ['admin']}
+        meta: { title: '用户管理', icon: 'sys-user', affix: false, roles: ['admin'] }
       },
       {
         path: '/sys/menu/menuList',
         name: '菜单管理',
         component: () => import('@/views/sys/menu/menu-list'),
-        meta: { title: '菜单管理', icon: 'menu', affix: false , roles: ['admin']}
+        meta: { title: '菜单管理', icon: 'menu', affix: false, roles: ['admin'] }
       },
       {
         path: '/sys/role/roleList',
         name: '角色管理',
         component: () => import('@/views/sys/role/role-list'),
-        meta: { title: '角色管理', icon: 'role' , affix: false , roles: ['admin']}
-      },
+        meta: { title: '角色管理', icon: 'role', affix: false, roles: ['admin'] }
+      }
     ]
   },
 
@@ -140,8 +181,6 @@ const createRouter = () => new Router({
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes
 })
-
-
 
 const router = createRouter()
 

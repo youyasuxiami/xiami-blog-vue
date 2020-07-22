@@ -181,7 +181,7 @@
         if (latestView) {
           this.$router.push(latestView.fullPath)
         } else {
-          // now the default is to redirect to the home page if there is no tags-view,
+          // now the default is to redirect to the home page if there is no tabs-view,
           // you can adjust it according to your needs.
           if (view.name === 'Dashboard') {
             // to reload home page
