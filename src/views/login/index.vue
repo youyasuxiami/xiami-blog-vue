@@ -179,7 +179,7 @@
     width: 100%;
     height: 100%;
     background-image: url(../../assets/img/outer_bg-f009f9.jpg);
-    background-size: 100%;
+    background-size: cover;
   }
 
   .ms-title {

@@ -8,8 +8,8 @@
       <tags-view style="position: absolute;top: 113px;width: 100%;"/>
       <div class="app-main"style="position:absolute;top: 153px;overflow-y: scroll;height:100px;padding-bottom: 70px;">
         <transition name="fade-transform" mode="out-in">
-          <keep-alive v-if="isRouterAlive">
-            <router-view  :key="key"></router-view>
+          <keep-alive :include="this.$store.state.tagsView.cachedViews" :exclude="this.$store.state.tagsView.uncachedView">
+            <router-view  v-if="isRouterAlive"></router-view>
           </keep-alive>
         </transition>
       </div>

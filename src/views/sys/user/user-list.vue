@@ -285,6 +285,7 @@
   import userAddUpdateView from '@/views/sys/user/user-add-update-view'
 
   export default {
+    name:'用户管理',
     data() {
       return {
         value1: [],
@@ -366,7 +367,9 @@
         this.searchForm.pageNum = this.pageNum
         this.searchForm.pageSize = this.pageSize
         this.searchForm.roleIds = this.value1.toString()
+        console.log("11111111")
         let data = this.searchForm
+
 
         // let formData = new FormData()
         // for(let key in data){

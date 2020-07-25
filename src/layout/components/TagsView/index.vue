@@ -120,7 +120,8 @@
       addTags() {
         const { name } = this.$route
         if (name) {
-          this.$store.dispatch('tagsView/addView', this.$route)
+          this.$store.dispatch('tagsView/delUnCachedView', this.$route)
+            this.$store.dispatch('tagsView/addView', this.$route)
           this.selectedTag=this.$route
         }
         return false
@@ -155,6 +156,8 @@
       },
       // 关闭当前标签
       closeSelectedTag(view) {
+        this.$store.dispatch('tagsView/addUnCacheView', this.$route)
+
         this.$store.dispatch('tagsView/delView', view).then(({ visitedViews }) => {
           if (this.isActive(view)) {
             this.toLastView(visitedViews, view)
@@ -201,8 +204,7 @@
       handleCommand(command) {
         switch (command) {
           case 'refreshSelectedTag':
-            // this.refreshSelectedTag(this.selectedTag)
-            this.refresh()
+            this.refreshSelectedTag(this.selectedTag)
             break
           case 'closeSelectedTag':
             this.closeSelectedTag(this.selectedTag)

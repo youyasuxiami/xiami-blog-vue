@@ -150,7 +150,7 @@
         console.log('-------- upload fail --------')
         console.log(status)
         console.log('field: ' + field)
-      }
+      },
     }
   }
 </script>
