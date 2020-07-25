@@ -28,4 +28,12 @@ export function logout(token) {
   })
 }
 
+export function getPublicKey() {
+  return request({
+    url: '/getPublicKey',
+    method: 'get',
+  })
+}
+
+
 

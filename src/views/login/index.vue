@@ -40,9 +40,9 @@
             <template slot="prepend">
               <svg-icon icon-class="password"/>
             </template>
-            <template slot="append" >
+            <template slot="append">
               <div @click="showPwd" style="cursor: pointer !important;">
-              <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"/>
+                <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"/>
               </div>
             </template>
           </el-input>
@@ -67,21 +67,22 @@
           </el-col>
 
           <el-col :span="9">
-            <div style="margin-left: 7px;cursor: pointer" >
-              <img alt="如果看不清楚，请单击图片刷新！" class="pointer" :src="src" @click="refreshCode" width="100%" height="39px" >
+            <div style="margin-left: 7px;cursor: pointer">
+              <img alt="如果看不清楚，请单击图片刷新！" class="pointer" :src="src" @click="refreshCode" width="100%" height="39px">
             </div>
           </el-col>
 
           <el-col :span="3">
             <div style="margin-left: 7px;margin-top: 40%;cursor: pointer" @click="refreshCode">
-              <i class="el-icon-refresh-right" />
+              <i class="el-icon-refresh-right"/>
             </div>
           </el-col>
 
         </el-row>
 
 
-        <el-button :loading="loading"  style="width:100%;margin-bottom:30px;background: #373737;border: 0px;border-radius: 10px;color: #fff"
+        <el-button :loading="loading"
+                   style="width:100%;margin-bottom:30px;background: #373737;border: 0px;border-radius: 10px;color: #fff"
                    @click.native.prevent="handleLogin">登 录
         </el-button>
 
@@ -95,6 +96,9 @@
   </div>
 </template>
 <script>
+  import { getPublicKey } from '@/api/user'
+  import {JSEncrypt} from 'jsencrypt'
+
   export default {
     name: 'Login',
     data() {
@@ -128,7 +132,8 @@
         loading: false,
         passwordType: 'password',
         redirect: undefined,
-        src: 'captcha.jpg'
+        src: 'captcha.jpg',
+        rsaKey: ''
       }
     },
     // watch: {
@@ -139,6 +144,9 @@
     //     immediate: true
     //   }
     // },
+    created(){
+      this.getRsaKey()
+    },
     methods: {
       showPwd() {
         if (this.passwordType === 'password') {
@@ -152,10 +160,12 @@
       },
       handleLogin() {
         this.$refs.loginForm.validate(valid => {
-          if (!valid) {
-            return false
-          } else {
+          if (valid) {
             this.loading = true
+            //加密
+            this.loginForm.password= this.passwordEncryption(
+              this.loginForm.password + ',' + new Date().getTime()
+            )
             this.$store.dispatch('user/Login', this.loginForm).then((data) => {
 
               this.$router.push({ path: '/' })
@@ -168,7 +178,25 @@
       },
       refreshCode() {
         this.src = 'captcha.jpg?t=' + new Date().getTime()
-      }
+      },
+      // 获取公钥的方法
+      getRsaKey() {
+        getPublicKey().then(data => {
+          if (data.code == '20000') {
+            this.rsaKey = data.data
+          } else {
+            console.log('获取公钥失败')
+          }
+        })
+      },
+      //密码加密方法
+      passwordEncryption(passwordUser) {
+        let publicKey = this.rsaKey // 从后台获取公钥
+        let encryptor = new JSEncrypt() // 新建JSEncrypt对象
+        encryptor.setPublicKey(publicKey) // 设置公钥
+        let passwordEncryp = encryptor.encrypt(passwordUser) // 对密码进行加密
+        return passwordEncryp
+      },
     }
   }
 </script>
