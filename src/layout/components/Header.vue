@@ -122,7 +122,14 @@
         getFirstMenus().then((data) => {
           if (data.code == '20000') {
             this.firstMenu=data.data
-            console.log("获取一级菜单成功")
+            console.log("获取一级菜单成功:"+this.firstMenu)
+            console.log(this.firstMenu[0].id)
+            // this.activeIndex =this.firstMenu[0].id
+            this.activeIndex = localStorage.getItem("activeIndex")
+            console.log(this.activeIndex)
+            if(!this.activeIndex){
+              this.activeIndex=this.firstMenu[0].id
+            }
           } else {
             console.log("获取一级菜单失败")
           }
@@ -131,6 +138,7 @@
       },
       async logout() {
         await this.$store.dispatch('user/logout')
+        localStorage.setItem("activeIndex",'')
         this.$router.push(`/login?redirect=${this.$route.fullPath}`)
       }
 
