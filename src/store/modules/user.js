@@ -44,9 +44,9 @@ const actions = {
   },
 
   // get user info
-  getInfo({ commit, state }) {
+  getInfo({ commit, state },params) {
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
+      getInfo({"firstMenuId":params}).then(response => {
         const { data } = response
 
         if (!data) {
@@ -58,9 +58,6 @@ const actions = {
         if (!roles || roles.length <= 0) {
           reject('getInfo: roles must be a non-null array!')
         }
-        console.log("roles")
-        console.log(roles)
-
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
         commit('SET_ROLES', roles)
@@ -74,14 +71,21 @@ const actions = {
   },
 
   // user logout
-  logout({ commit, state }) {
+  logout({ commit, state, dispatch }) {
     return new Promise((resolve, reject) => {
       logout(state.token).then(() => {
         commit('SET_TOKEN', '')
         commit('SET_NAME', '')
         commit('SET_AVATAR', '')
+        commit('SET_ROLES', [])
+
         removeToken()
         resetRouter()
+
+        //清空标签缓存
+        dispatch('tagsView/delAllViews', null, { root: true })
+
+
         resolve()
       }).catch(error => {
         reject(error)

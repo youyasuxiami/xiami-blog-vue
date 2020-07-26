@@ -8,7 +8,7 @@
       :model="form"
       label-width="120px"
     >
-      <el-input v-model="form.id" type="hidden"/>
+<!--      <el-input v-model="form.id" type="hidden"/>-->
       <el-form-item label="头像" prop="status">
         <pan-thumb :image="form.avatar" @click.native="toggleShow"/>
         <image-cropper
@@ -63,7 +63,7 @@
       return {
         formLoading: true,
         form: {
-          id:'',
+          // id:'',
           avatar: '',
           name:"",
           nickName: '',
@@ -150,7 +150,7 @@
         console.log('-------- upload fail --------')
         console.log(status)
         console.log('field: ' + field)
-      }
+      },
     }
   }
 </script>

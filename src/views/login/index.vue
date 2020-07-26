@@ -1,106 +1,97 @@
 <template>
-  <div class="login-container login-wrap">
-    <el-form ref="loginForm"
-             :model="loginForm"
-             :rules="loginRules"
-             class="login-form"
-             auto-complete="on"
-             label-position="left"
-             @keyup.enter.native="handleLogin"
-    >
-
-      <div class="title-container">
-        <h3 class="title">虾米的个人博客</h3>
+  <div class="login-wrap">
+    <div class="ms-login">
+      <div class="ms-title">
+        <h3>
+          博客后台管理系统
+        </h3>
       </div>
+      <el-form ref="loginForm"
+               :model="loginForm"
+               :rules="loginRules"
+               class="ms-content"
+               label-position="left"
+               @keyup.enter.native="handleLogin"
+      >
+        <el-form-item prop="username">
+          <el-input
+            ref="username"
+            v-model="loginForm.username"
+            placeholder="请输入用户名"
+            name="username"
+            type="text"
+            auto-complete="off">
+            <template slot="prepend">
+              <svg-icon icon-class="user"/>
+            </template>
+          </el-input>
+        </el-form-item>
 
-      <el-form-item prop="username">
-        <span class="svg-container">
-          <svg-icon icon-class="user"/>
-        </span>
-        <el-input
-          ref="username"
-          v-model="loginForm.username"
-          placeholder="请输入用户名"
-          name="username"
-          type="text"
-          tabindex="1"
-          auto-complete="on"></el-input>
-      </el-form-item>
+        <el-form-item prop="password">
+          <el-input
+            ref="password"
+            v-model="loginForm.password"
+            type="password"
+            placeholder="请输入密码"
+            name="password"
+            auto-complete="off"
+            @keyup.enter.native="handleLogin">
+            <template slot="prepend">
+              <svg-icon icon-class="password"/>
+            </template>
+          </el-input>
 
-      <el-form-item prop="password">
-        <span class="svg-container">
-          <svg-icon icon-class="password"/>
-        </span>
-        <el-input
-          :key="passwordType"
-          ref="password"
-          v-model="loginForm.password"
-          :type="passwordType"
-          placeholder="请输入密码"
-          name="password"
-          tabindex="2"
-          auto-complete="on"
-          @keyup.enter.native="handleLogin"></el-input>
-        <span class="show-pwd" @click="showPwd">
-          <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"/>
-        </span>
-      </el-form-item>
+        </el-form-item>
 
+        <el-row>
+          <el-col :span="12">
+            <el-form-item prop="captcha">
+              <el-input
+                ref="username"
+                v-model="loginForm.captcha"
+                placeholder="验证码"
+                name="captcha"
+                type="text"
+                auto-complete="off">
+                <template slot="prepend">
+                  <svg-icon icon-class="captcha"/>
+                </template>
+              </el-input>
+            </el-form-item>
+          </el-col>
 
-      <el-row>
-        <el-col :span="9">
-          <el-form-item prop="captcha">
-            <el-input
-              ref="username"
-              v-model="loginForm.captcha"
-              placeholder="验证码"
-              name="captcha"
-              type="text"
-              tabindex="1"
-              auto-complete="off"></el-input>
-          </el-form-item>
-        </el-col>
+          <el-col :span="9">
+            <div style="margin-left: 7px;cursor: pointer">
+              <img alt="如果看不清楚，请单击图片刷新！" class="pointer" :src="src" @click="refreshCode" width="100%" height="39px">
+            </div>
+          </el-col>
 
-        <el-col :span="15">
-          <div style="margin-left: 20px">
-            <!--            <img alt="如果看不清楚，请单击图片刷新！" class="pointer" :src="src" @click="refreshCode">-->
-            <img alt="如果看不清楚，请单击图片刷新！" class="pointer" :src="src" @click="refreshCode">
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <!--            <a href="javascript:;" @click="refreshCode" style="vertical-align: 18px;color: blue;">看不清</a>-->
-          </div>
-        </el-col>
-      </el-row>
+          <el-col :span="3">
+            <div style="margin-left: 7px;margin-top: 40%;cursor: pointer" @click="refreshCode">
+              <i class="el-icon-refresh-right"/>
+            </div>
+          </el-col>
+
+        </el-row>
 
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;"
-                 @click.native.prevent="handleLogin">登 录
-      </el-button>
+        <el-button :loading="loading"
+                   style="width:100%;margin-bottom:30px;background: #373737;border: 0px;border-radius: 10px;color: #fff"
+                   @click.native.prevent="handleLogin">登 录
+        </el-button>
 
-      <!--      <div class="tips">-->
-      <!--        <span style="margin-right:20px;">username: admin</span>-->
-      <!--        <span> password: any</span>-->
-      <!--      </div>-->
+        <!--      <div class="tips">-->
+        <!--        <span style="margin-right:20px;">username: admin</span>-->
+        <!--        <span> password: any</span>-->
+        <!--      </div>-->
 
-    </el-form>
+      </el-form>
+    </div>
   </div>
 </template>
-<script type="text/javascript" charset="utf-8"
-        src="https://files.cnblogs.com/files/liuzhou1/L2Dwidget.0.min.js"></script>
-<script type="text/javascript" charset="utf-8" src="https://files.cnblogs.com/files/liuzhou1/L2Dwidget.min.js"></script>
-<script type="text/javascript">
-  L2Dwidget.init({
-    'display': {
-      'superSample': 2,
-      'width': 200,
-      'height': 400,
-      'position': 'right',
-      'hOffset': 0,
-      'vOffset': 0
-    }
-  })
-</script>
 <script>
-  import { validUsername } from '@/utils/validate'
+  import { getPublicKey } from '@/api/user'
+  import {JSEncrypt} from 'jsencrypt'
 
   export default {
     name: 'Login',
@@ -133,39 +124,36 @@
           captcha: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
         },
         loading: false,
-        passwordType: 'password',
         redirect: undefined,
-        src: 'captcha.jpg'
+        src: 'captcha.jpg',
+        rsaKey: ''
       }
     },
-    watch: {
-      $route: {
-        handler: function(route) {
-          this.redirect = route.query && route.query.redirect
-        },
-        immediate: true
-      }
+    // watch: {
+    //   $route: {
+    //     handler: function(route) {
+    //       this.redirect = route.query && route.query.redirect
+    //     },
+    //     immediate: true
+    //   }
+    // },
+    created(){
+      this.getRsaKey()
     },
     methods: {
-      showPwd() {
-        if (this.passwordType === 'password') {
-          this.passwordType = ''
-        } else {
-          this.passwordType = 'password'
-        }
-        this.$nextTick(() => {
-          this.$refs.password.focus()
-        })
-      },
       handleLogin() {
         this.$refs.loginForm.validate(valid => {
-          if (!valid) {
-            return false
-          } else {
+          if (valid) {
             this.loading = true
-            this.$store.dispatch('user/Login', this.loginForm).then((data) => {
+            localStorage.setItem("activeIndex",'')
+            let jsonData=Object.assign({},this.loginForm);
+            //加密
+            jsonData.password= this.passwordEncryption(
+              jsonData.password + ',' + new Date().getTime()
+            )
+            this.$store.dispatch('user/Login', jsonData).then((data) => {
 
-              this.$router.push({ path: this.redirect || '/' })
+              this.$router.push({ path: '/' })
               this.loading = false
             }).catch(() => {
               this.loading = false
@@ -175,59 +163,77 @@
       },
       refreshCode() {
         this.src = 'captcha.jpg?t=' + new Date().getTime()
-      }
+      },
+      // 获取公钥的方法
+      getRsaKey() {
+        getPublicKey().then(data => {
+          if (data.code == '20000') {
+            this.rsaKey = data.data
+          } else {
+            console.log('获取公钥失败')
+          }
+        })
+      },
+      //密码加密方法
+      passwordEncryption(passwordUser) {
+        let publicKey = this.rsaKey // 从后台获取公钥
+        let encryptor = new JSEncrypt() // 新建JSEncrypt对象
+        encryptor.setPublicKey(publicKey) // 设置公钥
+        let passwordEncryp = encryptor.encrypt(passwordUser) // 对密码进行加密
+        return passwordEncryp
+      },
     }
   }
 </script>
 
-<style lang="scss">
-  #live2dcanvas {
-    border: 0 !important;
+<style scoped>
+  .login-wrap {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-image: url(../../assets/img/outer_bg-f009f9.jpg);
+    background-size: cover;
   }
 
-  /* 修复input 背景不协调 和光标变色 */
-  /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
-
-  $bg: #283443;
-  $light_gray: #fff;
-  $cursor: #fff;
-
-  @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
-    .login-container .el-input input {
-      color: $cursor;
-    }
+  .ms-title {
+    width: 100%;
+    line-height: 50px;
+    text-align: center;
+    font-size: 20px;
+    /*color: #409EFF;*/
+    color: #fff;
+    border-bottom: 1px solid #ddd;
   }
 
-  /* reset element-ui css */
-  .login-container {
-    .el-input {
-      display: inline-block;
-      height: 47px;
-      width: 85%;
+  .ms-login {
+    position: absolute;
+    left: 50%;
+    top: 40%;
+    width: 350px;
+    margin: -190px 0 0 -175px;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+  }
 
-      input {
-        background: transparent;
-        border: 0px;
-        -webkit-appearance: none;
-        border-radius: 0px;
-        padding: 12px 5px 12px 15px;
-        color: $light_gray;
-        height: 47px;
-        caret-color: $cursor;
+  .ms-content {
+    padding: 30px 30px;
+  }
 
-        &:-webkit-autofill {
-          box-shadow: 0 0 0px 1000px $bg inset !important;
-          -webkit-text-fill-color: $cursor !important;
-        }
-      }
-    }
+  .login-btn {
+    text-align: center;
+  }
 
-    .el-form-item {
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(0, 0, 0, 0.1);
-      border-radius: 5px;
-      color: #454545;
-    }
+  .login-btn button {
+    width: 100%;
+    height: 36px;
+    margin-bottom: 10px;
+  }
+
+  .login-tips {
+    font-size: 12px;
+    line-height: 30px;
+    color: #fff;
   }
 </style>
 
@@ -291,6 +297,38 @@
       color: $dark_gray;
       cursor: pointer;
       user-select: none;
+    }
+
+    .login-wrap {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background-image: url(../../assets/img/login-bg.jpg);
+      background-size: 100%;
+    }
+
+    .ms-login {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 350px;
+      margin: -190px 0 0 -175px;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.3);
+      overflow: hidden;
+    }
+
+    .ms-title {
+      width: 100%;
+      line-height: 50px;
+      text-align: center;
+      font-size: 20px;
+      color: #fff;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .ms-content {
+      padding: 30px 30px;
     }
   }
 </style>

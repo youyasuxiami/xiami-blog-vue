@@ -12,23 +12,27 @@
         </el-form-item>
 
         <el-form-item label="角色">
-          <el-select v-model="searchForm.roleId" placeholder="请选择" clearable>
-            <el-option :label="item.value" :value="item.code" v-for="item in roleList"
-                       :key="item.index"></el-option>
+          <el-select v-model="value1" multiple placeholder="请选择" style="width: 360px;">
+            <el-option
+              v-for="item in roleList"
+              :key="item.id"
+              :label="item.roleName"
+              :value="item.id">
+            </el-option>
           </el-select>
         </el-form-item>
 
         <el-form-item label="性别">
           <el-select v-model="searchForm.sex" placeholder="请选择" clearable>
             <el-option :label="item.value" :value="item.code" v-for="item in sexList"
-                       :key="item.index"></el-option>
+                       :key="item.index1"></el-option>
           </el-select>
         </el-form-item>
 
         <el-form-item label="账号状态">
           <el-select v-model="searchForm.accountStatus" placeholder="请选择" clearable>
             <el-option :label="item.value" :value="item.code" v-for="item in accountStatusList"
-                       :key="item.index"></el-option>
+                       :key="item.index1"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="创建时间" prop="yearApply">
@@ -60,18 +64,30 @@
 
 
         <el-form-item>
-          <el-button type="primary" icon="el-icon-search" @click="fetchData()" size="mini">
+          <el-button type="primary" icon="el-icon-search" @click="fetchData" size="mini">
             搜索
           </el-button>
         </el-form-item>
       </el-form>
+
+<!--      <el-dialog title="提示" :visible.sync="dialogVisible" width="30%" center append-to-body>-->
+<!--        <p style="margin-bottom: 12px;">请选择回退的范围</p>-->
+<!--        <el-radio-group v-model="exportFlag">-->
+<!--          <el-radio label="1">上一步</el-radio>-->
+<!--          <el-radio label="2">回退全部</el-radio>-->
+<!--        </el-radio-group>-->
+<!--        <span slot="footer" class="dialog-footer">-->
+<!--          <el-button type="primary" @click="audit('rollback',backRadio)">确 定</el-button>-->
+<!--          <el-button @click="dialogVisible = false">取 消</el-button>-->
+<!--        </span>-->
+<!--      </el-dialog>-->
 
       <!--      <el-row>-->
       <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-plus" @click="handleAddEditUser">新增
       </el-button>
 
       <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-download">
-        <a  href="/file/download?fileName=用户表.xlsx">下载模板</a>
+        <a href="/file/download?fileName=用户表.xlsx">下载模板</a>
       </el-button>
 
       <el-upload
@@ -83,7 +99,7 @@
         :http-request="importFile"
 
       >
-<!--        ref="upload"-->
+        <!--        ref="upload"-->
         <!--        action="https://jsonplaceholder.typicode.com/posts/"-->
         <!--        :auto-upload="true"--><!--        默认true，自动提交-->
         <!--        :before-upload="beforeUpload"-->
@@ -94,24 +110,36 @@
 
       </el-upload>
 
-<!--      <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-download">-->
-<!--        <a  :href="'/user/exportUserToExcel?name='+searchForm.name+'&nickName='+searchForm.nickName-->
-<!--        +'&sex='+searchForm.sex+'&accountStatus='+searchForm.accountStatus+'&roleId='+searchForm.roleId+''">导出</a>-->
-<!--      </el-button>-->
-      <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-download" @click="exportExcel">导出
+      <!--      <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-download">-->
+      <!--        <a  :href="'/user/exportUserToExcel?name='+searchForm.name+'&nickName='+searchForm.nickName-->
+      <!--        +'&sex='+searchForm.sex+'&accountStatus='+searchForm.accountStatus+'&roleId='+searchForm.roleId+''">导出</a>-->
+      <!--      </el-button>-->
+      <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-download" @click="exportExcel">导出当页数据
       </el-button>
 
+      <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-download" @click="exportAllExcel">导出全部数据
+      </el-button>
+
+      <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-delete" @click="handleDeleteUsers">批量删除
+      </el-button>
       <!--      </el-row>-->
     </div>
 
     <el-table
+      ref="handSelectTest_multipleTable"
+      @row-click="handleRowClick"
       v-loading="listLoading"
       :data="list"
       element-loading-text="Loading"
       border
       fit
       highlight-current-row
+      @selection-change="handleSelectionChange"
     >
+      <el-table-column
+        type="selection"
+        width="55">
+      </el-table-column>
       <!--    @sort-change="sortChange"-->
       <!--      :default-sort = "{prop: 'name', order: 'createTime'}"-->
       <el-table-column align="center" label="序号" width="95" :index="table_index"
@@ -123,7 +151,7 @@
       <!--      </el-table-column>-->
 
       <!--      <el-table-column label="用户名"  min-width="90px" align="center" sortable :sort-method="sortDevName">-->
-      <el-table-column label="用户名" min-width="90px" align="center" prop="name" sortable="custom">
+      <el-table-column label="用户名" min-width="90px" align="center" prop="name">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top" align="center">
             <span>{{scope.row.name}}</span>
@@ -226,8 +254,6 @@
           <el-button size="mini" type="danger" @click="handleDeleteUser(scope.row)">
             删除
           </el-button>
-
-
         </template>
       </el-table-column>
     </el-table>
@@ -253,15 +279,16 @@
 </template>
 
 <script>
-  import {getList,exportUsers} from '@/api/sys'
-  import {getTypeValue} from '@/utils/dictionary'
+  import { getList, updateUserStatus, deleteUser, addUsers, exportUsers,exportAllUsers ,deleteUsers, getRoles } from '@/api/sys'
+  import { getTypeValue } from '@/utils/dictionary'
   import Pagination from '@/components/Pagination/index' // secondary package based on el-pagination
   import userAddUpdateView from '@/views/sys/user/user-add-update-view'
-  import {updateUserStatus, deleteUser,addUsers} from '@/api/sys'
 
   export default {
+    name:'userList',
     data() {
       return {
+        value1: [],
         list: null,
         listLoading: true,
         pageNum: 1,
@@ -272,10 +299,10 @@
         accountStatusList: [],//账号状态数组
         currentPage: 1,
         dialogFormVisible: false,//默认不弹窗
+        multipleSelection: [],//用于存放选中的数据的id
         searchForm: {
           name: '',
           nickName: '',
-          roleId: '',
           sex: '',
           accountStatus: '',
           createTime: []//时间数组
@@ -299,7 +326,7 @@
         }
       }
     },
-    components: {Pagination, userAddUpdateView},
+    components: { Pagination, userAddUpdateView },
     created() {
       // 获取列表数据
       this.fetchData()
@@ -319,6 +346,10 @@
         this.accountStatusList = res.data
       })
 
+      getRoles().then(res => {
+        this.roleList = res.data
+      })
+
     },
     methods: {
       table_index(index) {
@@ -332,11 +363,13 @@
         console.log(`当前页: ${val}`)
       },
       fetchData() {
-
         // 请求参数
         this.searchForm.pageNum = this.pageNum
         this.searchForm.pageSize = this.pageSize
+        this.searchForm.roleIds = this.value1.toString()
+        console.log("11111111")
         let data = this.searchForm
+
 
         // let formData = new FormData()
         // for(let key in data){
@@ -365,7 +398,7 @@
         })
       },
       // 导出
-      exportExcel(){
+      exportExcel() {
 
         // 请求参数
         // this.searchForm.pageNum = this.pageNum
@@ -377,25 +410,60 @@
         exportUsers(datas).then(data => {
           if (data) {
             //调用成功，在html中创建一个a元素
-            let aTag = document.createElement("a");
+            let aTag = document.createElement('a')
             //创建一个blob对象
             let blob = new Blob([data], {
-              type: "application/vnd.ms-excel"
-            }); // 这个content是下载的文件内容，自己修改
-            console.log("blob", blob);
-            aTag.download = `用户表.xlsx`; // 下载的文件名
+              type: 'application/vnd.ms-excel'
+            }) // 这个content是下载的文件内容，自己修改
+            console.log('blob', blob)
+            aTag.download = `用户表.xlsx` // 下载的文件名
             // aTag.style.display = "none";
-            aTag.href = window.URL.createObjectURL(blob); //创建一个URL对象
-            document.body.appendChild(aTag);
-            aTag.click();
-            window.URL.revokeObjectURL(blob); //释放URL对象
-            document.body.removeChild(aTag);
+            aTag.href = window.URL.createObjectURL(blob) //创建一个URL对象
+            document.body.appendChild(aTag)
+            aTag.click()
+            window.URL.revokeObjectURL(blob) //释放URL对象
+            document.body.removeChild(aTag)
           } else {
-            console.log("-----------")
+            console.log('-----------')
           }
         })
-          // .then(response => {//这是json字符串请求
-          // console.log(response)
+        // .then(response => {//这是json字符串请求
+        // console.log(response)
+        // })
+        // window.location.href = "/user/exportUserToExcel"
+      },
+      // 导出全部数据
+      exportAllExcel() {
+
+        // 请求参数
+        // this.searchForm.pageNum = this.pageNum
+        // this.searchForm.pageSize = this.pageSize
+        let datas = this.searchForm
+
+        // this.listLoading = true
+        // getList(formData).then(response => {//这是formData表单请求
+        exportAllUsers(datas).then(data => {
+          if (data) {
+            //调用成功，在html中创建一个a元素
+            let aTag = document.createElement('a')
+            //创建一个blob对象
+            let blob = new Blob([data], {
+              type: 'application/vnd.ms-excel'
+            }) // 这个content是下载的文件内容，自己修改
+            console.log('blob', blob)
+            aTag.download = `用户表.xlsx` // 下载的文件名
+            // aTag.style.display = "none";
+            aTag.href = window.URL.createObjectURL(blob) //创建一个URL对象
+            document.body.appendChild(aTag)
+            aTag.click()
+            window.URL.revokeObjectURL(blob) //释放URL对象
+            document.body.removeChild(aTag)
+          } else {
+            console.log('-----------')
+          }
+        })
+        // .then(response => {//这是json字符串请求
+        // console.log(response)
         // })
         // window.location.href = "/user/exportUserToExcel"
       },
@@ -438,17 +506,16 @@
 
       //删除用户
       handleDeleteUser(row) {
-
         let params = {
           id: row.id
         }
         this.$confirm(
-          `确定提交操作?`,
-          "提示",
+          `确定删除该用户?`,
+          '提示',
           {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning"
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
           }
         )
           .then(() => {
@@ -476,27 +543,27 @@
 
       beforeUpload(file) {
         //判断文件格式
-        let hz = file.name.split(".")[1];
-        if (hz != "xlsx" && hz != "xls") {
-          this.$alert("只能上传EXCEL文件！");
-          return false;
+        let hz = file.name.split('.')[1]
+        if (hz != 'xlsx' && hz != 'xls') {
+          this.$alert('只能上传EXCEL文件！')
+          return false
         }
       },
       uploadSuccess(response) {
         if (response.respCode == 0) {
           this.$message({
-            type: "success",
-            message: "添加成功!"
-          });
-          this.$store.dispatch("teacher/getTeacherList", this.infoQ);
+            type: 'success',
+            message: '添加成功!'
+          })
+          this.$store.dispatch('teacher/getTeacherList', this.infoQ)
         } else {
-          this.$alert("添加失败!" + response.message);
+          this.$alert('添加失败!' + response.message)
         }
       },
       // 导入
       importFile(param) {
-          let uploadData = new FormData();
-          uploadData.append("file", param.file)
+        let uploadData = new FormData()
+        uploadData.append('file', param.file)
         addUsers(uploadData).then((data) => {
           if (data.code == '20000') {
             this.$notify({
@@ -516,14 +583,6 @@
             })
           }
         })
-
-
-
-
-
-
-
-
 
         // this.$http({
         //     url: "/user/importExcel",
@@ -551,14 +610,44 @@
         //     }
         //   })
 
+      },
+      //获得选中的行的id
+      handleSelectionChange(val) {
+        this.multipleSelection = []
+        for (let i = 0; i < val.length; i++) {
+          this.multipleSelection.push(val[i].id)
+        }
+      },
+      handleDeleteUsers() {
+        deleteUsers({ ids: (this.multipleSelection) + '' }).then(data => {
+          if (data.code == '20000') {
+            this.$notify({
+              title: '成功',
+              message: data.message,
+              type: 'success',
+              duration: 2000
+            })
+            this.fetchData()
 
-
+          } else {
+            this.$notify({
+              title: '失败',
+              message: data.message,
+              type: 'error',
+              duration: 2000
+            })
+          }
+        })
+      },
+      //点击表格一行数据触发
+      handleRowClick(row, column, event) {
+        this.$refs.handSelectTest_multipleTable.toggleRowSelection(row)
       }
     },
-    watch:{
-      total(){
-        if(this.total==(this.pageNum-1)*this.pageSize&& this.total!=0){
-          this.pageNum-=1;
+    watch: {
+      total() {
+        if (this.total == (this.pageNum - 1) * this.pageSize && this.total != 0) {
+          this.pageNum -= 1
           this.fetchData()//获取列表数据
         }
       }

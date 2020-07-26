@@ -1,6 +1,7 @@
 const state = {
   visitedViews: [],
-  cachedViews: []
+  cachedViews: [],
+  uncachedView: []
 }
 
 const mutations = {
@@ -18,6 +19,9 @@ const mutations = {
       state.cachedViews.push(view.name)
     }
   },
+  ADD_UN_CACHED_VIEW: (state, view) => {
+    state.uncachedView.push(view.name)
+  },
 
   DEL_VISITED_VIEW: (state, view) => {
     for (const [i, v] of state.visitedViews.entries()) {
@@ -31,39 +35,48 @@ const mutations = {
     const index = state.cachedViews.indexOf(view.name)
     index > -1 && state.cachedViews.splice(index, 1)
   },
-
-  DEL_OTHERS_VISITED_VIEWS: (state, view) => {
-    state.visitedViews = state.visitedViews.filter(v => {
-      return v.meta.affix || v.path === view.path
-    })
+  DEL_UN_CACHED_VIEW: (state, view) => {
+    const index = state.uncachedView.indexOf(view.name)
+    index > -1 && state.uncachedView.splice(index, 1)
   },
-  DEL_OTHERS_CACHED_VIEWS: (state, view) => {
-    const index = state.cachedViews.indexOf(view.name)
-    if (index > -1) {
-      state.cachedViews = state.cachedViews.slice(index, index + 1)
-    } else {
-      // if index = -1, there is no cached tags
+
+  DEL_OTHERS_VISITED_VIEWS:
+    (state, view) => {
+      state.visitedViews = state.visitedViews.filter(v => {
+        return v.meta.affix || v.path === view.path
+      })
+    },
+  DEL_OTHERS_CACHED_VIEWS:
+    (state, view) => {
+      const index = state.cachedViews.indexOf(view.name)
+      if (index > -1) {
+        state.cachedViews = state.cachedViews.slice(index, index + 1)
+      } else {
+        // if index = -1, there is no cached tabs
+        state.cachedViews = []
+      }
+    },
+
+  DEL_ALL_VISITED_VIEWS:
+    state => {
+      // keep affix tabs
+      const affixTags = state.visitedViews.filter(tag => tag.meta.affix)
+      state.visitedViews = affixTags
+    },
+  DEL_ALL_CACHED_VIEWS:
+    state => {
       state.cachedViews = []
-    }
-  },
+    },
 
-  DEL_ALL_VISITED_VIEWS: state => {
-    // keep affix tags
-    const affixTags = state.visitedViews.filter(tag => tag.meta.affix)
-    state.visitedViews = affixTags
-  },
-  DEL_ALL_CACHED_VIEWS: state => {
-    state.cachedViews = []
-  },
-
-  UPDATE_VISITED_VIEW: (state, view) => {
-    for (let v of state.visitedViews) {
-      if (v.path === view.path) {
-        v = Object.assign(v, view)
-        break
+  UPDATE_VISITED_VIEW:
+    (state, view) => {
+      for (let v of state.visitedViews) {
+        if (v.path === view.path) {
+          v = Object.assign(v, view)
+          break
+        }
       }
     }
-  }
 }
 
 const actions = {
@@ -76,6 +89,9 @@ const actions = {
   },
   addCachedView({ commit }, view) {
     commit('ADD_CACHED_VIEW', view)
+  },
+  addUnCacheView({ commit }, view) {
+    commit('ADD_UN_CACHED_VIEW', view)
   },
 
   delView({ dispatch, state }, view) {
@@ -98,6 +114,12 @@ const actions = {
     return new Promise(resolve => {
       commit('DEL_CACHED_VIEW', view)
       resolve([...state.cachedViews])
+    })
+  },
+  delUnCachedView({ commit, state }, view) {
+    return new Promise(resolve => {
+      commit('DEL_UN_CACHED_VIEW', view)
+      resolve([...state.uncachedView])
     })
   },
 
@@ -149,6 +171,18 @@ const actions = {
 
   updateVisitedView({ commit }, view) {
     commit('UPDATE_VISITED_VIEW', view)
+  },
+  // 添加不缓存页面名单
+  addUnCacheViews({ commit }, view) {
+    commit('ADD_UNCACHE_VIEWS', view)
+  },
+  DEL_ALL_VISITED_VIEWS: state => {
+    // keep affix tabs
+    const affixTags = state.visitedViews.filter(tag => tag.meta.affix)
+    state.visitedViews = affixTags
+  },
+  DEL_ALL_CACHED_VIEWS: state => {
+    state.cachedViews = []
   }
 }
 

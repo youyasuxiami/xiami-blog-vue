@@ -9,75 +9,12 @@
         label-width="120px"
         :rules="rule"
       >
-        <!--        <el-row :gutter="10">-->
-        <el-row class="demo-avatar demo-basic">
-          <el-col :span="12">
-            <el-form-item label="头像" prop="status">
-              <pan-thumb :image="temp.avatar" @click.native="toggleShow"/>
-              <image-cropper
-                v-model="show"
-                field="multipartFile"
-                :size="50"
-                :url="url"
-                :headers="headers"
-                img-format="png"
-                @crop-success="cropSuccess"
-                @crop-upload-success="cropUploadSuccess"
-                @crop-upload-fail="cropUploadFail"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
         <el-row>
-          <el-col :span="12">
-            <el-form-item label="用户名" prop="name">
-              <el-input v-model="temp.name" :disabled="viewDisabled"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="昵称" prop="nickName">
-              <el-input v-model="temp.nickName" :disabled="viewDisabled"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="性别" prop="sex">
-              <el-radio-group v-model="temp.sex" :disabled="viewDisabled">
-                <el-radio label="0">男</el-radio>
-                <el-radio label="1">女</el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="12">
-            <el-form-item label="年龄" prop="age">
-              <el-input-number v-model="temp.age" clearable type="number"
-                               :min="1" :disabled="viewDisabled"></el-input-number>
-            </el-form-item>
-          </el-col>
-
-        </el-row>
-
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="联系方式" prop="phone">
-              <el-input v-model="temp.phone" :disabled="viewDisabled"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="电子邮箱" prop="email">
-              <el-input v-model="temp.email" :disabled="viewDisabled"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="账号状态" prop="status">
-              <el-select v-model="temp.status" placeholder="请选择" clearable class="m-max-width" :disabled="viewDisabled">
-                <el-option :label="item.value" :value="item.code" v-for="item in accountStatusList"
-                           :key="item.index"></el-option>
+          <el-col :span="24">
+            <el-form-item label="菜单类型" prop="type">
+              <el-select v-model="temp.type" placeholder="请选择" clearable class="m-max-width" :disabled="viewDisabled||checkDisabled">
+                <el-option :label="item.value" :value="item.code" v-for="item in menuTypeList"
+                           :key="item.index1"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -85,9 +22,53 @@
 
         <el-row>
           <el-col :span="24">
-            <el-form-item label="备注" prop="ps">
-              <el-input v-model="temp.ps" placeholder="请输入备注" clearable type="textarea"
-                        resize="none" :disabled="viewDisabled"></el-input>
+            <el-form-item label="父级菜单" prop="id" v-if="temp.type !=='0'&&temp.type !== '一级菜单'">
+<!--              viewDisabled:true代表不可编辑-->
+              <el-input
+                v-model="temp.fatherMenuName"
+                clearable
+                :disabled="viewDisabled||checkDisabled"
+                @focus="showTree"
+              ></el-input>
+              <el-tree
+                style="border: 1px solid #ccc;z-index:10000;"
+                :data="menuData"
+                node-key="id"
+                :default-expanded-keys="[2, 3]"
+                :default-checked-keys="[5]"
+                :props="defaultProps"
+                @node-click="handleNodeClick"
+                v-bind:style="{display: isShowTree?'block':'none'}"
+              >
+              </el-tree>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="菜单名称" prop="name">
+              <el-input v-model="temp.name" :disabled="viewDisabled"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="菜单路径" prop="url">
+              <el-input v-model="temp.url" :disabled="viewDisabled"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="权限" prop="perms" v-if="temp.type !== '0'&&temp.type !== '1'&&temp.type !== '2'&&temp.type !== '一级菜单'&&temp.type !== '二级菜单'&&temp.type !== '三级菜单'">
+              <el-input v-model="temp.perms" :disabled="viewDisabled"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="排序号" prop="orderNum">
+              <el-input v-model="temp.orderNum" :disabled="viewDisabled"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -113,15 +94,13 @@
         </div>
       </div>
       <!--      底部按钮 end-->
+      <div class="cover" v-if="isShowCover" @click="closeAllCover"></div>
     </el-dialog>
   </div>
 </template>
 <script>
-  import { addUser } from '@/api/sys'
+  import { addMenu, getMenuList } from '@/api/sys'
   import { getTypeValue } from '@/utils/dictionary'
-  import ImageCropper from 'vue-image-crop-upload'
-  import PanThumb from '@/components/PanThumb'
-  import { modifyIcon } from '@/api/profile'
 
   export default {
     data() {
@@ -129,29 +108,37 @@
         visible: true,
         dialogStatus: '',
         addUpdateVisible: true,
-        accountStatusList: [],//账号状态数组
+        menuTypeList: [],//菜单类型数组
         viewDisabled: false,//false：表示可以编辑
-        show: false,//默认不显示头像修改框
-        url: process.env.VUE_APP_BASE_API + '/upload',
+        checkDisabled: false,//false：表示可以菜单类型/父级菜单编辑,在详情和编辑页面要设置为true,表示不可编辑
+        // show: false,//默认不显示头像修改框
+        // url: process.env.VUE_APP_BASE_API + '/upload',
         // params: {
         //   access_token: getToken()
         // },
         headers: {
           smail: '*_~'
         },
+        isShowTree: false,
+        isShowCover: false,
+        menuData: [],//全部菜单
+        listLoading: false,
+        defaultProps: {
+          children: 'children',
+          label: 'name'
+        },
         // searchForm: {
         //   name: 'zhengjin'
         // },
         temp: {
+          type: '',
+          id: '',
           name: '',
-          nickName: '',
-          sex: '0',
-          age: '',
-          phone: '',
-          email: '',
-          ps: '',
-          status: '',
-          avatar: ''
+          url: '',
+          perms: '',
+          orderNum: '',
+          fatherMenuName: '',
+          parentId: ''
         },
         textMap: {
           add: '申请',
@@ -159,73 +146,82 @@
           view: '查看'
         },
         rule: {
+          type: [
+            { required: true, message: '类型不能为空', trigger: 'blur' }
+          ],
+          // id: [
+          //   { required: true, message: '父级菜单不能为空', trigger: 'blur' }
+          // ],
           name: [
-            { required: true, message: '用户名不能为空', trigger: 'blur' }
+            { required: true, message: '菜单名称不能为空', trigger: 'blur' }
           ],
-          nickName: [
-            { required: true, message: '昵称不能为空', trigger: 'blur' }
+          url: [
+            { required: true, message: '菜单路径不能为空', trigger: 'blur' }
           ],
-          sex: [
-            { required: true, message: '性别不能为空', trigger: 'blur' }
-          ],
-          age: [
-            { required: true, message: '年龄不能为空', trigger: 'blur' }
-          ],
-          phone: [
-            { required: true, message: '联系方式不能为空', trigger: 'blur' }
-          ],
-          email: [
-            { required: true, message: '电子邮箱不能为空', trigger: 'blur' }
-          ],
-          status: [
-            { required: true, message: '账号状态不能为空', trigger: 'blur' }
+          // perms: [
+          //   { required: true, message: '权限不能为空', trigger: 'blur' }
+          // ],
+          orderNum: [
+            { required: true, message: '排序号不能为空', trigger: 'blur' }
           ]
         }
       }
     },
-    components: { ImageCropper, PanThumb },
     methods: {
       init(row, param) {
         this.viewDisabled = false //可以编辑
+        this.checkDisabled = false //可以编辑
         this.visible = true
+        this.menuData = []
+        this.getMenuData()  //获得所有菜单
+
         // this.dialogStatus = param
         if (param) {//如果是新增传过来，那么param为undefined,将会走else
           console.log('编辑/查看')
           this.dialogStatus = param
           this.temp = Object.assign({}, row) // copy obj
-          switch (this.temp.sex) {
-            case '男':
-              this.temp.sex = '0'
+          switch (this.temp.type) {
+            case 0:
+              this.temp.type = '一级菜单'
               break
-            case '女':
-              this.temp.sex = '1'
+            case 1:
+              this.temp.type = '二级菜单'
+              break
+            case 2:
+              this.temp.type = '三级菜单'
+              break
+            case 3:
+              this.temp.type = '按钮'
               break
           }
 
           switch (param) {
             case 'edit':
               console.log('edit')
+              this.checkDisabled = true //不可编辑
               break
 
             case 'view':
               console.log('view')
               this.viewDisabled = true //不可编辑
+              this.checkDisabled = true //不可编辑
               break
           }
         } else {
           console.log('add')
           this.dialogStatus = 'add'
           this.$refs.dataForm.resetFields()//对该表单项进行重置，将其值重置为初始值并移除校验结果
-          this.temp.avatar="http://youyasumi-oss.oss-cn-beijing.aliyuncs.com/76e11fce-e7fd-4985-84ec-2332b9dfef84.png"
-          // this.$refs.dataForm.clearValidate()//清除校验结果
+          console.log(this.temp.type)
+          this.temp.fatherMenuName = ''
         }
       },
+      // 申请提交
       addData() {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             // this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
             // this.temp.author = 'vue-element-admin'
-            addUser(this.temp).then(data => {
+            addMenu(this.temp).then(data => {
               if (data.code == '20000') {
                 this.$notify({
                   title: '成功',
@@ -253,12 +249,14 @@
       updateData: function() {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
-            for (var i in this.accountStatusList) {
-              if (this.accountStatusList[i].value === this.temp.status) {
-                this.temp.status = this.accountStatusList[i].code
+
+
+            for (var i in this.menuTypeList) {
+              if (this.menuTypeList[i].value === this.temp.type) {
+                this.temp.type = this.menuTypeList[i].code
               }
             }
-            addUser(this.temp).then((data) => {
+            addMenu(this.temp).then((data) => {
 
               // // 更新头像
               // modifyIcon({
@@ -305,43 +303,51 @@
       toggleShow() {
         this.show = !this.show
       },
-      /**
-       *
-       * @param image
-       * @param field
-       */
-      cropSuccess(image, field) {
-        console.log('-------- crop success --------')
-        this.temp.avatar = image
+      showTree() {
+        this.isShowTree = !this.isShowTree
+        this.isShowCover = !this.isShowCover
       },
-      /**
-       * 上传成功
-       * @param jsonData 服务器返回数据，已进行 JSON 转码
-       * @param field
-       */
-      cropUploadSuccess(jsonData, field) {
-        console.log('-------- upload success --------')
-        console.log(jsonData)
-        console.log('path: ', jsonData.data.path)
-        console.log('field: ' + field)
-        this.temp.avatar = jsonData.data.path
+      // 获得菜单
+      getMenuData() {
+        // 请求参数
+        // this.searchForm.pageNum = this.pageNum
+        // this.searchForm.pageSize = this.pageSize
+        // let data = this.searchForm
+
+        this.listLoading = true
+        getMenuList({}).then(data => {//这是json字符串请求
+          if (data) {
+            // console.log('菜单',JSON.parse(data.data))
+            // let record = JSON.parse(data.data)
+            this.menuData = data.data.data
+
+            // if(this.editVisible || this.detailVisible){
+            //   this.getMenuId()
+            // }
+          } else {
+            this.$message.error(`加载权限失败!`)
+          }
+
+          // this.list = response.data.data
+          // this.total = response.data.total
+          this.listLoading = false
+        })
       },
-      /**
-       * 上传失败
-       * @param status 服务器返回的失败状态码
-       * @param field
-       */
-      cropUploadFail(status, field) {
-        console.log('-------- upload fail --------')
-        console.log(status)
-        console.log('field: ' + field)
+      // 关闭
+      closeAllCover() {
+        this.isShowCover = false
+        this.isShowTree = false
+      },
+      handleNodeClick(data) {
+        this.temp.fatherMenuName = data.name
+        this.temp.parentId = data.id
       }
     },
 
     created() {
-      // // 获取账号状态下拉框
-      getTypeValue('account_status').then(res => {
-        this.accountStatusList = res.data
+      //获取菜单类型下拉框
+      getTypeValue('menu_type').then(res => {
+        this.menuTypeList = res.data
       })
     }
   }
@@ -353,5 +359,16 @@
 
   .m-footer {
     text-align: center;
+  }
+
+  .cover {
+    background-color: #ccc;
+    opacity: 0.08;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    top: 0;
+    left: 0;
   }
 </style>

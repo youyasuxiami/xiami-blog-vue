@@ -5,28 +5,36 @@ import { asyncRoutes, constantRoutes } from '@/router'
  * @param roles
  * @param route
  */
-function hasPermission(roles, route) {
-  if (route.meta && route.meta.roles) {
-    return roles.some(role => route.meta.roles.includes(role))
+function hasPermission(urls, route) {
+  // console.log('**********')
+  // if (route.meta && route.meta.roles) {
+  //   return roles.some(role => route.meta.urls.includes(role))
+  // } else {
+  //   return false
+  // }
+  if (urls) {
+    return urls.includes(route.path)
+    // return urls.some(ulr => route.url==ulr)
   } else {
-    return true
+    return false
   }
 }
 
 /**
- * Filter asynchronous routing tables by recursion
+ * 根据角色筛选菜单
  * @param routes asyncRoutes
  * @param roles
  */
-export function filterAsyncRoutes(routes, roles) {
+export function filterAsyncRoutes(routes, urls) {
   const res = []
-
+// routes代表所有的菜单
   routes.forEach(route => {
     const tmp = { ...route }
-    if (hasPermission(roles, tmp)) {
+    if (hasPermission(urls, tmp)) {
       if (tmp.children) {
-        tmp.children = filterAsyncRoutes(tmp.children, roles)
+        tmp.children = filterAsyncRoutes(tmp.children, urls)
       }
+      //把符合角色的菜单过滤出来
       res.push(tmp)
     }
   })
@@ -46,15 +54,21 @@ const mutations = {
   }
 }
 
+/**
+ * 获取要显示的菜单
+ * @type {{generateRoutes({commit: *}, *=): *}}
+ */
 const actions = {
-  generateRoutes({ commit }, roles) {
+  generateRoutes({ commit }, urls) {
     return new Promise(resolve => {
       let accessedRoutes
-      if (roles.includes('admin')) {
-        accessedRoutes = asyncRoutes || []
-      } else {
-        accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
-      }
+      // if (roles.includes('admin')) {
+      //   accessedRoutes = asyncRoutes || []
+      // } else {
+      //   //获取符合角色的菜单（要显示出来的菜单）：参数：所有菜单、该登录用户拥有的角色
+      //   accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
+      // }
+      accessedRoutes = filterAsyncRoutes(asyncRoutes, urls)
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)
     })

@@ -15,12 +15,7 @@
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
       row-key="id"
     >
-<!--      <el-table-column align="center" label="序号" width="50" :index="table_index"-->
-<!--                       type="index" sortable="true">-->
-<!--      </el-table-column>-->
-      <el-table-column type="selection" width="55" align="center"></el-table-column>
-
-      <el-table-column label="菜单名称" min-width="150px" align="center" prop="name" sortable="custom">
+      <el-table-column label="菜单名称" min-width="150px" align="center" prop="name" >
       </el-table-column>
 
       <el-table-column label="菜单ID" align="center" >
@@ -34,7 +29,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="菜单路径" align="center">
+      <el-table-column label="菜单路径" align="center" min-width="200px">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
             <span>{{scope.row.url}}</span>
@@ -45,11 +40,12 @@
         </template>
       </el-table-column>
 
-      <el-table-column class-name="status-col" label="类型" width="90px" align="center">
+      <el-table-column class-name="status-col" label="菜单类型" width="100px" align="center">
         <template slot-scope="scope">
-            <el-tag v-if="scope.row.type == '0'" type=""effect="dark">目录</el-tag>
-            <el-tag v-if="scope.row.type == '1'" type="success"effect="dark">菜单</el-tag>
-            <el-tag v-if="scope.row.type == '2'" type="warning"effect="dark">按钮</el-tag>
+            <el-tag v-if="scope.row.type == '0'" type=""effect="dark">一级菜单</el-tag>
+            <el-tag v-if="scope.row.type == '1'" type="success"effect="dark">二级菜单</el-tag>
+            <el-tag v-if="scope.row.type == '2'" type="warning"effect="dark">三级菜单</el-tag>
+            <el-tag v-if="scope.row.type == '3'" type="warning"effect="dark">按钮</el-tag>
         </template>
       </el-table-column>
 
@@ -61,7 +57,7 @@
         <template slot-scope="scope">{{ scope.row.perms }}</template>
       </el-table-column>
 
-      <el-table-column class-name="status-col" label="排序号" align="center" width="160" sortable prop="createTime">
+      <el-table-column class-name="status-col" label="排序号" align="center" width="160"  prop="createTime">
         <template slot-scope="scope">{{ scope.row.orderNum }}</template>
       </el-table-column>
 
@@ -88,18 +84,19 @@
     <pagination v-show="total>0" :total="total" :page.sync="pageNum" :limit.sync="pageSize" @pagination="fetchData"
                 ref="handleSizeChange"/>
     <!--    引入组件-->
-    <user-add-update-view v-if="dialogFormVisible" ref="userAddUpdateView"
-                          @refreshDataList="fetchData"></user-add-update-view>
+    <menu-add-update-view v-if="dialogFormVisible" ref="userAddUpdateView"
+                          @refreshDataList="fetchData"></menu-add-update-view>
   </div>
 </template>
 
 <script>
-  import { getMenuList } from '@/api/sys'
+  import { getMenuList,deleteMenu } from '@/api/sys'
   import Pagination from '@/components/Pagination/index' // secondary package based on el-pagination
-  import userAddUpdateView from '@/views/sys/menu/menu-add-update-view'
+  import menuAddUpdateView from '@/views/sys/menu/menu-add-update-view'
   // import {updateUserStatus, deleteUser,addUsers} from '@/api/sys'
 
   export default {
+    name:'menuList',
     data() {
       return {
         list: [],
@@ -131,7 +128,7 @@
         }
       }
     },
-    components: { Pagination, userAddUpdateView },
+    components: { Pagination, menuAddUpdateView },
     created() {
       // 获取列表数据
       this.fetchData()
@@ -159,6 +156,11 @@
           console.log("response")
           console.log(response)
           this.list = response.data.data
+          localStorage.setItem("accessRoutes", JSON.stringify(this.list));
+          console.log("获得所有的菜单")
+          console.log(this.list)
+          let accessRoutes=JSON.parse(localStorage.getItem("accessRoutes"))
+          console.log(accessRoutes)
           this.total = response.data.total
           this.listLoading = false
         })
@@ -224,7 +226,7 @@
           }
         )
           .then(() => {
-            deleteUser(params).then((data) => {
+            deleteMenu(params).then((data) => {
               if (data.code == '20000') {
                 this.$notify({
                   title: '成功',
@@ -239,7 +241,7 @@
                   title: '失败',
                   message: data.message,
                   type: 'error',
-                  duration: 2000
+                  duration: 4000
                 })
               }
             })

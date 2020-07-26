@@ -50,7 +50,7 @@
                        type="index" sortable="true">
       </el-table-column>
 
-      <el-table-column label="角色名称" min-width="90px" align="center" prop="name" sortable="custom">
+      <el-table-column label="角色名称" min-width="90px" align="center" prop="name">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top" align="center">
             <span>{{scope.row.roleName}}</span>
@@ -92,7 +92,7 @@
             详情
           </el-button>
           &nbsp;
-          <el-button size="mini" type="danger" @click="handleDeleteUser(scope.row)">
+          <el-button size="mini" type="danger" @click="handleDeleteRole(scope.row)">
             删除
           </el-button>
         </template>
@@ -107,13 +107,14 @@
 </template>
 
 <script>
-  import {getRoleList} from '@/api/sys'
+  import {getRoleList,deleteRole} from '@/api/sys'
   import {getTypeValue} from '@/utils/dictionary'
   import Pagination from '@/components/Pagination/index' // secondary package based on el-pagination
   import roleAddUpdateView from '@/views/sys/role/role-add-update-view'
   import {updateUserStatus, deleteUser,addUsers} from '@/api/sys'
 
   export default {
+    name:'roleList',
     data() {
       return {
         list: null,
@@ -159,7 +160,6 @@
         console.log(`当前页: ${val}`)
       },
       fetchData() {
-
         // 请求参数
         this.searchForm.pageNum = this.pageNum
         this.searchForm.pageSize = this.pageSize
@@ -264,13 +264,13 @@
       },
 
       //删除用户
-      handleDeleteUser(row) {
+      handleDeleteRole(row) {
 
         let params = {
           id: row.id
         }
         this.$confirm(
-          `确定提交操作?`,
+          `确定删除该角色?`,
           "提示",
           {
             confirmButtonText: "确定",
@@ -279,7 +279,7 @@
           }
         )
           .then(() => {
-            deleteUser(params).then((data) => {
+            deleteRole(params).then((data) => {
               if (data.code == '20000') {
                 this.$notify({
                   title: '成功',

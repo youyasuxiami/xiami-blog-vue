@@ -17,7 +17,7 @@
           class="el-icon-close"></i></span>
       </router-link>
     </scroll-pane>
-    <div style="position: absolute;right: 0px;">
+    <div style="position: absolute;right: 5px;">
       <el-dropdown @command="handleCommand">
         <el-button type="primary" size="small">
           标签选项<i class="el-icon-arrow-down el-icon--right"></i>
@@ -38,14 +38,17 @@
   import path from 'path'
 
   export default {
+    inject: ['reload'],
+
     components: { ScrollPane },
     data() {
       return {
-        visible: false,
+        visible: true,
         top: 0,
         left: 0,
         selectedTag: {},
-        affixTags: []
+        affixTags: [],
+        isRouterAlive: true
       }
     },
     computed: {
@@ -74,6 +77,10 @@
       this.addTags()
     },
     methods: {
+      refresh(){
+        // 调用Home.vue的reload函数，通过切换router-view的v-if达到重新加载效果
+        this.reload();
+      },
       isActive(route) {
         return route.path === this.$route.path
       },
@@ -113,7 +120,9 @@
       addTags() {
         const { name } = this.$route
         if (name) {
-          this.$store.dispatch('tagsView/addView', this.$route)
+          this.$store.dispatch('tagsView/delUnCachedView', this.$route)
+            this.$store.dispatch('tagsView/addView', this.$route)
+          this.selectedTag=this.$route
         }
         return false
       },
@@ -132,35 +141,30 @@
           }
         })
       },
-      refreshSelectedTag(view) {
-        // console.log("11111111")
-        // this.$store.dispatch('tagsView/delCachedView', this.$route).then(() => {
-        //   const { fullPath } = this.$route
-        //   this.$nextTick(() => {
-        //     this.$router.replace({
-        //       path: '/redirect' + fullPath
-        //     })
-        //   })
-        // })
-        location.reload()
+      refreshSelectedTag() {
+        this.$store.dispatch('tagsView/delCachedView', this.$route).then(() => {
+          const { fullPath } = this.$route
+          this.reload()
+          this.$nextTick(() => {
+            this.$router.replace({
+              redirect: fullPath
+            })
+          })
+        })
       },
       // 关闭当前标签
       closeSelectedTag(view) {
-        // this.$store.dispatch('tagsView/delView', view).then(({ visitedViews }) => {
-        //   if (this.isActive(view)) {
-        //     this.toLastView(visitedViews, view)
-        //   }
-        // })
-        // 调用全局挂载的方法
-        this.$store.dispatch('tagsView/delView', this.$route)
-        // 返回上一步路由
-        this.$router.go(-1)
+        this.$store.dispatch('tagsView/addUnCacheView', this.$route)
+
+        this.$store.dispatch('tagsView/delView', view).then(({ visitedViews }) => {
+          if (this.isActive(view)) {
+            this.toLastView(visitedViews, view)
+          }
+        })
       },
       // 关闭其他标签
       closeOthersTags() {
-        this.$router.push(this.selectedTag)
-        this.$store.dispatch('tagsView/delOthersViews', this.$route).then(() => {
-        // this.$store.dispatch('tagsView/delOthersViews', this.selectedTag).then(() => {
+        this.$store.dispatch('tagsView/delOthersViews', this.selectedTag).then(() => {
           this.moveToCurrentTag()
         })
       },
@@ -178,7 +182,7 @@
         if (latestView) {
           this.$router.push(latestView.fullPath)
         } else {
-          // now the default is to redirect to the home page if there is no tags-view,
+          // now the default is to redirect to the home page if there is no tabs-view,
           // you can adjust it according to your needs.
           if (view.name === 'Dashboard') {
             // to reload home page
@@ -188,23 +192,6 @@
           }
         }
       },
-      // openMenu(tag, e) {
-      //   const menuMinWidth = 105
-      //   const offsetLeft = this.$el.getBoundingClientRect().left // container margin left
-      //   const offsetWidth = this.$el.offsetWidth // container width
-      //   const maxLeft = offsetWidth - menuMinWidth // left boundary
-      //   const left = e.clientX - offsetLeft + 15 // 15: margin right
-      //
-      //   if (left > maxLeft) {
-      //     this.left = maxLeft
-      //   } else {
-      //     this.left = left
-      //   }
-      //
-      //   this.top = e.clientY
-      //   this.visible = true
-      //   this.selectedTag = tag
-      // },
       closeMenu() {
         this.visible = false
       },
@@ -213,10 +200,6 @@
       },
       // 选项卡下拉
       handleCommand(command) {
-        // @click="refreshSelectedTag(selectedTag)"刷新
-        // @click="closeSelectedTag(selectedTag)"关闭当前标签
-        // @click="closeOthersTags"关闭其他标签
-        // @click="closeAllTags(selectedTag)"关闭所有标签
         switch (command) {
           case 'refreshSelectedTag':
             this.refreshSelectedTag(this.selectedTag)

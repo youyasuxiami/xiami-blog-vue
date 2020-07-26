@@ -33,3 +33,17 @@ export function modifyIcon(data) {
     data
   })
 }
+
+/**
+ * 修改密码
+ * @param data
+ * @returns {AxiosPromise}
+ */
+export function modifyPassword(params) {
+  return request({
+    url: '/api/profile/modify/password',
+    method: 'post',
+    params
+  })
+}
+
