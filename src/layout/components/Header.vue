@@ -138,7 +138,6 @@
       },
       async logout() {
         await this.$store.dispatch('user/logout')
-        localStorage.setItem("activeIndex",'')
         this.$router.push(`/login?redirect=${this.$route.fullPath}`)
       }
 

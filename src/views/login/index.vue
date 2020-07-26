@@ -145,6 +145,7 @@
         this.$refs.loginForm.validate(valid => {
           if (valid) {
             this.loading = true
+            localStorage.setItem("activeIndex",'')
             let jsonData=Object.assign({},this.loginForm);
             //加密
             jsonData.password= this.passwordEncryption(
