@@ -96,7 +96,7 @@
   // import {updateUserStatus, deleteUser,addUsers} from '@/api/sys'
 
   export default {
-    name:'菜单管理',
+    name:'menuList',
     data() {
       return {
         list: [],

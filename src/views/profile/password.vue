@@ -179,7 +179,6 @@
           this.$refs.confirmPassword.focus()
         })
       }
-
     }
   }
 </script>

@@ -114,7 +114,7 @@
   import {updateUserStatus, deleteUser,addUsers} from '@/api/sys'
 
   export default {
-    name:'角色管理1',
+    name:'roleList',
     data() {
       return {
         list: null,

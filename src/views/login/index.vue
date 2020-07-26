@@ -29,21 +29,15 @@
 
         <el-form-item prop="password">
           <el-input
-            :key="passwordType"
             ref="password"
             v-model="loginForm.password"
-            :type="passwordType"
+            type="password"
             placeholder="请输入密码"
             name="password"
             auto-complete="off"
             @keyup.enter.native="handleLogin">
             <template slot="prepend">
               <svg-icon icon-class="password"/>
-            </template>
-            <template slot="append">
-              <div @click="showPwd" style="cursor: pointer !important;">
-                <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"/>
-              </div>
             </template>
           </el-input>
 
@@ -130,7 +124,6 @@
           captcha: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
         },
         loading: false,
-        passwordType: 'password',
         redirect: undefined,
         src: 'captcha.jpg',
         rsaKey: ''
@@ -148,25 +141,16 @@
       this.getRsaKey()
     },
     methods: {
-      showPwd() {
-        if (this.passwordType === 'password') {
-          this.passwordType = ''
-        } else {
-          this.passwordType = 'password'
-        }
-        this.$nextTick(() => {
-          this.$refs.password.focus()
-        })
-      },
       handleLogin() {
         this.$refs.loginForm.validate(valid => {
           if (valid) {
             this.loading = true
+            let jsonData=Object.assign({},this.loginForm);
             //加密
-            this.loginForm.password= this.passwordEncryption(
-              this.loginForm.password + ',' + new Date().getTime()
+            jsonData.password= this.passwordEncryption(
+              jsonData.password + ',' + new Date().getTime()
             )
-            this.$store.dispatch('user/Login', this.loginForm).then((data) => {
+            this.$store.dispatch('user/Login', jsonData).then((data) => {
 
               this.$router.push({ path: '/' })
               this.loading = false

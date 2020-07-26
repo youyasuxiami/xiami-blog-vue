@@ -34,10 +34,11 @@ router.beforeEach(async(to, from, next) => {
           // get user info
           //1、给个默认的一级菜单（如果没有默认的，给个默认）
           let activeIndex=localStorage.getItem("activeIndex")
+          console.log("打印默认的一级菜单的id："+activeIndex)
           // console.log("获得菜单id")
           // console.log(activeIndex)
           console.log("222222")
-          const { urls } = await store.dispatch('user/getInfo')
+          const { urls } = await store.dispatch('user/getInfo',activeIndex)
           console.log("獲取一開始urls")
           console.log(urls)
           //2、根据选中的一级菜单获取所有的子菜单

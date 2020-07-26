@@ -285,7 +285,7 @@
   import userAddUpdateView from '@/views/sys/user/user-add-update-view'
 
   export default {
-    name:'用户管理',
+    name:'userList',
     data() {
       return {
         value1: [],

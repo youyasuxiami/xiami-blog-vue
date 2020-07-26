@@ -46,7 +46,7 @@ const actions = {
   // get user info
   getInfo({ commit, state },params) {
     return new Promise((resolve, reject) => {
-      getInfo(params).then(response => {
+      getInfo({"firstMenuId":params}).then(response => {
         const { data } = response
 
         if (!data) {

@@ -31,21 +31,31 @@ import Layout from '@/layout'
  * all roles can be accessed
  */
 export const constantRoutes = [
-
+  {
+    path: '/redirect',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '/redirect/:path(.*)',
+        component: () => import('@/views/redirect/index')
+      }
+    ]
+  },
   {
     path: '/',
     component: Layout,
     redirect: '/dashboard',
     children: [{
-      path: 'dashboard',
-      name: '首页',
+      path: '/dashboard',
       component: () => import('@/views/dashboard/index'),
+      name: '首页',
       meta: { title: '首页', icon: 'dashboard', affix: true }
     },
       {
         path: '/tabs',
-        name: '选项卡',
         component: () => import('@/views/tabs/Tabs'),
+        name: '选项卡',
         hidden: true,
         meta: {
           title: '未读消息'
@@ -71,18 +81,18 @@ export const constantRoutes = [
     children: [
       {
         path: '/profile/info',
-        name: '修改信息',
+        name: 'profileInfo',
         component: () => import('@/views/profile/info'),
         hidden: true,
         meta: {
-          title: '修改信息',
+          title: '用户信息',
           icon: 'profile',
           affix: false
         }
       },
       {
         path: '/profile/password',
-        name: '修改密码',
+        name: 'profilePassword',
         component: () => import('@/views/profile/password'),
         hidden: true,
         meta: {
@@ -90,13 +100,6 @@ export const constantRoutes = [
           icon: 'password',
           affix: false
         }
-      },
-      {
-        path: '/profile/icon',
-        name: '修改头像',
-        component: () => import('@/views/profile/icon'),
-        hidden: true,
-        meta: { title: '修改头像', icon: 'avatar', affix: false }
       }
     ]
   },
@@ -105,16 +108,15 @@ export const constantRoutes = [
     component: () => import('@/views/login/index'),
     hidden: true
   },
-  {
-    path: '*',
-    redirect: '/404'
-  }
+  // {
+  //   path: '*',
+  //   redirect: '/404'
+  // }
 ]
 
 export const asyncRoutes = [
   {
     path: '/blog',
-    name: '博客管理',
     component: Layout,
     redirect: '/blog/info',
     meta: {
@@ -124,8 +126,9 @@ export const asyncRoutes = [
     children: [
       {
         path: '/blog/info',
-        name: '博客列表',
-        component: () => import('@/views/profile/info'),
+        name: 'ProfileInfo',
+        // component: () => import('@/views/profile/info'),
+        component: () => import('@/views/sys/user/user-list'),
         meta: {
           title: '博客列表',
           icon: 'profile',
@@ -134,8 +137,9 @@ export const asyncRoutes = [
       },
       {
         path: '/blog/comment',
-        name: '评论管理',
-        component: () => import('@/views/profile/info'),
+        name: 'ProfileInfo',
+        // component: () => import('@/views/profile/password'),
+        component: () => import('@/views/sys/role/role-list'),
         meta: {
           title: '评论管理',
           icon: 'password',
@@ -146,30 +150,31 @@ export const asyncRoutes = [
   },
   {
     path: '/sys',
-    name: '系统管理',
     component: Layout,
-    // redirect: '/user/userList',
+    // name: '系统管理',
+    redirect: '/user/userList',
     meta: {
-      title: '系统管理', icon: 'setting', roles: ['admin']
+      title: '系统管理',
+      icon: 'setting'
     },
     children: [
       {
         path: '/sys/user/userList',
-        name: '用户管理',
         component: () => import('@/views/sys/user/user-list'),
-        meta: { title: '用户管理', icon: 'sys-user', affix: false, roles: ['admin'] }
+        name: 'userList',
+        meta: { title: '用户管理', icon: 'sys-user', affix: false }
       },
       {
         path: '/sys/menu/menuList',
-        name: '菜单管理',
         component: () => import('@/views/sys/menu/menu-list'),
-        meta: { title: '菜单管理', icon: 'menu', affix: false, roles: ['admin'] }
+        name: 'menuList',
+        meta: { title: '菜单管理', icon: 'menu', affix: false }
       },
       {
         path: '/sys/role/roleList',
-        name: '角色管理',
         component: () => import('@/views/sys/role/role-list'),
-        meta: { title: '角色管理', icon: 'role', affix: false, roles: ['admin'] }
+        name: 'roleList',
+        meta: { title: '角色管理', icon: 'role', affix: false }
       }
     ]
   },

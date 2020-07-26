@@ -103,13 +103,14 @@
         //  this.$store.dispatch('user/getInfo',{"firstMenuId":this.activeIndex}).then(data=>{
         //    urls=data.urls;
         //  })
+        localStorage.setItem("activeIndex",this.activeIndex)
         getMenusByFirstMenuId({"firstMenuId":this.activeIndex}).then(async(data) => {
 
           if (data.code == '20000') {
             urls = data.data.urls
-            console.log("urls")
+            console.log("urls////////////////")
             const accessRoutes = await store.dispatch('permission/generateRoutes', urls)//获取该用户的所有菜单
-            console.log("获取路由表")
+            console.log("获取路由表////////////")
             console.log(accessRoutes)
             router.addRoutes(accessRoutes)
           } else {
@@ -121,9 +122,9 @@
         getFirstMenus().then((data) => {
           if (data.code == '20000') {
             this.firstMenu=data.data
-            console.log("成功")
+            console.log("获取一级菜单成功")
           } else {
-            console.log("失败")
+            console.log("获取一级菜单失败")
           }
         })
 

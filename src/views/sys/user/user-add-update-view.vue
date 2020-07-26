@@ -84,6 +84,38 @@
         </el-row>
 
         <el-row>
+          <el-col :span="12">
+            <el-form-item label="新密码" prop="newPassword">
+              <el-input v-model="temp.newPassword" :type="passwordType2" :key="passwordType2" style="width: 200px;"            ref="newPassword"
+
+              >
+                <template slot="append">
+                  <div @click="showPwd2" style="cursor: pointer !important;">
+                    <svg-icon :icon-class="passwordType2 === 'password' ? 'eye' : 'eye-open'"/>
+                  </div>
+                </template>
+              </el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="确认密码" prop="confirmPassword">
+              <el-input v-model="temp.confirmPassword":type="passwordType3" :key="passwordType3" style="width: 200px;"            ref="confirmPassword"
+
+              >
+                <template slot="append">
+                  <div @click="showPwd3" style="cursor: pointer !important;">
+                    <svg-icon :icon-class="passwordType3 === 'password' ? 'eye' : 'eye-open'"/>
+                  </div>
+                </template>
+              </el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
           <el-col :span="24">
             <el-form-item label="备注" prop="ps">
               <el-input v-model="temp.ps" placeholder="请输入备注" clearable type="textarea"
@@ -173,14 +205,17 @@
           email: '',
           ps: '',
           status: '',
-          avatar: ''
+          avatar: '',
+          newPassword:'',
+          confirmPassword:''
         },
         textMap: {
           add: '申请',
           edit: '编辑',
           view: '查看'
         },
-
+        passwordType2: 'password',
+        passwordType3: 'password',
         rule: {
           name: [
             { required: true, message: '用户名不能为空', trigger: 'blur' }
@@ -375,6 +410,27 @@
           this.checkedRoles = res.data
         })
 
+      },
+      showPwd2() {
+        if (this.passwordType2 === 'password') {
+          this.passwordType2 = ''
+        } else {
+          this.passwordType2 = 'password'
+        }
+        this.$nextTick(() => {
+          this.$refs.newPassword.focus()
+        })
+      },
+
+      showPwd3() {
+        if (this.passwordType3 === 'password') {
+          this.passwordType3 = ''
+        } else {
+          this.passwordType3 = 'password'
+        }
+        this.$nextTick(() => {
+          this.$refs.confirmPassword.focus()
+        })
       }
     },
     created() {

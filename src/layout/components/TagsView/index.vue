@@ -148,8 +148,6 @@
           this.$nextTick(() => {
             this.$router.replace({
               redirect: fullPath
-              // path:'/user/userList',
-              // params:new Date
             })
           })
         })
