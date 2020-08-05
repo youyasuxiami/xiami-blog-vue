@@ -116,29 +116,79 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/blog/info',
     meta: {
-      title: '博客管理',
+      title: '内容管理',
       icon: 'user'
     },
     children: [
+      // {
+      //   path: '/blog/publish',
+      //   name: 'blogPublish',
+      //   component: () => import('@/views/blog/blog-add-update-view'),
+      //   meta: {
+      //     title: '发布文章',
+      //     icon: 'profile',
+      //     affix: false
+      //   }
+      // },
       {
         path: '/blog/info',
-        name: 'ProfileInfo',
-        // component: () => import('@/views/profile/info'),
-        component: () => import('@/views/sys/user/user-list'),
+        name: 'blogInfo',
+        component: () => import('@/views/blog/blog-list'),
         meta: {
-          title: '博客列表',
+          title: '文章管理',
+          icon: 'profile',
+          affix: false
+        }
+      },
+      // {
+      //   path: '/blog/draft',
+      //   name: 'blogDraft',
+      //   // component: () => import('@/views/profile/password'),
+      //   component: () => import('@/views/blog/blog-add-update-view'),
+      //   meta: {
+      //     title: '草稿箱',
+      //     icon: 'password',
+      //     affix: false
+      //   }
+      // }
+      {
+        path: '/blog/type',
+        name: 'blogType',
+        component: () => import('@/views/blog/type-list'),
+        meta: {
+          title: '分类管理',
           icon: 'profile',
           affix: false
         }
       },
       {
-        path: '/blog/comment',
-        name: 'ProfileInfo',
-        // component: () => import('@/views/profile/password'),
-        component: () => import('@/views/sys/role/role-list'),
+        path: '/blog/tag',
+        name: 'blogTag',
+        component: () => import('@/views/blog/tag-list'),
         meta: {
-          title: '评论管理',
-          icon: 'password',
+          title: '标签管理',
+          icon: 'profile',
+          affix: false
+        }
+      }
+    ]
+  },
+  {
+    path: '/comment',
+    component: Layout,
+    redirect: '/comment/info',
+    meta: {
+      title: '评论管理',
+      icon: 'user'
+    },
+    children: [
+      {
+        path: '/comment/info',
+        name: 'commentInfo',
+        component: () => import('@/views/blog/blog-list'),
+        meta: {
+          title: '评论列表',
+          icon: 'profile',
           affix: false
         }
       }

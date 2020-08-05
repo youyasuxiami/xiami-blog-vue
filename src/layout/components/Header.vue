@@ -128,7 +128,7 @@
             this.activeIndex = localStorage.getItem("activeIndex")
             console.log(this.activeIndex)
             if(!this.activeIndex){
-              this.activeIndex=this.firstMenu[0].id
+              this.activeIndex=this.firstMenu[0].id+""
             }
           } else {
             console.log("获取一级菜单失败")

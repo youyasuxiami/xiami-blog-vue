@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog :visible.sync="visible" :title=textMap[dialogStatus]>
+    <el-dialog :visible.sync="visible" :title=textMap[dialogStatus] width="700px">
       <!-- 表单  start-->
       <el-form
         ref="dataForm"
@@ -459,5 +459,6 @@
 
   .m-footer {
     text-align: center;
+    margin-bottom: 35px;
   }
 </style>

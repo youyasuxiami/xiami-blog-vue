@@ -52,7 +52,7 @@
           <!--            placeholder="选择日期时间">-->
           <!--          </el-date-picker>-->
           <el-date-picker
-            v-model="searchForm.createTime"
+            v-model="dateRange"
             type="daterange"
             format="yyyy-MM-dd"
             value-format="yyyy-MM-dd"
@@ -70,17 +70,17 @@
         </el-form-item>
       </el-form>
 
-<!--      <el-dialog title="提示" :visible.sync="dialogVisible" width="30%" center append-to-body>-->
-<!--        <p style="margin-bottom: 12px;">请选择回退的范围</p>-->
-<!--        <el-radio-group v-model="exportFlag">-->
-<!--          <el-radio label="1">上一步</el-radio>-->
-<!--          <el-radio label="2">回退全部</el-radio>-->
-<!--        </el-radio-group>-->
-<!--        <span slot="footer" class="dialog-footer">-->
-<!--          <el-button type="primary" @click="audit('rollback',backRadio)">确 定</el-button>-->
-<!--          <el-button @click="dialogVisible = false">取 消</el-button>-->
-<!--        </span>-->
-<!--      </el-dialog>-->
+      <!--      <el-dialog title="提示" :visible.sync="dialogVisible" width="30%" center append-to-body>-->
+      <!--        <p style="margin-bottom: 12px;">请选择回退的范围</p>-->
+      <!--        <el-radio-group v-model="exportFlag">-->
+      <!--          <el-radio label="1">上一步</el-radio>-->
+      <!--          <el-radio label="2">回退全部</el-radio>-->
+      <!--        </el-radio-group>-->
+      <!--        <span slot="footer" class="dialog-footer">-->
+      <!--          <el-button type="primary" @click="audit('rollback',backRadio)">确 定</el-button>-->
+      <!--          <el-button @click="dialogVisible = false">取 消</el-button>-->
+      <!--        </span>-->
+      <!--      </el-dialog>-->
 
       <!--      <el-row>-->
       <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-plus" @click="handleAddEditUser">新增
@@ -279,13 +279,22 @@
 </template>
 
 <script>
-  import { getList, updateUserStatus, deleteUser, addUsers, exportUsers,exportAllUsers ,deleteUsers, getRoles } from '@/api/sys'
+  import {
+    getList,
+    updateUserStatus,
+    deleteUser,
+    addUsers,
+    exportUsers,
+    exportAllUsers,
+    deleteUsers,
+    getRoles
+  } from '@/api/sys'
   import { getTypeValue } from '@/utils/dictionary'
   import Pagination from '@/components/Pagination/index' // secondary package based on el-pagination
   import userAddUpdateView from '@/views/sys/user/user-add-update-view'
 
   export default {
-    name:'userList',
+    name: 'userList',
     data() {
       return {
         value1: [],
@@ -304,11 +313,12 @@
           name: '',
           nickName: '',
           sex: '',
-          accountStatus: '',
-          createTime: []//时间数组
+          accountStatus: ''
+          // createTime: []//时间数组
           // pageNum: 1,//暂时json
           // pageSize: 10,//暂时json
         },
+        dateRange: [],//时间数组
         dataForm: {
           name: '',
           nickName: '',
@@ -332,9 +342,9 @@
       this.fetchData()
 
       // 获取角色下拉框
-      getTypeValue('sys_role').then(res => {
-        this.roleList = res.data
-      })
+      // getTypeValue('sys_role').then(res => {
+      //   this.roleList = res.data
+      // })
 
       // 获取性别下拉框
       getTypeValue('sex').then(res => {
@@ -367,9 +377,12 @@
         this.searchForm.pageNum = this.pageNum
         this.searchForm.pageSize = this.pageSize
         this.searchForm.roleIds = this.value1.toString()
-        console.log("11111111")
-        let data = this.searchForm
 
+        this.searchForm.createTime = ''
+        if (null != this.dateRange && '' != this.dateRange) {
+          this.searchForm.createTime = this.dateRange.toString()
+        }
+        let data = this.searchForm
 
         // let formData = new FormData()
         // for(let key in data){

@@ -93,11 +93,10 @@ export function deleteUsers(params) {
  * @param params
  * @returns {AxiosPromise}
  */
-export function getRoles(params) {
+export function getRoles() {
   return request({
     url: '/user/getRoles',
     method: 'get',
-    params
   })
 }
 
