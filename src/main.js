@@ -30,6 +30,9 @@ import '@/assets/router_icons/iconfont.css'
 if (process.env.NODE_ENV === 'production') {
   mockXHR()
 }
+import mavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
+Vue.use(mavonEditor)
 
 // set ElementUI lang to EN
 Vue.use(ElementUI, { locale })
