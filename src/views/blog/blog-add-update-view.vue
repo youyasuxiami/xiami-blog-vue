@@ -69,6 +69,25 @@
         <el-row style="margin-top: 15px;">
           <el-col :span="3">
             <div class="m-tag">
+              推荐
+            </div>
+          </el-col>
+
+          <el-col :span="9" style="padding-right: 0.5em">
+            <el-select v-model="temp.recommend" placeholder="请选择" clearable class="m-max-width">
+              <el-option
+                v-for="item in recommendList"
+                :key="item.id"
+                :label="item.value"
+                :value="item.code">
+              </el-option>
+            </el-select>
+          </el-col>
+        </el-row>
+
+        <el-row style="margin-top: 15px;">
+          <el-col :span="3">
+            <div class="m-tag">
               首图
             </div>
           </el-col>
@@ -78,8 +97,11 @@
             <image-cropper
               v-model="show"
               field="multipartFile"
+              :width="224"
+              :height="140"
               :size="50"
               :url="url"
+              :langExt="zdy"
               :headers="headers"
               img-format="png"
               @crop-success="cropSuccess"
@@ -96,9 +118,9 @@
         </el-row>
 
         <el-row style="margin-top: 15px;">
-          <el-col :span="3">
-            <el-checkbox v-model="temp.recommend">推荐</el-checkbox>
-          </el-col>
+<!--          <el-col :span="3">-->
+<!--            <el-checkbox v-model="temp.recommend">推荐</el-checkbox>-->
+<!--          </el-col>-->
 
           <el-col :span="3">
             <el-checkbox v-model="temp.shareStatement">转载声明</el-checkbox>
@@ -159,6 +181,25 @@
         // params: {
         //   access_token: getToken()
         // },
+        zdy: {
+          hint: '点击，或拖动图片至此处',
+          loading: '正在上传……',
+          noSupported: '浏览器不支持该功能，请使用IE10以上或其他现在浏览器！',
+          success: '上传成功',
+          fail: '图片上传失败',
+          preview: '图片预览',
+          btn: {
+            off: '取消',
+            close: '关闭',
+            back: '上一步',
+            save: '保存'
+          },
+          error: {
+            onlyImg: '仅限图片格式',
+            outOfSize: '单文件大小不能超过 ',
+            lowestPx: '图片最低像素为（宽*高）：'
+          }
+        },
         headers: {
           smail: '*_~'
         },
@@ -166,15 +207,16 @@
         flagList: [],
         typeList: [],
         tagList: [],
+        recommendList:[],
         value1: [],
         temp: {
           flag: '1',
           title: '',
           content: '',
           typeId: '',
+          recommend:'',
           firstPicture: '',
           description: '',
-          recommend: false,
           shareStatement: false,
           appreciation: false,
           commentabled: false
@@ -209,7 +251,25 @@
               this.temp.flag = '3'
               break
           }
-          this.temp.recommend = this.temp.recommend === 1
+
+          switch (this.temp.recommend) {
+            case '正常':
+              this.temp.recommend = '0'
+              break
+            case '一级推荐':
+              this.temp.recommend = '1'
+              break
+            case '二级推荐':
+              this.temp.recommend = '2'
+              break
+            case '三级推荐':
+              this.temp.recommend = '3'
+              break
+            case '四级推荐':
+              this.temp.recommend = '4'
+              break
+          }
+          // this.temp.recommend = this.temp.recommend === ""
 
           this.temp.shareStatement = this.temp.shareStatement === 1
 
@@ -236,10 +296,10 @@
           this.temp.title = ''
           this.temp.content = ''
           this.temp.typeId = ''
+          this.temp.recommend = ''
           this.value1 = []
           this.temp.firstPicture = ''
           this.temp.description = ''
-          this.temp.recommend = false
           this.temp.shareStatement = false
           this.temp.appreciation = false
           this.temp.commentabled = false
@@ -344,6 +404,10 @@
 
       getTags().then(res => {
         this.tagList = res.data
+      })
+
+      getTypeValue('recommend_type').then(res => {
+        this.recommendList = res.data
       })
     }
   }
