@@ -16,14 +16,6 @@ export function addBlog(data) {
   })
 }
 
-//更新推荐
-export function changeRecommend(params) {
-  return request({
-    url: "/blog/changeRecommend",
-    method: 'put',
-    params
-  })
-}
 //更新文章来源
 export function changeShareStatement(params) {
   return request({

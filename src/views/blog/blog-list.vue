@@ -30,6 +30,16 @@
           </el-select>
         </el-form-item>
 
+        <el-form-item label="推荐等级">
+          <el-select v-model="searchForm.recommend" placeholder="请选择" clearable>
+            <el-option label="正常" value="0"></el-option>
+            <el-option label="一级推荐" value="1"></el-option>
+            <el-option label="二级推荐" value="2"></el-option>
+            <el-option label="三级推荐" value="3"></el-option>
+            <el-option label="四级推荐" value="4"></el-option>
+          </el-select>
+        </el-form-item>
+
         <el-form-item label="状态">
           <el-select v-model="searchForm.publish" placeholder="请选择" clearable>
             <el-option label="发布" value="1"></el-option>
@@ -134,13 +144,12 @@
 
       <el-table-column class-name="status-col" label="推荐" width="200" align="center">
         <template slot-scope="scope">
-          <el-switch
-            v-model="scope.row.recommend"
-            :active-value="1"
-            :inactive-value="0"
-            @change="handleRecommendChange(scope.row)"
-          >
-          </el-switch>
+          <el-popover trigger="hover" placement="top">
+            <span>{{scope.row.recommend}}</span>
+            <div slot="reference" class="m-popover">
+              {{scope.row.recommend}}
+            </div>
+          </el-popover>
         </template>
       </el-table-column>
 
@@ -250,7 +259,7 @@
 
 <script>
   // import { updateUserStatus, deleteUser, addUsers, exportUsers, exportAllUsers, deleteUsers } from '@/api/sys'
-  import { getList, changeRecommend,changeShareStatement,  changeAppreciation, changeCommentabled,deleteBlog,deleteBlogs } from '@/api/blog'
+  import { getList,changeShareStatement,changeAppreciation, changeCommentabled,deleteBlog,deleteBlogs } from '@/api/blog'
   import { getTypes } from '@/api/type'
   import Pagination from '@/components/Pagination/index' // secondary package based on el-pagination
   import blogAddUpdateView from '@/views/blog/blog-add-update-view'
@@ -279,6 +288,7 @@
           typeId: '',
           title: '',
           flag: '',
+          recommend: '',
           publish: '',
           createTime: []//时间数组
         },
@@ -457,40 +467,6 @@
       //点击表格一行数据触发
       handleRowClick(row, column, event) {
         this.$refs.handSelectTest_multipleTable.toggleRowSelection(row)
-      },
-
-      // 更新推荐
-      handleRecommendChange(row) {
-        let text = row.recommend === 1 ? '【开启】' : '【关闭】'
-        this.$confirm('确认要' + text + '推荐吗?', '警告', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          changeRecommend({
-            id: row.id,
-            recommend: row.recommend
-          }).then(data => {
-            if (data.code == '20000') {
-              this.$notify({
-                title: '成功',
-                message: data.message,
-                type: 'success',
-                duration: 2000
-              })
-              this.fetchData()
-            } else {
-              this.$notify({
-                title: '失败',
-                message: data.message,
-                type: 'error',
-                duration: 2000
-              })
-            }
-          })
-        }).catch(function() {
-          row.recommend = row.recommend === 0 ? 1 : 0
-        })
       },
 
       //更新文章来源
