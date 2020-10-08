@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog :visible.sync="visible" :title=textMap[dialogStatus] width="800px">
+    <el-dialog :visible.sync="visible" :title=textMap[dialogStatus] width="80%">
       <!-- 表单  start-->
       <el-form
         ref="dataForm"
@@ -97,7 +97,7 @@
             <image-cropper
               v-model="show"
               field="multipartFile"
-              :width="224"
+              :width="231"
               :height="140"
               :size="50"
               :url="url"
@@ -166,7 +166,7 @@
   import { getTypeValue } from '@/utils/dictionary'
   import { getTypes } from '@/api/type'
   import { getTags, getCheckedTags } from '@/api/tag'
-  import { addBlog } from '@/api/blog'
+  import { addBlog,addPhoto } from '@/api/blog'
 
   export default {
     data() {
@@ -225,7 +225,8 @@
           add: '申请',
           edit: '编辑',
           view: '查看'
-        }
+        },
+        img_file:{}
       }
     },
     components: { ImageCropper, PanThumb },
@@ -306,20 +307,51 @@
         }
       },
       imgAdd(pos, $file) {
+        console.log("111111111111111111111")
         // 第一步.将图片上传到服务器.
         var formdata = new FormData()
-        formdata.append('image', $file)
+        formdata.append('multipartFile', $file)
+
+        let url=this.url
+
         this.img_file[pos] = $file
-        this.$http({
-          url: '/api/edit/uploadimg',
-          method: 'post',
-          data: formdata,
-          headers: { 'Content-Type': 'multipart/form-data' }
-        }).then((res) => {
-          let _res = res.data
-          // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
-          this.$refs.md.$img2Url(pos, _res.url)
+        addPhoto(
+          formdata
+        ).then((response) => {
+          if (response.code == '20000') {
+            let _res = response.data
+            // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
+            console.log("_res")
+            console.log(_res)
+            this.$refs.md.$img2Url(pos, _res.path)
+
+            this.$notify({
+              title: '成功',
+              message: response.message,
+              type: 'success',
+              duration: 2000,
+            })
+          } else {
+            this.$notify({
+              title: '失败',
+              message: response.message,
+              type: 'error',
+              duration: 2000
+            })
+          }
         })
+
+
+        // this.$http({
+        //   url: url,
+        //   method: 'post',
+        //   data: formdata,
+        //   headers: { 'Content-Type': 'multipart/form-data' }
+        // }).then((res) => {
+        //   let _res = res.data
+        //   // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
+        //   this.$refs.md.$img2Url(pos, _res.url)
+        // })
       },
       imgDel(pos) {
         delete this.img_file[pos]

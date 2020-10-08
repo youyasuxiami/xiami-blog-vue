@@ -578,6 +578,8 @@
         let uploadData = new FormData()
         uploadData.append('file', param.file)
         addUsers(uploadData).then((data) => {
+          console.log("data")
+          console.log(data)
           if (data.code == '20000') {
             this.$notify({
               title: '成功',

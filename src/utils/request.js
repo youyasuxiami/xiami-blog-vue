@@ -59,6 +59,7 @@ service.interceptors.response.use(
       //   })
       // }
       if (document.getElementsByClassName('el-message').length === 0) {
+        console.log("00000000000000000000")
 
         // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
         if (res.code === 401) {
@@ -75,7 +76,8 @@ service.interceptors.response.use(
           })
         }
       }
-      return Promise.reject(new Error(res.message || 'Error'))
+      // return Promise.reject(new Error(res.message || 'Error'))
+      return res
     } else {
       return res
     }
