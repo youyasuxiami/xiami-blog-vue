@@ -30,6 +30,8 @@ router.beforeEach(async(to, from, next) => {
       if (hasGetUserInfo) {
         next()
       } else {
+        console.log("***********************************************")
+        console.log(hasToken)
         try {
           // get user info
           //1、给个默认的一级菜单（如果没有默认的，给个默认）

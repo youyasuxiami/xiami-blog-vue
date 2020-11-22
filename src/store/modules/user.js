@@ -29,7 +29,6 @@ const mutations = {
 const actions = {
   // user login
   Login({ commit }, userInfo) {
-    console.log("login")
     const { username, password ,captcha} = userInfo
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password,captcha:captcha }).then(response => {
@@ -46,7 +45,9 @@ const actions = {
   // get user info
   getInfo({ commit, state },params) {
     return new Promise((resolve, reject) => {
-      getInfo({"firstMenuId":params}).then(response => {
+      console.log("打印请求信息")
+      console.log("-----------------------------------------------------")
+      getInfo({"firstMenuId":params,"token":getToken()}).then(response => {
         const { data } = response
 
         if (!data) {
