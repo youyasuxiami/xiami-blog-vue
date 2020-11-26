@@ -15,6 +15,8 @@ import router from './router'
 
 import '@/icons' // icon
 import '@/permission' // permission control
+import request from '@/utils/request'
+
 
 /**
  * If you don't want to use mock-server
@@ -78,6 +80,16 @@ Vue.filter("FormatDate", function(date, fmt) {
   return formatDate(date, fmt);
 });
 
+Vue.prototype.getTypeValue = function getTypeValue(value){
+  return request({
+    url:'/utils/dictionaries',
+    method:'get',
+    params:{
+      group:value
+    }
+  })
+}
+
 
 new Vue({
   el: '#app',
@@ -85,3 +97,7 @@ new Vue({
   store,
   render: h => h(App)
 })
+
+
+
+

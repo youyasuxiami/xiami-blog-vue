@@ -185,9 +185,19 @@ export const asyncRoutes = [
       {
         path: '/comment/info',
         name: 'commentInfo',
-        component: () => import('@/views/blog/blog-list'),
+        component: () => import('@/views/comment/comment-list'),
         meta: {
           title: '评论列表',
+          icon: 'profile',
+          affix: false
+        }
+      },
+      {
+        path: '/comment/report',
+        name: 'commentReport',
+        component: () => import('@/views/comment/comment-report-list'),
+        meta: {
+          title: '举报列表',
           icon: 'profile',
           affix: false
         }
