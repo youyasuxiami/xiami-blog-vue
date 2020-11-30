@@ -6,14 +6,14 @@ import router from '@/router'
 
 // create an axios instance
 const service = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  withCredentials: true, //让ajax携带cookie
-  timeout: 60000 // request timeout
+  baseURL: process.env.VUE_APP_BASE_API,
+  // withCredentials: true, //允许后台的cookie传递到前端
+  timeout: 100000 //超时时间
 })
 
 // request interceptor
 service.interceptors.request.use(
-  config => {
+  (config) => {
     // do something before request is sent
 
     if (store.getters.token) {//原来显示
@@ -21,12 +21,16 @@ service.interceptors.request.use(
     // ['X-Token'] is a custom headers key
     // please modify it according to the actual situation
     config.headers['authorization'] = getToken()
-    // config.headers['authorization'] = 'Bearer ' + getToken()//原来显示
+      console.log("22222222222")
+
+      // config.headers['authorization'] = 'Bearer ' + getToken()//原来显示
     }//原来显示
+    console.log("33333333333333")
     return config
   },
   error => {
     // do something with request error
+    console.log("111111111111")
     console.log(error) // for debug
     return Promise.reject(error)
   }

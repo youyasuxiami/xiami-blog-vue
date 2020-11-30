@@ -268,7 +268,7 @@
           status: index
         }
         updateProgressStatusName(params).then((data) => {
-          if (data.code == '20000') {
+          if (data.data.code == '20000') {
             this.$notify({
               title: '成功',
               message: data.message,

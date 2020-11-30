@@ -36,4 +36,13 @@ export function getPublicKey() {
 }
 
 
+export function getCaptcha(params) {
+  return request({
+    url: '/captcha.jpg',
+    method: 'get',
+    params
+  })
+}
+
+
 
