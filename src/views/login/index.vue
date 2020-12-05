@@ -125,7 +125,7 @@
         },
         loading: false,
         redirect: undefined,
-        src: process.env.VUE_APP_BASE_API+'captcha.jpg',
+        src: process.env.VUE_APP_BASE_API+'/captcha.jpg',
         rsaKey: ''
       }
     },
@@ -162,7 +162,7 @@
         })
       },
       refreshCode() {
-        this.src = process.env.VUE_APP_BASE_API+'captcha.jpg?t=' + new Date().getTime()
+        this.src = process.env.VUE_APP_BASE_API+'/captcha.jpg?t=' + new Date().getTime()
       },
       // 获取公钥的方法
       getRsaKey() {

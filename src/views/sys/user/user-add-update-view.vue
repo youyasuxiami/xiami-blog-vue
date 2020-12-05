@@ -167,7 +167,6 @@
 </template>
 <script>
   import { addUser, getRoles, getCheckedRoles } from '@/api/sys'
-  import { getTypeValue } from '@/utils/dictionary'
   import ImageCropper from 'vue-image-crop-upload'
   import PanThumb from '@/components/PanThumb'
 
@@ -435,7 +434,7 @@
     },
     created() {
       // // 获取账号状态下拉框
-      getTypeValue('account_status').then(res => {
+      this.getTypeValue('account_status').then(res => {
         this.accountStatusList = res.data
       })
 

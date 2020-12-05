@@ -58,7 +58,6 @@
 </template>
 <script>
   import { getMenuList, addRole, getMenusByRoleId } from '@/api/sys'
-  import { getTypeValue } from '@/utils/dictionary'
 
   export default {
     data() {
@@ -276,7 +275,7 @@
 
     created() {
       // // 获取账号状态下拉框
-      getTypeValue('account_status').then(res => {
+      this.getTypeValue('account_status').then(res => {
         this.accountStatusList = res.data
       })
     }

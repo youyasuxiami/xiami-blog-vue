@@ -108,7 +108,6 @@
 
 <script>
   import {getRoleList,deleteRole} from '@/api/sys'
-  import {getTypeValue} from '@/utils/dictionary'
   import Pagination from '@/components/Pagination/index' // secondary package based on el-pagination
   import roleAddUpdateView from '@/views/sys/role/role-add-update-view'
   import {updateUserStatus, deleteUser,addUsers} from '@/api/sys'

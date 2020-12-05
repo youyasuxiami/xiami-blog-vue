@@ -289,7 +289,6 @@
     deleteUsers,
     getRoles
   } from '@/api/sys'
-  import { getTypeValue } from '@/utils/dictionary'
   import Pagination from '@/components/Pagination/index' // secondary package based on el-pagination
   import userAddUpdateView from '@/views/sys/user/user-add-update-view'
 
@@ -347,12 +346,12 @@
       // })
 
       // 获取性别下拉框
-      getTypeValue('sex').then(res => {
+      this.getTypeValue('sex').then(res => {
         this.sexList = res.data
       })
 
       // // 获取账号状态下拉框
-      getTypeValue('account_status').then(res => {
+      this.getTypeValue('account_status').then(res => {
         this.accountStatusList = res.data
       })
 

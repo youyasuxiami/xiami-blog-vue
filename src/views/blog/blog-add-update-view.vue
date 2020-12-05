@@ -163,7 +163,6 @@
 <script>
   import ImageCropper from 'vue-image-crop-upload'
   import PanThumb from '@/components/PanThumb'
-  import { getTypeValue } from '@/utils/dictionary'
   import { getTypes } from '@/api/type'
   import { getTags, getCheckedTags } from '@/api/tag'
   import { addBlog,addPhoto } from '@/api/blog'
@@ -426,7 +425,7 @@
     }
     ,
     created() {
-      getTypeValue('flag').then(res => {
+      this.getTypeValue('flag').then(res => {
         this.flagList = res.data
       })
 
@@ -438,7 +437,7 @@
         this.tagList = res.data
       })
 
-      getTypeValue('recommend_type').then(res => {
+      this.getTypeValue('recommend_type').then(res => {
         this.recommendList = res.data
       })
     }
