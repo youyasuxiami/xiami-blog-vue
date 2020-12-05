@@ -2,13 +2,12 @@ import axios from 'axios'
 import { MessageBox, Message, notify } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
-import router from '@/router'
 
 // create an axios instance
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
   // withCredentials: true, //允许后台的cookie传递到前端
-  timeout: 100000 //超时时间
+  timeout: 20000 //超时时间
 })
 
 // request interceptor
@@ -21,16 +20,13 @@ service.interceptors.request.use(
     // ['X-Token'] is a custom headers key
     // please modify it according to the actual situation
     config.headers['authorization'] = getToken()
-      console.log("22222222222")
 
       // config.headers['authorization'] = 'Bearer ' + getToken()//原来显示
     }//原来显示
-    console.log("33333333333333")
     return config
   },
   error => {
     // do something with request error
-    console.log("111111111111")
     console.log(error) // for debug
     return Promise.reject(error)
   }
@@ -49,8 +45,6 @@ service.interceptors.response.use(
    * You can also judge the status by HTTP Status Code
    */
   response => {
-    console.log('response--------------')
-    console.log(response)
     const res = response.data
 
     // if the custom code is not 20000, it is judged as an error.
