@@ -100,7 +100,6 @@
 </template>
 <script>
   import { addMenu, getMenuList } from '@/api/sys'
-  import { getTypeValue } from '@/utils/dictionary'
 
   export default {
     data() {
@@ -346,7 +345,7 @@
 
     created() {
       //获取菜单类型下拉框
-      getTypeValue('menu_type').then(res => {
+      this.getTypeValue('menu_type').then(res => {
         this.menuTypeList = res.data
       })
     }

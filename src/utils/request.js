@@ -2,27 +2,27 @@ import axios from 'axios'
 import { MessageBox, Message, notify } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
-import router from '@/router'
 
 // create an axios instance
 const service = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  withCredentials: true, //让ajax携带cookie
-  timeout: 60000 // request timeout
+  baseURL: process.env.VUE_APP_BASE_API,
+  // withCredentials: true, //允许后台的cookie传递到前端
+  timeout: 20000 //超时时间
 })
 
 // request interceptor
 service.interceptors.request.use(
-  config => {
+  (config) => {
     // do something before request is sent
 
-    // if (store.getters.token) {//原来显示
+    if (store.getters.token) {//原来显示
     // let each request carry token
     // ['X-Token'] is a custom headers key
     // please modify it according to the actual situation
-    // config.headers['X-Token'] = getToken()
-    // config.headers['authorization'] = 'Bearer ' + getToken()//原来显示
-    //}//原来显示
+    config.headers['authorization'] = getToken()
+
+      // config.headers['authorization'] = 'Bearer ' + getToken()//原来显示
+    }//原来显示
     return config
   },
   error => {
@@ -45,8 +45,6 @@ service.interceptors.response.use(
    * You can also judge the status by HTTP Status Code
    */
   response => {
-    console.log('response--------------')
-    console.log(response)
     const res = response.data
 
     // if the custom code is not 20000, it is judged as an error.
@@ -59,6 +57,7 @@ service.interceptors.response.use(
       //   })
       // }
       if (document.getElementsByClassName('el-message').length === 0) {
+        console.log("00000000000000000000")
 
         // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
         if (res.code === 401) {
@@ -75,7 +74,8 @@ service.interceptors.response.use(
           })
         }
       }
-      return Promise.reject(new Error(res.message || 'Error'))
+      // return Promise.reject(new Error(res.message || 'Error'))
+      return res
     } else {
       return res
     }

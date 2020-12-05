@@ -15,6 +15,8 @@ import router from './router'
 
 import '@/icons' // icon
 import '@/permission' // permission control
+import request from '@/utils/request'
+
 
 /**
  * If you don't want to use mock-server
@@ -24,12 +26,6 @@ import '@/permission' // permission control
  * Currently MockJs will be used in the production environment,
  * please remove it before going online! ! !
  */
-import { mockXHR } from '../mock'
-
-import '@/assets/router_icons/iconfont.css'
-if (process.env.NODE_ENV === 'production') {
-  mockXHR()
-}
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 Vue.use(mavonEditor)
@@ -78,6 +74,16 @@ Vue.filter("FormatDate", function(date, fmt) {
   return formatDate(date, fmt);
 });
 
+Vue.prototype.getTypeValue = function getTypeValue(value){
+  return request({
+    url:'/utils/dictionaries',
+    method:'get',
+    params:{
+      group:value
+    }
+  })
+}
+
 
 new Vue({
   el: '#app',
@@ -85,3 +91,7 @@ new Vue({
   store,
   render: h => h(App)
 })
+
+
+
+

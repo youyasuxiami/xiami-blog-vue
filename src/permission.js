@@ -11,6 +11,12 @@ NProgress.configure({ showSpinner: false }) // NProgress Configuration
 const whiteList = ['/login'] // no redirect whitelist
 // 全局钩子router.beforeEach中拦截路由
 router.beforeEach(async(to, from, next) => {
+  console.log("to")
+  console.log(to)
+  console.log("from")
+  console.log(from)
+  console.log("next")
+  console.log(next)
   // start progress bar
   NProgress.start()
 
@@ -30,6 +36,8 @@ router.beforeEach(async(to, from, next) => {
       if (hasGetUserInfo) {
         next()
       } else {
+        console.log("***********************************************")
+        console.log(hasToken)
         try {
           // get user info
           //1、给个默认的一级菜单（如果没有默认的，给个默认）

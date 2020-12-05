@@ -90,7 +90,7 @@
   </div>
 </template>
 <script>
-  import { getPublicKey } from '@/api/user'
+  import { getPublicKey,getCaptcha } from '@/api/user'
   import {JSEncrypt} from 'jsencrypt'
 
   export default {
@@ -125,7 +125,7 @@
         },
         loading: false,
         redirect: undefined,
-        src: 'captcha.jpg',
+        src: process.env.VUE_APP_BASE_API+'captcha.jpg',
         rsaKey: ''
       }
     },
@@ -162,11 +162,13 @@
         })
       },
       refreshCode() {
-        this.src = 'captcha.jpg?t=' + new Date().getTime()
+        this.src = process.env.VUE_APP_BASE_API+'captcha.jpg?t=' + new Date().getTime()
       },
       // 获取公钥的方法
       getRsaKey() {
         getPublicKey().then(data => {
+          console.log("data")
+          console.log(data)
           if (data.code == '20000') {
             this.rsaKey = data.data
           } else {
