@@ -111,6 +111,7 @@ export const constantRoutes = [
 ]
 
 export const asyncRoutes = [
+  // 1、内容管理
   {
     path: '/blog',
     component: Layout,
@@ -120,16 +121,6 @@ export const asyncRoutes = [
       icon: 'user'
     },
     children: [
-      // {
-      //   path: '/blog/publish',
-      //   name: 'blogPublish',
-      //   component: () => import('@/views/blog/blog-add-update-view'),
-      //   meta: {
-      //     title: '发布文章',
-      //     icon: 'profile',
-      //     affix: false
-      //   }
-      // },
       {
         path: '/blog/info',
         name: 'blogInfo',
@@ -140,17 +131,6 @@ export const asyncRoutes = [
           affix: false
         }
       },
-      // {
-      //   path: '/blog/draft',
-      //   name: 'blogDraft',
-      //   // component: () => import('@/views/profile/password'),
-      //   component: () => import('@/views/blog/blog-add-update-view'),
-      //   meta: {
-      //     title: '草稿箱',
-      //     icon: 'password',
-      //     affix: false
-      //   }
-      // }
       {
         path: '/blog/type',
         name: 'blogType',
@@ -173,6 +153,7 @@ export const asyncRoutes = [
       }
     ]
   },
+  //2 、评论管理
   {
     path: '/comment',
     component: Layout,
@@ -204,6 +185,61 @@ export const asyncRoutes = [
       }
     ]
   },
+// 3、推荐管理
+  {
+    path: '/recommend',
+    component: Layout,
+    redirect: '/recommend/banner',
+    meta: {
+      title: '推荐管理',
+      icon: 'user'
+    },
+    children: [
+      {
+        path: '/recommend/banner',
+        name: 'banner',
+        component: () => import('@/views/recommend/banner-list'),
+        meta: {
+          title: '轮播图管理',
+          icon: 'profile',
+          affix: false
+        }
+      },
+      {
+        path: '/recommend/secondRecommend',
+        name: 'secondRecommend',
+        component: () => import('@/views/recommend/second-list'),
+        meta: {
+          title: '二级推荐',
+          icon: 'profile',
+          affix: false
+        }
+      },
+      {
+        path: '/recommend/thirdRecommend',
+        name: 'thirdRecommend',
+        component: () => import('@/views/recommend/third-list'),
+        meta: {
+          title: '三级推荐',
+          icon: 'profile',
+          affix: false
+        }
+      },
+      {
+        path: '/recommend/fourRecommend',
+        name: 'fourRecommend',
+        component: () => import('@/views/recommend/four-list'),
+        meta: {
+          title: '四级推荐',
+          icon: 'profile',
+          affix: false
+        }
+      }
+    ]
+  },
+
+
+  //4 、系统管理
   {
     path: '/sys',
     component: Layout,
