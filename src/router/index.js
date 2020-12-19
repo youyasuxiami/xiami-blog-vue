@@ -238,7 +238,6 @@ export const asyncRoutes = [
     ]
   },
 
-
   //4 、系统管理
   {
     path: '/sys',
@@ -270,7 +269,55 @@ export const asyncRoutes = [
       }
     ]
   },
-
+  // 5、运维监控
+  {
+    path: '/monitor',
+    component: Layout,
+    redirect: '/monitor/job',
+    meta: {
+      title: '运维监控',
+      icon: 'setting'
+    },
+    children: [
+      {
+        path: '/monitor/job',
+        component: () => import('@/views/monitor/job-list'),
+        name: 'userList',
+        meta: { title: '定时任务', icon: 'sys-user', affix: false }
+      },
+      {
+        path: '/monitor/data',
+        component: () => import('@/views/monitor/job-list'),
+        name: 'menuList',
+        meta: { title: '数据监控', icon: 'menu', affix: false }
+      },
+      {
+        path: '/monitor/service',
+        component: () => import('@/views/monitor/job-list'),
+        name: 'roleList',
+        meta: { title: '服务监控', icon: 'role', affix: false }
+      },
+      {
+        path: '/monitor/redis',
+        component: () => import('@/views/monitor/job-list'),
+        name: 'roleList',
+        meta: { title: 'redis监控', icon: 'role', affix: false }
+      },
+      {
+        path: '/monitor/loginLog',
+        component: () => import('@/views/monitor/job-list'),
+        name: 'roleList',
+        meta: { title: '登录日志', icon: 'role', affix: false }
+      }
+      ,
+      {
+        path: '/monitor/operateLog',
+        component: () => import('@/views/monitor/job-list'),
+        name: 'roleList',
+        meta: { title: '操作日志', icon: 'role', affix: false }
+      }
+    ]
+  },
   { path: '*', redirect: '/404', hidden: true }
 ]
 const createRouter = () => new Router({

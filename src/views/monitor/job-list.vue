@@ -1,0 +1,574 @@
+<template>
+  <div class="app-container">
+    <div>
+
+      <el-form ref="form" :model="searchForm" label-width="80px" size="mini" :inline="true">
+        <el-form-item label="任务名称">
+          <el-input v-model="searchForm.jobName" clearable></el-input>
+        </el-form-item>
+
+<!--        <el-form-item label="昵称">-->
+<!--          <el-input v-model="searchForm.nickName" clearable></el-input>-->
+<!--        </el-form-item>-->
+
+<!--        <el-form-item label="角色">-->
+<!--          <el-select v-model="value1" multiple placeholder="请选择" style="width: 360px;">-->
+<!--            <el-option-->
+<!--              v-for="item in roleList"-->
+<!--              :key="item.id"-->
+<!--              :label="item.roleName"-->
+<!--              :value="item.id">-->
+<!--            </el-option>-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
+
+<!--        <el-form-item label="性别">-->
+<!--          <el-select v-model="searchForm.sex" placeholder="请选择" clearable>-->
+<!--            <el-option :label="item.value" :value="item.code" v-for="item in sexList"-->
+<!--                       :key="item.index1"></el-option>-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
+
+<!--        <el-form-item label="账号状态">-->
+<!--          <el-select v-model="searchForm.accountStatus" placeholder="请选择" clearable>-->
+<!--            <el-option :label="item.value" :value="item.code" v-for="item in accountStatusList"-->
+<!--                       :key="item.index1"></el-option>-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="创建时间" prop="yearApply">-->
+<!--          <el-date-picker-->
+<!--            v-model="dateRange"-->
+<!--            type="daterange"-->
+<!--            format="yyyy-MM-dd"-->
+<!--            value-format="yyyy-MM-dd"-->
+<!--            range-separator="至"-->
+<!--            start-placeholder="开始日期"-->
+<!--            end-placeholder="结束日期">-->
+<!--          </el-date-picker>-->
+<!--        </el-form-item>-->
+
+
+        <el-form-item>
+          <el-button type="primary" icon="el-icon-search" @click="fetchData" size="mini">
+            搜索
+          </el-button>
+        </el-form-item>
+      </el-form>
+
+      <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-plus" @click="handleAddEditUser">新增
+      </el-button>
+
+      <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-download">
+        <a href="/file/download?fileName=用户表.xlsx">下载模板</a>
+      </el-button>
+
+      <el-upload
+        style="display: inline-block;"
+        action
+        :show-file-list="false"
+        :multiple="false"
+        accept=".xls, .xlsx"
+        :http-request="importFile"
+
+      >
+        <el-button slot="trigger" size="small" type="primary" icon="el-icon-upload">批量导入</el-button>
+
+      </el-upload>
+      <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-download" @click="exportExcel">导出当页数据
+      </el-button>
+
+      <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-download" @click="exportAllExcel">导出全部数据
+      </el-button>
+
+      <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-delete" @click="handleDeleteUsers">批量删除
+      </el-button>
+    </div>
+
+    <el-table
+      ref="handSelectTest_multipleTable"
+      @row-click="handleRowClick"
+      v-loading="listLoading"
+      :data="list"
+      element-loading-text="Loading"
+      border
+      fit
+      highlight-current-row
+      @selection-change="handleSelectionChange"
+    >
+      <el-table-column
+        type="selection"
+        width="55">
+      </el-table-column>
+
+      <el-table-column label="任务编号" min-width="90px" align="center" prop="id">
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top" align="center">
+            <span>{{scope.row.id}}</span>
+            <div slot="reference" class="m-popover">
+              {{ scope.row.id }}
+            </div>
+          </el-popover>
+        </template>
+        '
+      </el-table-column>
+
+      <el-table-column label="任务名称" min-width="90px" align="center" prop="jobName">
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top" align="center">
+            <span>{{scope.row.jobName}}</span>
+            <div slot="reference" class="m-popover">
+              {{ scope.row.jobName }}
+            </div>
+          </el-popover>
+        </template>
+        '
+      </el-table-column>
+
+      <el-table-column label="任务组名" min-width="90px" align="center" prop="jobGroup">
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top" align="center">
+            <span>{{scope.row.jobGroup}}</span>
+            <div slot="reference" class="m-popover">
+              {{ scope.row.jobGroup }}
+            </div>
+          </el-popover>
+        </template>
+        '
+      </el-table-column>
+
+<!--      <el-table-column label="任务类型" min-width="90px" align="center" prop="jobType">-->
+<!--        <template slot-scope="scope">-->
+<!--          <el-popover trigger="hover" placement="top" align="center">-->
+<!--            <span>{{scope.row.jobType}}</span>-->
+<!--            <div slot="reference" class="m-popover">-->
+<!--              {{ scope.row.jobType }}-->
+<!--            </div>-->
+<!--          </el-popover>-->
+<!--        </template>-->
+<!--        '-->
+<!--      </el-table-column>-->
+
+      <el-table-column label="执行路径/文件.方法" min-width="90px" align="center" prop="executePath">
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top" align="center">
+            <span>{{scope.row.executePath}}</span>
+            <div slot="reference" class="m-popover">
+              {{ scope.row.executePath }}
+            </div>
+          </el-popover>
+        </template>
+        '
+      </el-table-column>
+
+      <el-table-column label="执行参数" min-width="90px" align="center" prop="paramsValue">
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top" align="center">
+            <span>{{scope.row.paramsValue}}</span>
+            <div slot="reference" class="m-popover">
+              {{ scope.row.paramsValue }}
+            </div>
+          </el-popover>
+        </template>
+        '
+      </el-table-column>
+
+      <el-table-column label="cron表达式" min-width="90px" align="center" prop="cronExpression">
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top" align="center">
+            <span>{{scope.row.cronExpression}}</span>
+            <div slot="reference" class="m-popover">
+              {{ scope.row.cronExpression }}
+            </div>
+          </el-popover>
+        </template>
+        '
+      </el-table-column>
+
+      <el-table-column class-name="status-col" label="上次执行时间" align="center" width="160" sortable prop="previousTime">
+        <template slot-scope="scope">{{ scope.row.previousTime }}</template>
+      </el-table-column>
+
+
+      <el-table-column class-name="status-col" label="下次执行时间" align="center" width="160" sortable prop="nextTime">
+        <template slot-scope="scope">{{ scope.row.nextTime }}</template>
+      </el-table-column>
+
+      <el-table-column class-name="status-col" label="任务状态" align="center" prop="jobStatusName">
+        <template slot-scope="scope">{{ scope.row.jobStatusName }}</template>
+      </el-table-column>
+
+      <el-table-column label="操作" align="center" width="400" class-name="small-padding fixed-width">
+        <template slot-scope="scope">
+          <el-button size="mini" type="primary" @click="handleAddEditUser(scope.row,'edit')">
+            编辑
+          </el-button>
+
+          <el-button size="mini" type="primary" @click="handleAddEditUser(scope.row,'view')">
+            详情
+          </el-button>
+          &nbsp;
+          <el-button size="mini" type="primary" @click="handleDeleteUser(scope.row)">
+            删除
+          </el-button>
+
+          <el-button size="mini" type="primary" @click="handleDeleteUser(scope.row)">
+            立即运行
+          </el-button>
+
+          <el-button size="mini" type="primary" @click="handleDeleteUser(scope.row)">
+            暂停
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <pagination v-show="total>0" :total="total" :page.sync="pageNum" :limit.sync="pageSize" @pagination="fetchData"
+                ref="handleSizeChange"/>
+    <!--    引入组件-->
+    <user-add-update-view v-if="dialogFormVisible" ref="userAddUpdateView"
+                          @refreshDataList="fetchData"></user-add-update-view>
+  </div>
+</template>
+
+<script>
+  import {
+    getJobList,
+    updateUserStatus,
+    deleteUser,
+    addUsers,
+    exportUsers,
+    exportAllUsers,
+    deleteUsers,
+    getRoles
+  } from '@/api/monitor/job'
+  import Pagination from '@/components/Pagination/index' // secondary package based on el-pagination
+  import userAddUpdateView from '@/views/sys/user/user-add-update-view'
+
+  export default {
+    name: 'userList',
+    data() {
+      return {
+        value1: [],
+        list: null,
+        listLoading: true,
+        pageNum: 1,
+        pageSize: 10,
+        total: 0,
+        roleList: [],//角色数组
+        sexList: [],//性别数组
+        accountStatusList: [],//账号状态数组
+        currentPage: 1,
+        dialogFormVisible: false,//默认不弹窗
+        multipleSelection: [],//用于存放选中的数据的id
+        searchForm: {
+          // name: '',
+          // nickName: '',
+          // sex: '',
+          // accountStatus: '',
+          jobName:''
+        },
+        dateRange: [],//时间数组
+        dataForm: {
+          name: '',
+          nickName: '',
+          password: '',
+          sex: '',
+          age: '',
+          phone: '',
+          email: '',
+          avatar: '',
+          createTime: '',
+          updateTime: '',
+          loginTime: '',
+          ps: '',
+          status: ''
+        }
+      }
+    },
+    components: { Pagination, userAddUpdateView },
+    created() {
+      // 获取列表数据
+      this.fetchData()
+
+      // 获取性别下拉框
+      this.getTypeValue('sex').then(res => {
+        this.sexList = res.data
+      })
+
+      // // 获取账号状态下拉框
+      this.getTypeValue('account_status').then(res => {
+        this.accountStatusList = res.data
+      })
+
+      getRoles().then(res => {
+        this.roleList = res.data
+      })
+
+    },
+    methods: {
+      table_index(index) {
+        return (this.pageNum - 1) * this.pageSize + index + 1
+      },
+
+      handleSizeChange(val) {
+        console.log(`每页 ${val} 条`)
+      },
+      handleCurrentChange(val) {
+        console.log(`当前页: ${val}`)
+      },
+      fetchData() {
+        // 请求参数
+        this.searchForm.pageNum = this.pageNum
+        this.searchForm.pageSize = this.pageSize
+        // this.searchForm.roleIds = this.value1.toString()
+
+        // this.searchForm.createTime = ''
+        // if (null != this.dateRange && '' != this.dateRange) {
+        //   this.searchForm.createTime = this.dateRange.toString()
+        // }
+        let data = this.searchForm
+
+        this.listLoading = true
+        getJobList(data).then(response => {//这是json字符串请求
+          console.log("-----------")
+          console.log(response)
+          this.list = response.data.data
+          this.total = response.data.total
+          this.listLoading = false
+        })
+      },
+
+      // 新增/编辑用户
+      handleAddEditUser(row, param) {
+        this.dialogFormVisible = true
+        this.$nextTick(() => {
+          this.$refs.userAddUpdateView.init(row, param)
+        })
+      },
+      // 导出
+      exportExcel() {
+
+        let datas = this.searchForm
+
+        exportUsers(datas).then(data => {
+          if (data) {
+            //调用成功，在html中创建一个a元素
+            let aTag = document.createElement('a')
+            //创建一个blob对象
+            let blob = new Blob([data], {
+              type: 'application/vnd.ms-excel'
+            }) // 这个content是下载的文件内容，自己修改
+            console.log('blob', blob)
+            aTag.download = `用户表.xlsx` // 下载的文件名
+            // aTag.style.display = "none";
+            aTag.href = window.URL.createObjectURL(blob) //创建一个URL对象
+            document.body.appendChild(aTag)
+            aTag.click()
+            window.URL.revokeObjectURL(blob) //释放URL对象
+            document.body.removeChild(aTag)
+          } else {
+            console.log('-----------')
+          }
+        })
+      },
+      // 导出全部数据
+      exportAllExcel() {
+
+        // 请求参数
+        let datas = this.searchForm
+
+        exportAllUsers(datas).then(data => {
+          if (data) {
+            //调用成功，在html中创建一个a元素
+            let aTag = document.createElement('a')
+            //创建一个blob对象
+            let blob = new Blob([data], {
+              type: 'application/vnd.ms-excel'
+            }) // 这个content是下载的文件内容，自己修改
+            console.log('blob', blob)
+            aTag.download = `用户表.xlsx` // 下载的文件名
+            // aTag.style.display = "none";
+            aTag.href = window.URL.createObjectURL(blob) //创建一个URL对象
+            document.body.appendChild(aTag)
+            aTag.click()
+            window.URL.revokeObjectURL(blob) //释放URL对象
+            document.body.removeChild(aTag)
+          } else {
+            console.log('-----------')
+          }
+        })
+      },
+
+      //禁用0、启用1
+      handleUpdateUserStatus(row) {
+        let status = ''
+        if (row.status == '启用') {
+          status = '0'//传给后端，0表示禁用
+        } else if (row.status == '禁用') {
+          status = '1'//传给后端，1表示启用
+        }
+
+        let params = {
+          id: row.id,
+          status: status
+        }
+        updateUserStatus(params).then((data) => {
+          console.log('data')
+          console.log(data)
+          if (data.code == '20000') {
+            this.$notify({
+              title: '成功',
+              message: data.message,
+              type: 'success',
+              duration: 2000
+            })
+            this.fetchData()
+
+          } else {
+            this.$notify({
+              title: '失败',
+              message: data.message,
+              type: 'error',
+              duration: 2000
+            })
+          }
+        })
+      },
+
+      //删除用户
+      handleDeleteUser(row) {
+        let params = {
+          id: row.id
+        }
+        this.$confirm(
+          `确定删除该用户?`,
+          '提示',
+          {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }
+        )
+          .then(() => {
+            deleteUser(params).then((data) => {
+              if (data.code == '20000') {
+                this.$notify({
+                  title: '成功',
+                  message: data.message,
+                  type: 'success',
+                  duration: 2000
+                })
+                this.fetchData()
+
+              } else {
+                this.$notify({
+                  title: '失败',
+                  message: data.message,
+                  type: 'error',
+                  duration: 2000
+                })
+              }
+            })
+          })
+      },
+
+      beforeUpload(file) {
+        //判断文件格式
+        let hz = file.name.split('.')[1]
+        if (hz != 'xlsx' && hz != 'xls') {
+          this.$alert('只能上传EXCEL文件！')
+          return false
+        }
+      },
+      uploadSuccess(response) {
+        if (response.respCode == 0) {
+          this.$message({
+            type: 'success',
+            message: '添加成功!'
+          })
+          this.$store.dispatch('teacher/getTeacherList', this.infoQ)
+        } else {
+          this.$alert('添加失败!' + response.message)
+        }
+      },
+      // 导入
+      importFile(param) {
+        let uploadData = new FormData()
+        uploadData.append('file', param.file)
+        addUsers(uploadData).then((data) => {
+          console.log('data')
+          console.log(data)
+          if (data.code == '20000') {
+            this.$notify({
+              title: '成功',
+              message: data.message,
+              type: 'success',
+              duration: 2000
+            })
+            this.fetchData()
+
+          } else {
+            this.$notify({
+              title: '失败',
+              message: data.message,
+              type: 'error',
+              duration: 2000
+            })
+          }
+        })
+      },
+      //获得选中的行的id
+      handleSelectionChange(val) {
+        this.multipleSelection = []
+        for (let i = 0; i < val.length; i++) {
+          this.multipleSelection.push(val[i].id)
+        }
+      },
+      handleDeleteUsers() {
+        deleteUsers({ ids: (this.multipleSelection) + '' }).then(data => {
+          if (data.code == '20000') {
+            this.$notify({
+              title: '成功',
+              message: data.message,
+              type: 'success',
+              duration: 2000
+            })
+            this.fetchData()
+
+          } else {
+            this.$notify({
+              title: '失败',
+              message: data.message,
+              type: 'error',
+              duration: 2000
+            })
+          }
+        })
+      },
+      //点击表格一行数据触发
+      handleRowClick(row, column, event) {
+        this.$refs.handSelectTest_multipleTable.toggleRowSelection(row)
+      }
+    },
+    watch: {
+      total() {
+        if (this.total == (this.pageNum - 1) * this.pageSize && this.total != 0) {
+          this.pageNum -= 1
+          this.fetchData()//获取列表数据
+        }
+      }
+    }
+
+  }
+</script>
+<style lang="scss" scoped>
+  .m-add-btn {
+    margin-bottom: 10px;
+  }
+
+  .m-popover {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+</style>
