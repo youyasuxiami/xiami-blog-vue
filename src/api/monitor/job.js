@@ -8,9 +8,9 @@ export function getJobList(params) {
     params
   })
 }
-export function addUser(data) {
+export function addUpdateJob(data) {
   return request({
-    url: '/user/addUser',
+    url: '/monitor/addUpdateJob',
     method: 'post',
     data
   })
@@ -24,54 +24,11 @@ export function updateUserStatus(params) {
   })
 }
 
-export function deleteUser(params) {
+export function deleteJob(params) {
   return request({
-    url: '/user/deleteUser',
-    method: 'post',
+    url: '/monitor/deleteJob',
+    method: 'delete',
     params
-  })
-}
-
-/**
- * 批量导入用户
- * @param params
- * @returns {AxiosPromise}
- */
-export function addUsers(data) {
-  return request({
-    url: '/user/importExcel',
-    method: 'post',
-    headers: {"Content-type": "multipart/form-data"},
-    data
-  })
-}
-
-/**
- * 导出当前页数据
- * @param params
- * @returns {AxiosPromise}
- */
-export function exportUsers(params) {
-  return request({
-    url: '/user/exportUserToExcel',
-    method: 'get',
-    params,
-    headers: { "Content-type": "multipart/form-data" },
-    responseType: "blob"
-  })
-}
-/**
- * 导出全部数据
- * @param params
- * @returns {AxiosPromise}
- */
-export function exportAllUsers(params) {
-  return request({
-    url: '/user/exportAllUserToExcel',
-    method: 'get',
-    params,
-    headers: { "Content-type": "multipart/form-data" },
-    responseType: "blob"
   })
 }
 
@@ -80,13 +37,56 @@ export function exportAllUsers(params) {
  * @param params
  * @returns {AxiosPromise}
  */
-export function deleteUsers(params) {
+export function deleteJobs(params) {
   return request({
-    url: '/user/deleteUsers',
-    method: 'get',
+    url: '/monitor/deleteJobs',
+    method: 'delete',
     params
   })
 }
+
+/**
+ * 开启定时任务
+ * @param data
+ * @returns {AxiosPromise}
+ */
+export function startJob(data) {
+  return request({
+    url: '/monitor/startJob',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 暂停定时任务
+ * @param data
+ * @returns {AxiosPromise}
+ */
+export function stopJob(data) {
+  return request({
+    url: '/monitor/stopJob',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 恢复定时任务
+ * @param data
+ * @returns {AxiosPromise}
+ */
+export function resumeJob(data) {
+  return request({
+    url: '/monitor/resumeJob',
+    method: 'post',
+    data
+  })
+}
+
+
+
+
 
 /**
  * 获取所有的角色
