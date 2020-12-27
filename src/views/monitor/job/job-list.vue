@@ -266,7 +266,7 @@
     resumeJob
   } from '@/api/monitor/job'
   import Pagination from '@/components/Pagination/index' // secondary package based on el-pagination
-  import jobAddUpdateView from '@/views/monitor/job-add-update-view'
+  import jobAddUpdateView from '@/views/monitor/job/job-add-update-view'
 
   export default {
     name: 'userList',

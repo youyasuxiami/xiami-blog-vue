@@ -281,38 +281,44 @@ export const asyncRoutes = [
     children: [
       {
         path: '/monitor/job',
-        component: () => import('@/views/monitor/job-list'),
+        component: () => import('@/views/monitor/job/job-list'),
         name: 'userList',
         meta: { title: '定时任务', icon: 'sys-user', affix: false }
       },
       {
         path: '/monitor/data',
-        component: () => import('@/views/monitor/job-list'),
+        component: () => import('@/views/monitor/druid/druid'),
         name: 'menuList',
         meta: { title: '数据监控', icon: 'menu', affix: false }
       },
       {
         path: '/monitor/service',
-        component: () => import('@/views/monitor/job-list'),
+        component: () => import('@/views/monitor/server/server'),
         name: 'roleList',
         meta: { title: '服务监控', icon: 'role', affix: false }
       },
       {
         path: '/monitor/redis',
-        component: () => import('@/views/monitor/job-list'),
+        component: () => import('@/views/monitor/redis/redis'),
         name: 'roleList',
         meta: { title: 'redis监控', icon: 'role', affix: false }
       },
       {
+        path: '/monitor/api',
+        component: () => import('@/views/monitor/swagger/swagger'),
+        name: 'roleList',
+        meta: { title: 'api监控', icon: 'role', affix: false }
+      },
+      {
         path: '/monitor/loginLog',
-        component: () => import('@/views/monitor/job-list'),
+        component: () => import('@/views/monitor/job/job-list'),
         name: 'roleList',
         meta: { title: '登录日志', icon: 'role', affix: false }
       }
       ,
       {
         path: '/monitor/operateLog',
-        component: () => import('@/views/monitor/job-list'),
+        component: () => import('@/views/monitor/job/job-list'),
         name: 'roleList',
         meta: { title: '操作日志', icon: 'role', affix: false }
       }
