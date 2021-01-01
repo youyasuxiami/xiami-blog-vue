@@ -134,18 +134,7 @@
       this.fetchData()
     },
     methods: {
-      table_index(index) {
-        return (this.pageNum - 1) * this.pageSize + index + 1
-      },
-
-      handleSizeChange(val) {
-        console.log(`每页 ${val} 条`)
-      },
-      handleCurrentChange(val) {
-        console.log(`当前页: ${val}`)
-      },
       fetchData() {
-
         // 请求参数
         this.searchForm.pageNum = this.pageNum
         this.searchForm.pageSize = this.pageSize
@@ -153,14 +142,9 @@
 
         this.listLoading = true
         getMenuList(data).then(response => {//这是json字符串请求
-          console.log("response")
-          console.log(response)
           this.list = response.data.data
           localStorage.setItem("accessRoutes", JSON.stringify(this.list));
-          console.log("获得所有的菜单")
-          console.log(this.list)
           let accessRoutes=JSON.parse(localStorage.getItem("accessRoutes"))
-          console.log(accessRoutes)
           this.total = response.data.total
           this.listLoading = false
         })
@@ -188,8 +172,6 @@
           status: status
         }
         updateUserStatus(params).then((data) => {
-          console.log('data')
-          console.log(data)
           if (data.code == '20000') {
             this.$notify({
               title: '成功',

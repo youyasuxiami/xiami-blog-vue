@@ -37,7 +37,6 @@ export default {
   },
   methods:{
     // reload() {
-    //   console.log("33333")
     //   this.isRouterAlive = false;
     //   this.$nextTick(function() {
     //     this.isRouterAlive = true;

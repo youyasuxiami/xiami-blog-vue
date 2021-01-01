@@ -192,8 +192,6 @@
       /** 查询服务器信息 */
       getList() {
         getServer().then(response => {
-          console.log("response")
-          console.log(response)
           this.server = response.data;
           this.loading.close();
         });

@@ -136,7 +136,6 @@
           if (data.code == '20000') {
             this.rsaKey = data.data
           } else {
-            console.log('获取公钥失败')
           }
         })
       },

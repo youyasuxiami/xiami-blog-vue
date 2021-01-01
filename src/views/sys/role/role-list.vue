@@ -148,16 +148,6 @@
       this.fetchData()
     },
     methods: {
-      table_index(index) {
-        return (this.pageNum - 1) * this.pageSize + index + 1
-      },
-
-      handleSizeChange(val) {
-        console.log(`每页 ${val} 条`)
-      },
-      handleCurrentChange(val) {
-        console.log(`当前页: ${val}`)
-      },
       fetchData() {
         // 请求参数
         this.searchForm.pageNum = this.pageNum
@@ -208,7 +198,6 @@
             let blob = new Blob([data], {
               type: "application/vnd.ms-excel"
             }); // 这个content是下载的文件内容，自己修改
-            console.log("blob", blob);
             aTag.download = `用户表.xlsx`; // 下载的文件名
             // aTag.style.display = "none";
             aTag.href = window.URL.createObjectURL(blob); //创建一个URL对象
@@ -217,13 +206,8 @@
             window.URL.revokeObjectURL(blob); //释放URL对象
             document.body.removeChild(aTag);
           } else {
-            console.log("-----------")
           }
         })
-          // .then(response => {//这是json字符串请求
-          // console.log(response)
-        // })
-        // window.location.href = "/user/exportUserToExcel"
       },
 
       //禁用0、启用1
@@ -240,8 +224,6 @@
           status: status
         }
         updateUserStatus(params).then((data) => {
-          console.log('data')
-          console.log(data)
           if (data.code == '20000') {
             this.$notify({
               title: '成功',
@@ -342,43 +324,6 @@
             })
           }
         })
-
-
-
-
-
-
-
-
-
-        // this.$http({
-        //     url: "/user/importExcel",
-        //     headers: {"Content-type": "multipart/form-data"},
-        //     method: "post",
-        //     data: uploadData
-        //   }).then((data) => {
-        //     console.log("--------------")
-        //     console.log(data)
-        //     return false
-        //     if (data.data.flag) {
-        //       this.$message({
-        //         type: "success",
-        //         message: "导入成功"
-        //       });
-        //       this.monthly = this.dataForm.monthly
-        //       // 获取列表数据
-        //       this.getDataList()
-        //
-        //
-        //     } else if (data.data.code == "506") {
-        //       this.$message.error(data.data.msg);
-        //     } else {
-        //       this.$message.error(data.data.msg);
-        //     }
-        //   })
-
-
-
       }
     },
     watch:{
@@ -389,7 +334,6 @@
         }
       }
     }
-
   }
 </script>
 <style lang="scss" scoped>

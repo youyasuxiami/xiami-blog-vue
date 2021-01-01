@@ -251,14 +251,8 @@
 </template>
 
 <script>
-  // import { updateUserStatus, deleteUser, addUsers, exportUsers, exportAllUsers, deleteUsers } from '@/api/sys'
   import {
-    getList,
-    changeShareStatement,
-    changeAppreciation,
-    changeCommentabled,
-    deleteBlog,
-    deleteBlogs
+    getList
   } from '@/api/comment'
   import Pagination from '@/components/Pagination/index' // secondary package based on el-pagination
   import blogAddUpdateView from '@/views/blog/blog-add-update-view'
@@ -297,22 +291,10 @@
 
       this.getTypeValue('comment_status').then(res => {
         this.statusList = res.data
-        console.log('****************************')
-        console.log(this.statusList)
       })
 
     },
     methods: {
-      table_index(index) {
-        return (this.pageNum - 1) * this.pageSize + index + 1
-      },
-
-      handleSizeChange(val) {
-        // console.log(`每页 ${val} 条`)
-      },
-      handleCurrentChange(val) {
-        // console.log(`当前页: ${val}`)
-      },
       fetchData() {
         // 请求参数
         this.searchForm.pageNum = this.pageNum

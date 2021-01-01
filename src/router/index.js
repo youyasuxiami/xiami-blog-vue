@@ -311,14 +311,14 @@ export const asyncRoutes = [
       },
       {
         path: '/monitor/loginLog',
-        component: () => import('@/views/monitor/job/job-list'),
+        component: () => import('@/views/monitor/log/operator-log'),
         name: 'roleList',
         meta: { title: '登录日志', icon: 'role', affix: false }
       }
       ,
       {
         path: '/monitor/operateLog',
-        component: () => import('@/views/monitor/job/job-list'),
+        component: () => import('@/views/monitor/log/operator-log'),
         name: 'roleList',
         meta: { title: '操作日志', icon: 'role', affix: false }
       }

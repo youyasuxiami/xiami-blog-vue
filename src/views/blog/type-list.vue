@@ -120,16 +120,6 @@
       this.fetchData()
     },
     methods: {
-      table_index(index) {
-        return (this.pageNum - 1) * this.pageSize + index + 1
-      },
-
-      handleSizeChange(val) {
-        // console.log(`每页 ${val} 条`)
-      },
-      handleCurrentChange(val) {
-        // console.log(`当前页: ${val}`)
-      },
       fetchData() {
         // 请求参数
         this.searchForm.pageNum = this.pageNum

@@ -126,7 +126,6 @@
        * @param field
        */
       cropSuccess(image, field) {
-        console.log('-------- crop success --------')
         this.form.avatar = image
       },
       /**
@@ -135,10 +134,6 @@
        * @param field
        */
       cropUploadSuccess(jsonData, field) {
-        console.log('-------- upload success --------')
-        console.log(jsonData)
-        console.log('path: ', jsonData.data.path)
-        console.log('field: ' + field)
         this.form.avatar = jsonData.data.path
       },
       /**
@@ -147,9 +142,6 @@
        * @param field
        */
       cropUploadFail(status, field) {
-        console.log('-------- upload fail --------')
-        console.log(status)
-        console.log('field: ' + field)
       },
     }
   }

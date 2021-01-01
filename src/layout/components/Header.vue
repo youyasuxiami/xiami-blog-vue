@@ -108,13 +108,9 @@
 
           if (data.code == '20000') {
             urls = data.data.urls
-            console.log("urls////////////////")
             const accessRoutes = await store.dispatch('permission/generateRoutes', urls)//获取该用户的所有菜单
-            console.log("获取路由表////////////")
-            console.log(accessRoutes)
             router.addRoutes(accessRoutes)
           } else {
-            console.log("失败")
           }
         })
       },
@@ -122,16 +118,11 @@
         getFirstMenus().then((data) => {
           if (data.code == '20000') {
             this.firstMenu=data.data
-            console.log("获取一级菜单成功:"+this.firstMenu)
-            console.log(this.firstMenu[0].id)
-            // this.activeIndex =this.firstMenu[0].id
             this.activeIndex = localStorage.getItem("activeIndex")
-            console.log(this.activeIndex)
             if(!this.activeIndex){
               this.activeIndex=this.firstMenu[0].id+""
             }
           } else {
-            console.log("获取一级菜单失败")
           }
         })
 

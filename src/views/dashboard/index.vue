@@ -14,9 +14,6 @@ export default {
       'name'
     ])
   },
-  created() {
-    console.log("进来")
-  }
 }
 </script>
 

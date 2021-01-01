@@ -11,13 +11,6 @@ NProgress.configure({ showSpinner: false }) // NProgress Configuration
 const whiteList = ['/login'] // no redirect whitelist
 // 全局钩子router.beforeEach中拦截路由
 router.beforeEach(async(to, from, next) => {
-  console.log("to")
-  console.log(to)
-  console.log("from")
-  console.log(from)
-  console.log("next")
-  console.log(next)
-  // start progress bar
   NProgress.start()
 
   // set page title
@@ -36,23 +29,13 @@ router.beforeEach(async(to, from, next) => {
       if (hasGetUserInfo) {
         next()
       } else {
-        console.log("***********************************************")
-        console.log(hasToken)
         try {
           // get user info
           //1、给个默认的一级菜单（如果没有默认的，给个默认）
           let activeIndex=localStorage.getItem("activeIndex")
-          console.log("打印默认的一级菜单的id："+activeIndex)
-          // console.log("获得菜单id")
-          // console.log(activeIndex)
-          console.log("222222")
           const { urls } = await store.dispatch('user/getInfo',activeIndex)
-          console.log("獲取一開始urls")
-          console.log(urls)
           //2、根据选中的一级菜单获取所有的子菜单
           const accessRoutes = await store.dispatch('permission/generateRoutes', urls)//获取该用户的所有菜单
-          console.log("一开始获得路由表")
-          console.log(accessRoutes)
           // router.addRoutes(JSON.parse(localStorage.getItem("accessRoutes")))
           router.addRoutes(accessRoutes)
           next({ ...to, replace: true })

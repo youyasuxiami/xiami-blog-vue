@@ -235,11 +235,8 @@
         this.visible = true
 
         if (param) {//如果是新增传过来，那么param为undefined,将会走else
-          console.log('编辑/查看')
           this.dialogStatus = param
           this.temp = Object.assign({}, row) // copy obj
-          console.log('获得编辑的this.temp')
-          console.log(this.temp)
           switch (this.temp.flag) {
             case '原创':
               this.temp.flag = '1'
@@ -280,17 +277,14 @@
           switch (param) {
             case 'edit':
               this.getChecked()//获取选中的标签的id
-              console.log('编辑界面')
               break
 
             case 'view':
               this.getChecked()//获取选中的标签的id
-              console.log('查看界面')
               this.viewDisabled = true //不可编辑
               break
           }
         } else {
-          console.log('新增界面')
           this.dialogStatus = 'add'
           this.temp.flag = '1'
           this.temp.title = ''
@@ -306,7 +300,6 @@
         }
       },
       imgAdd(pos, $file) {
-        console.log("111111111111111111111")
         // 第一步.将图片上传到服务器.
         var formdata = new FormData()
         formdata.append('multipartFile', $file)
@@ -320,8 +313,6 @@
           if (response.code == '20000') {
             let _res = response.data
             // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
-            console.log("_res")
-            console.log(_res)
             this.$refs.md.$img2Url(pos, _res.path)
 
             this.$notify({
@@ -357,8 +348,6 @@
       },
       getChecked() {
         getCheckedTags({ id: this.temp.id }).then(res => {
-          console.log('获取选中的标签的id')
-          console.log(res)
           this.value1 = res.data
         })
       },
@@ -368,7 +357,6 @@
        * @param field
        */
       cropSuccess(image, field) {
-        console.log('-------- crop success --------')
         this.temp.firstPicture = image
       },
       /**
@@ -377,10 +365,6 @@
        * @param field
        */
       cropUploadSuccess(jsonData, field) {
-        console.log('-------- upload success --------')
-        console.log(jsonData)
-        console.log('path: ', jsonData.data.path)
-        console.log('field: ' + field)
         this.temp.firstPicture = jsonData.data.path
       },
       /**
@@ -389,7 +373,6 @@
        * @param field
        */
       cropUploadFail(status, field) {
-        console.log('-------- upload fail --------')
       },
       toggleShow() {
         this.show = !this.show

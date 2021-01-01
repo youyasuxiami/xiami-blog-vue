@@ -325,16 +325,6 @@
       })
     },
     methods: {
-      table_index(index) {
-        return (this.pageNum - 1) * this.pageSize + index + 1
-      },
-
-      handleSizeChange(val) {
-        console.log(`每页 ${val} 条`)
-      },
-      handleCurrentChange(val) {
-        console.log(`当前页: ${val}`)
-      },
       fetchData() {
         // 请求参数
         this.searchForm.pageNum = this.pageNum
@@ -377,8 +367,6 @@
           status: status
         }
         updateUserStatus(params).then((data) => {
-          console.log('data')
-          console.log(data)
           if (data.code == '20000') {
             this.$notify({
               title: '成功',

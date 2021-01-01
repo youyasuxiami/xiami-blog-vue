@@ -251,11 +251,8 @@
         this.visible = true
         // this.dialogStatus = param
         if (param) {//如果是新增传过来，那么param为undefined,将会走else
-          console.log('编辑/查看')
           this.dialogStatus = param
           this.temp = Object.assign({}, row) // copy obj
-          console.log('获得编辑的this.temp')
-          console.log(this.temp)
           switch (this.temp.sex) {
             case '男':
               this.temp.sex = '0'
@@ -268,17 +265,14 @@
           switch (param) {
             case 'edit':
               this.getChecked()//获取选中的角色数组
-              console.log('编辑界面')
               break
 
             case 'view':
               this.getChecked()//获取选中的角色数组
-              console.log('查看界面')
               this.viewDisabled = true //不可编辑
               break
           }
         } else {
-          console.log('新增界面')
           this.dialogStatus = 'add'
           this.$refs.dataForm.resetFields()//对该表单项进行重置，将其值重置为初始值并移除校验结果
           this.checkedRoles = []
@@ -327,22 +321,6 @@
             }
             this.temp.roleIds = this.checkedRoles
             addUser(this.temp).then((data) => {
-
-              // // 更新头像
-              // modifyIcon({
-              //   username: this.temp.name,
-              //   path: jsonData.data.path
-              // }).then(response => {
-              //   this.$message({
-              //     message: response.message,
-              //     type: 'success'
-              //   })
-              //   console.log(jsonData.data.path)
-              //   // 更新 vuex 中的头像
-              //   // this.$store.dispatch('user/setAvatar', jsonData.data.path)
-              // }).catch(() => {
-              // })
-
               if (data.code == '20000') {
                 this.$notify({
                   title: '成功',
@@ -379,7 +357,6 @@
        * @param field
        */
       cropSuccess(image, field) {
-        console.log('-------- crop success --------')
         this.temp.avatar = image
       },
       /**
@@ -388,10 +365,6 @@
        * @param field
        */
       cropUploadSuccess(jsonData, field) {
-        console.log('-------- upload success --------')
-        console.log(jsonData)
-        console.log('path: ', jsonData.data.path)
-        console.log('field: ' + field)
         this.temp.avatar = jsonData.data.path
       },
       /**
@@ -400,12 +373,9 @@
        * @param field
        */
       cropUploadFail(status, field) {
-        console.log('-------- upload fail --------')
       },
       getChecked() {
         getCheckedRoles({ id: this.temp.id }).then(res => {
-          console.log('获取选中的角色id')
-          console.log(res)
           this.checkedRoles = res.data
         })
 
