@@ -112,6 +112,26 @@ export function getCheckedRoles(params) {
     params
   })
 }
+
+export function resetUser(params) {
+  return request({
+    url: '/user/resetUser',
+    method: 'post',
+    params
+  })
+}
+
+
+
+
+
+
+
+
+
+
+
+
 // 用户管理 END **********************
 
 // 菜单管理 START **********************

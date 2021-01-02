@@ -134,6 +134,9 @@
       this.fetchData()
     },
     methods: {
+      table_index(index) {
+        return (this.pageNum - 1) * this.pageSize + index + 1
+      },
       fetchData() {
         // 请求参数
         this.searchForm.pageNum = this.pageNum

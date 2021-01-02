@@ -2,7 +2,7 @@
   <div class="app-container">
     <div>
 
-      <el-form ref="form" :model="searchForm" label-width="80px" size="mini" :inline="true">
+      <el-form ref="form" :model="searchForm" label-width="80px" size="mini" :inline="true" @keyup.enter.native="fetchData">
         <el-form-item label="任务名称">
           <el-input v-model="searchForm.jobName" clearable></el-input>
         </el-form-item>

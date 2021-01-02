@@ -6,6 +6,7 @@
                label-width="80px"
                size="mini"
                :inline="true"
+               @keyup.enter.native="fetchData"
       >
         <el-form-item label="作者">
           <el-input v-model="searchForm.userName" clearable></el-input>
@@ -89,7 +90,7 @@
         type="selection"
         width="55">
       </el-table-column>
-      <el-table-column align="center" label="序号" width="95" :index="table_index"
+      <el-table-column align="center" label="序号" width="95"
                        type="index" sortable="true">
       </el-table-column>
       <el-table-column label="作者" min-width="90px" align="center" prop="userName">

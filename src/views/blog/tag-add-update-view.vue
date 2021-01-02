@@ -7,6 +7,7 @@
         :model="temp"
         label-width="120px"
         :rules="rule"
+        @keyup.enter.native="dialogStatus==='add'?addData():updateData()"
       >
         <el-form-item label="标签名称" prop="name">
           <el-input v-model="temp.name"></el-input>

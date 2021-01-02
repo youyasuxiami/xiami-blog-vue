@@ -2,7 +2,9 @@
   <div class="app-container">
     <div>
 
-      <el-form ref="form" :model="searchForm" label-width="80px" size="mini" :inline="true">
+      <el-form ref="form" :model="searchForm" label-width="80px" size="mini" :inline="true"
+               @keyup.enter.native="fetchData"
+      >
         <el-form-item label="角色名称">
           <el-input v-model="searchForm.roleName" clearable></el-input>
         </el-form-item>
@@ -148,6 +150,9 @@
       this.fetchData()
     },
     methods: {
+      table_index(index) {
+        return (this.pageNum - 1) * this.pageSize + index + 1
+      },
       fetchData() {
         // 请求参数
         this.searchForm.pageNum = this.pageNum

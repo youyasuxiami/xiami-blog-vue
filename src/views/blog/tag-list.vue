@@ -2,14 +2,14 @@
   <div class="app-container">
     <div>
 
-      <el-form ref="form" :model="searchForm" label-width="80px" size="mini" :inline="true">
+      <el-form ref="form" :model="searchForm" label-width="80px" size="mini" :inline="true" @keyup.enter.native="fetchData">
         <el-form-item label="标签名称">
           <el-input v-model="searchForm.tagName" clearable></el-input>
         </el-form-item>
 
         <el-form-item label="创建时间" prop="yearApply">
           <el-date-picker
-            v-model="createTime"
+            v-model="dateRange"
             type="daterange"
             format="yyyy-MM-dd"
             value-format="yyyy-MM-dd"
@@ -124,6 +124,9 @@
       this.fetchData()
     },
     methods: {
+      table_index(index) {
+        return (this.pageNum - 1) * this.pageSize + index + 1
+      },
       fetchData() {
         // 请求参数
         this.searchForm.pageNum = this.pageNum

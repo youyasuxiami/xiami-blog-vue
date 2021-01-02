@@ -59,7 +59,7 @@ service.interceptors.response.use(
   },
   error => {
     Message({
-      message: error.message,
+      message: error.response.data.message,
       type: 'error',
       duration: 3 * 1000
     })

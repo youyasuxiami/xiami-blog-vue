@@ -2,7 +2,8 @@
   <div class="app-container">
     <div>
 
-      <el-form ref="form" :model="searchForm" label-width="80px" size="mini" :inline="true">
+      <el-form ref="form" :model="searchForm" label-width="80px" size="mini" :inline="true" @keyup.enter.native="fetchData"
+      >
         <el-form-item label="用户名">
           <el-input v-model="searchForm.name" clearable></el-input>
         </el-form-item>
@@ -228,7 +229,7 @@
       <el-table-column class-name="status-col" label="账号状态" align="center">
         <template slot-scope="scope">{{ scope.row.status }}</template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="320" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="400px" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="handleAddEditUser(scope.row,'edit')">
             编辑
@@ -253,6 +254,10 @@
           &nbsp;
           <el-button size="mini" type="danger" @click="handleDeleteUser(scope.row)">
             删除
+          </el-button>
+
+          <el-button size="mini" type="danger" @click="handleResetUser(scope.row)">
+            重置密码
           </el-button>
         </template>
       </el-table-column>
@@ -287,7 +292,8 @@
     exportUsers,
     exportAllUsers,
     deleteUsers,
-    getRoles
+    getRoles,
+    resetUser
   } from '@/api/sys'
   import Pagination from '@/components/Pagination/index' // secondary package based on el-pagination
   import userAddUpdateView from '@/views/sys/user/user-add-update-view'
@@ -361,6 +367,9 @@
 
     },
     methods: {
+      table_index(index) {
+        return (this.pageNum - 1) * this.pageSize + index + 1
+      },
       fetchData() {
         // 请求参数
         this.searchForm.pageNum = this.pageNum
@@ -603,6 +612,51 @@
       //点击表格一行数据触发
       handleRowClick(row, column, event) {
         this.$refs.handSelectTest_multipleTable.toggleRowSelection(row)
+      },
+      // 重置密码
+      handleResetUser(row) {
+        let params = {
+          id: row.id
+        }
+        this.$confirm(
+          `确定重置该用户密码?`,
+          '提示',
+          {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }
+        )
+          .then(() => {
+            resetUser(params).then(data => {
+              if (data.code == '20000') {
+                // this.$notify({
+                //   title: '成功',
+                //   message: data.message,
+                //   type: 'success',
+                //   duration: 2000
+                // })
+                this.$message({
+                  message: data.message,
+                  type: "success",
+                  duration: 3000,
+                  onClose: () => {
+                    this.fetchData()
+                  }
+                });
+
+
+
+              } else {
+                this.$notify({
+                  title: '失败',
+                  message: data.message,
+                  type: 'error',
+                  duration: 2000
+                })
+              }
+            })
+          })
       }
     },
     watch: {

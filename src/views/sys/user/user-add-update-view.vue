@@ -8,6 +8,7 @@
         label-position="right"
         label-width="120px"
         :rules="rule"
+        @keyup.enter.native="dialogStatus==='add'?addData():updateData()"
       >
         <!--        <el-row :gutter="10">-->
         <el-row class="demo-avatar demo-basic">

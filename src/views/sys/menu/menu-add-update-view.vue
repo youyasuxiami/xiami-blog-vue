@@ -8,6 +8,7 @@
         label-position="right"
         label-width="120px"
         :rules="rule"
+        @keyup.enter.native="dialogStatus==='add'?addData():updateData()"
       >
         <el-row>
           <el-col :span="24">

@@ -2,7 +2,7 @@
   <div class="app-container">
     <div>
 
-      <el-form ref="form" :model="searchForm" label-width="80px" size="mini" :inline="true">
+      <el-form ref="form" :model="searchForm" label-width="80px" size="mini" :inline="true" @keyup.enter.native="fetchData">
         <el-form-item label="日志标题">
           <el-input v-model="searchForm.title" clearable></el-input>
         </el-form-item>
@@ -64,7 +64,7 @@
       </el-form>
 
 
-      <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-delete" @click="handleDeleteJobs">批量删除
+      <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-delete" @click="handledeleteLogs">批量删除
       </el-button>
     </div>
 
@@ -199,7 +199,7 @@
 
       <el-table-column label="操作" align="left"  class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button size="mini" type="primary" @click="handleDeleteJob(scope.row)">
+          <el-button size="mini" type="primary" @click="handleDeleteLog(scope.row)">
             删除
           </el-button>
         </template>
@@ -208,18 +208,14 @@
 
     <pagination v-show="total>0" :total="total" :page.sync="searchForm.pageNum" :limit.sync="searchForm.pageSize" @pagination="fetchData"
                 ref="handleSizeChange"/>
-    <!--    引入组件-->
-    <job-add-update-view v-if="dialogFormVisible" ref="jobAddUpdateView" @refreshDataList="fetchData">
-
-    </job-add-update-view>
   </div>
 </template>
 
 <script>
   import {
     getOperatorLogList,
-    deleteJob,
-    deleteJobs
+    deleteLog,
+    deleteLogs
   } from '@/api/monitor/operator'
   import Pagination from '@/components/Pagination/index' // secondary package based on el-pagination
   import jobAddUpdateView from '@/views/monitor/job/job-add-update-view'
@@ -273,14 +269,12 @@
       },
 
       //删除定时任务
-      handleDeleteJob(row) {
+      handleDeleteLog(row) {
         let params = {
-          id: row.id,
-          jobName:row.jobName,
-          jobGroup:row.jobGroup
+          id: row.id
         }
         this.$confirm(
-          `确定删除该定时任务?`,
+          `确定删除该日志?`,
           '提示',
           {
             confirmButtonText: '确定',
@@ -289,7 +283,7 @@
           }
         )
           .then(() => {
-            deleteJob(params).then((data) => {
+            deleteLog(params).then((data) => {
               if (data.code == '20000') {
                 this.$notify({
                   title: '成功',
@@ -319,8 +313,8 @@
         }
       },
 
-      handleDeleteJobs() {
-        deleteJobs({ ids: (this.multipleSelection) + '' }).then(data => {
+      handledeleteLogs() {
+        deleteLogs({ ids: (this.multipleSelection) + '' }).then(data => {
           if (data.code == '20000') {
             this.$notify({
               title: '成功',

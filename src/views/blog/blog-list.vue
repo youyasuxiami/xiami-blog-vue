@@ -6,6 +6,7 @@
                label-width="80px"
                size="mini"
                :inline="true"
+               @keyup.enter.native="fetchData"
       >
         <el-form-item label="作者">
           <el-input v-model="searchForm.userName" clearable></el-input>
@@ -305,6 +306,9 @@
 
     },
     methods: {
+      table_index(index) {
+        return (this.pageNum - 1) * this.pageSize + index + 1
+      },
       fetchData() {
         // 请求参数
         this.searchForm.pageNum = this.pageNum

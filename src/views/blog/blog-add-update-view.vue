@@ -7,6 +7,7 @@
         :model="temp"
         label-position="right"
         label-width="300px"
+        @keyup.enter.native="dialogStatus==='add'?addData():updateData()"
       >
         <el-row style="margin-bottom: 15px;">
           <el-col :span="3">

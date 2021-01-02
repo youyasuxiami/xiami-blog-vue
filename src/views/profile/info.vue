@@ -7,6 +7,7 @@
       element-loading-text="加载中..."
       :model="form"
       label-width="120px"
+      @keyup.enter.native="onSubmit"
     >
 <!--      <el-input v-model="form.id" type="hidden"/>-->
       <el-form-item label="头像" prop="status">
