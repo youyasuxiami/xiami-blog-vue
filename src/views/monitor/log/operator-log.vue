@@ -268,7 +268,7 @@
         })
       },
 
-      //删除定时任务
+      //删除操作日志
       handleDeleteLog(row) {
         let params = {
           id: row.id
