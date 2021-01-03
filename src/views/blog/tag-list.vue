@@ -99,6 +99,7 @@
   import { getList,deleteTag,deleteTags } from '@/api/tag'
   import Pagination from '@/components/Pagination/index' // secondary package based on el-pagination
   import tagAddUpdateView from '@/views/blog/tag-add-update-view'
+  import { MessageBox } from '_element-ui@2.13.0@element-ui'
 
   export default {
     name: 'tagList',
@@ -199,6 +200,12 @@
         }
       },
       handleDeleteTags() {
+        if(this.multipleSelection.length==0){
+          MessageBox.confirm('请选择至少一条数据', '批量删除数据', {
+            type: 'warning'
+          })
+          return
+        }
         deleteTags({ ids: (this.multipleSelection) + '' }).then(data => {
           if (data.code == '20000') {
             this.$notify({

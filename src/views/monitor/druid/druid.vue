@@ -8,7 +8,7 @@
     name: "Druid",
     data() {
       return {
-        src: process.env.VUE_APP_BASE_API + "/druid/index.html",
+        src: process.env.VUE_APP_DRUID + "/druid/index.html",
         height: document.documentElement.clientHeight - 94.5 + "px;",
         loading: true
       };

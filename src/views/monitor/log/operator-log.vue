@@ -142,7 +142,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="操作地点" min-width="90px" align="center" prop="operAddr">
+      <el-table-column label="操作地点" min-width="120px" align="center" prop="operAddr">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top" align="center">
             <span>{{scope.row.operAddr}}</span>
@@ -197,8 +197,11 @@
         <template slot-scope="scope">{{ scope.row.operTime }}</template>
       </el-table-column>
 
-      <el-table-column label="操作" align="left"  class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="left"  class-name="small-padding fixed-width" width="160px">
         <template slot-scope="scope">
+          <el-button size="mini" type="primary" @click="handleDetailLog(scope.row)">
+            详情
+          </el-button>
           <el-button size="mini" type="primary" @click="handleDeleteLog(scope.row)">
             删除
           </el-button>
@@ -208,6 +211,12 @@
 
     <pagination v-show="total>0" :total="total" :page.sync="searchForm.pageNum" :limit.sync="searchForm.pageSize" @pagination="fetchData"
                 ref="handleSizeChange"/>
+
+    <!--    引入组件-->
+    <operator-log-detail v-if="dialogFormVisible" ref="detailLogView" @refreshDataList="fetchData">
+
+    </operator-log-detail>
+
   </div>
 </template>
 
@@ -217,8 +226,10 @@
     deleteLog,
     deleteLogs
   } from '@/api/monitor/operator'
-  import Pagination from '@/components/Pagination/index' // secondary package based on el-pagination
-  import jobAddUpdateView from '@/views/monitor/job/job-add-update-view'
+  import Pagination from '@/components/Pagination/index'
+  import operatorLogDetail from '@/views/monitor/log/operator-log-detail'
+  import { MessageBox } from '_element-ui@2.13.0@element-ui'
+  import store from '@/store'
 
   export default {
     name: 'userList',
@@ -240,9 +251,10 @@
           operAddr:''
         },
         dateRange: [],//时间数组
+        dialogFormVisible: false//默认不弹窗
       }
     },
-    components: { Pagination, jobAddUpdateView },
+    components: { Pagination, operatorLogDetail },
     created() {
       // 获取列表数据
       this.fetchData()
@@ -265,6 +277,13 @@
           this.list = response.data.data
           this.total = response.data.total
           this.listLoading = false
+        })
+      },
+
+      handleDetailLog(row) {
+        this.dialogFormVisible = true
+        this.$nextTick(() => {
+          this.$refs.detailLogView.init(row)
         })
       },
 
@@ -314,6 +333,12 @@
       },
 
       handledeleteLogs() {
+        if(this.multipleSelection.length==0){
+          MessageBox.confirm('请选择至少一条数据', '批量删除数据', {
+            type: 'warning'
+          })
+          return
+        }
         deleteLogs({ ids: (this.multipleSelection) + '' }).then(data => {
           if (data.code == '20000') {
             this.$notify({

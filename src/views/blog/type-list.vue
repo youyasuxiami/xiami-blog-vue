@@ -95,6 +95,7 @@
   import { getList,deleteType,deleteTypes } from '@/api/type'
   import Pagination from '@/components/Pagination/index' // secondary package based on el-pagination
   import typeAddUpdateView from '@/views/blog/type-add-update-view'
+  import { MessageBox } from '_element-ui@2.13.0@element-ui'
 
   export default {
     name: 'blogType',
@@ -194,6 +195,12 @@
         }
       },
       handleDeleteTypes() {
+        if(this.multipleSelection.length==0){
+          MessageBox.confirm('请选择至少一条数据', '批量删除数据', {
+            type: 'warning'
+          })
+          return
+        }
         deleteTypes({ ids: (this.multipleSelection) + '' }).then(data => {
           if (data.code == '20000') {
             this.$notify({
