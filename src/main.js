@@ -15,6 +15,10 @@ import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 import {getTypeValue,formatDate,selectDictLabel} from "@/utils/dictionary";
 
+import dataV from '@jiaminghi/data-view'
+Vue.use(dataV)
+
+
 
 Vue.use(mavonEditor)
 Vue.use(ElementUI, { locale })
