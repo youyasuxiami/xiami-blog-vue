@@ -23,7 +23,7 @@
                     <dv-border-box-12 style="height: 30%;">
                       <city-info></city-info>
                     </dv-border-box-12>
-                    <dv-border-box-1 style="height: 40%;">
+                    <dv-border-box-1 style="height: 30%;">
                       <alarm-info></alarm-info>
                     </dv-border-box-1>
                   </div>
@@ -77,14 +77,12 @@
 
   // 中间
   import TopologyInfo from "./screen/topologyInfo.vue";
-  import StorageTop from './screen/storageTop.vue'
-  import CityNum from "./screen/cityNum.vue";
-
-
 
 
   import CpuTop from './screen/cpuTop.vue'
+  import StorageTop from './screen/storageTop.vue'
   import AlarmList from './screen/alarmList.vue'
+  import CityNum from "./screen/cityNum.vue";
 
   export default {
     components: {
@@ -92,14 +90,14 @@
       CityInfo,
       AlarmInfo,
       TopologyInfo,
-      StorageTop,
-      CityNum
 
 
+
+      // CityNum,
 
       // CpuTop,
       // AlarmList,
-
+      // StorageTop,
       // ScreenHeader
     },
     data() {
@@ -144,7 +142,7 @@
     display: flex;
     flex-direction: column;
     padding: 0.2rem 0.2rem 0 0.2rem;
-    background-image: url("../assets/pageBg1.png");
+    background-image: url("../assets/pageBg2.png");
     background-size: cover;
     /*background-repeat:repeat;*/
     background-position: center center;

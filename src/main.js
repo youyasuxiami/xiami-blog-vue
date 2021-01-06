@@ -18,7 +18,8 @@ import {getTypeValue,formatDate,selectDictLabel} from "@/utils/dictionary";
 import dataV from '@jiaminghi/data-view'
 Vue.use(dataV)
 
-
+import echarts from 'echarts'
+Vue.prototype.$echarts = echarts
 
 Vue.use(mavonEditor)
 Vue.use(ElementUI, { locale })
