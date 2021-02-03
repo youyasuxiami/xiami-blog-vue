@@ -6,10 +6,11 @@
 
 <script>
 const echarts = require("echarts");
+let chart= null
+
 export default {
   data() {
     return {
-      chart: null
     };
   },
   mounted() {
@@ -51,7 +52,7 @@ export default {
       let option = {
         title: [
           {
-            text: tips, 
+            text: tips,
             x: "center",
             y: "center",
             textStyle: {

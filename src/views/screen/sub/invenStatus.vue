@@ -1,11 +1,10 @@
 <template>
   <div>
-    <div :id="id" style="width:100%;height:100%;"></div>
+    <div :id="id" style="width:80%;height:80%;"></div>
   </div>
 </template>
 
 <script>
-const echarts = require("echarts");
 export default {
   data() {
     return {
@@ -45,13 +44,13 @@ export default {
   methods: {
     draw() {
       // 基于准备好的dom，初始化echarts实例
-      this.chart = echarts.init(document.getElementById(this.id));
+      this.chart = this.$echarts.init(document.getElementById(this.id));
       //  ----------------------------------------------------------------
       let tips = this.tips;
       let option = {
         title: [
           {
-            text: tips * 1 + "%",
+            text: tips,
             x: "center",
             y: "center",
             textStyle: {
@@ -64,7 +63,7 @@ export default {
           {
             type: "pie",
             radius: ["100%", "80%"],
-            center: ["50%", "50%"], 
+            center: ["50%", "50%"],
             hoverAnimation: false,
             color: this.colorObj.series.color,
             label: {
@@ -81,7 +80,16 @@ export default {
                     shadowBlur: 10,
                     shadowColor: this.colorObj.series.dataColor.shadowColor
                   }
-                }
+                },
+                // label: {
+                //   normal: {
+                //     formatter: 111 + '',
+                //     textStyle: {
+                //       fontSize: 20,
+                //       color: '#fff',
+                //     }
+                //   }
+                // }
               },
               {
                 value: 100 - tips

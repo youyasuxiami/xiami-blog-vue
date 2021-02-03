@@ -4,7 +4,6 @@
   </div>
 </template>
 <script>
-  import echarts from "echarts";
   //   import '../../node_modules/echarts/map/js/world.js'
   import '../../../node_modules/echarts/map/js/china.js' // 引入中国地图数据
   export default {
@@ -28,7 +27,7 @@
     methods: {
       chinaConfigure() {
         console.log(this.userJson)
-        let myChart = echarts.init(this.$refs.myEchart); //这里是为了获得容器所在位置
+        let myChart = this.$echarts.init(this.$refs.myEchart); //这里是为了获得容器所在位置
         window.onresize = myChart.resize;
         myChart.setOption({ // 进行相关配置
           backgroundColor: "#02AFDB",

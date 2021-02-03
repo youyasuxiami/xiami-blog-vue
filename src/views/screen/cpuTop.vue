@@ -4,7 +4,7 @@
 	  	<span style="color:#5cd9e8">
 	  		<svg-icon icon-class="alarun"></svg-icon>
 	  	</span>
-	  	<span class="fs-xl text mx-2">城市使用率Top10</span>
+	  	<span class="fs-xl text mx-2">热门类别</span>
 
 	  </div>
     <div id="LeftChart" style="height:100%"  ></div>
@@ -12,45 +12,33 @@
 </template>
 
 <script>
-const echarts = require("echarts");
-import api from "@/http/api";
+import { getHotBlogTypeAndNum } from '@/api/home'
 export default {
   data() {
     return {
-      chart: null,
 	  item:"",
     };
   },
-  mounted() {
-	/* this.fetchData(); */
-	var category=["驻马店",'南阳','郑州','洛阳','新乡','周口'];
-	var data=[10,12,18,20,17,16]
-	this.draw(category,data);
-  },
+	created() {
+		this.initData()
+	},
   methods: {
-	  fetchData(){
-		api.summary.cpuTop10() //新接口，所有监控设备的内存 Top10
-			.then(response => {
-				if(response){
-					this.item=response.itemSingle;
-					let kdata=[],vdata=[];
-					kdata= Object.keys(this.item);
-					vdata=Object.values(this.item);
-					 if(document.getElementById("LeftChart")){
-						 this.draw(kdata,vdata);
-						setTimeout(this.fetchData,60000);
-					} 
-				}
-			}).catch(err=>{
-				if(document.getElementById("LeftChart")){
-					setTimeout(this.fetchData,60000);
-				}
-			})  
+	  initData() {
+		  getHotBlogTypeAndNum().then(response => {//这是json字符串请求
+			  let data1=response.data;
+			  let category=[];
+			  let data=[]
+
+			  for (let i = 0; i < data1.length; i++) {
+				  category.push(data1[i].name)
+				  data.push(data1[i].value)
+			  }
+			  this.draw(category,data);
+		  })
 	  },
-	  
     draw(category,data) {
       // 基于准备好的dom，初始化echarts实例
-      this.chart = echarts.init(document.getElementById("LeftChart"));
+      this.chart = this.$echarts.init(document.getElementById("LeftChart"));
       //  ----------------------------------------------------------------
       let option = {
         title: {
@@ -94,10 +82,10 @@ export default {
           },
           axisTick: {
             show: false
-          } 
+          }
         },
         yAxis: [
-       
+
           {
 			 type: 'value',
             splitLine: { show: false },
@@ -114,13 +102,13 @@ export default {
         series: [
           {
             type: "line",
-			areaStyle: {}, 
+			areaStyle: {},
 			 smooth: true,
             barWidth: 10,
             itemStyle: {
               normal: {
                 barBorderRadius: 5,
-                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                color: new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [
 				  { offset: 0, color: "#f06371" },
 				  { offset: 0.2, color: "#7979e5" },
 				  { offset: 1, color: "rgba(156,107,211,0.2)" }//rgba(156,107,211,0.2)
@@ -129,13 +117,9 @@ export default {
             },
             data: data
           },
-
-         
         ]
       };
-	
-	   this.chart.setOption(option); 
-	 
+	   this.chart.setOption(option);
     }
   },
   destroyed() {

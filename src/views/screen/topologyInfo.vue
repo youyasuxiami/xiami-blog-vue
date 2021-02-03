@@ -13,8 +13,6 @@
 </template>
 <script>
   import '../../../node_modules/echarts/map/js/china.js' // 引入中国地图数据
-  import echarts from "echarts";
-
   export default{
     data(){
       return{
@@ -36,10 +34,9 @@
     methods:{
       chinaConfigure() {
         console.log(this.userJson)
-        let myChart = echarts.init(this.$refs.myEchart); //这里是为了获得容器所在位置
+        let myChart = this.$echarts.init(this.$refs.myEchart); //这里是为了获得容器所在位置
         window.onresize = myChart.resize;
         myChart.setOption({
-
           title: {
             text: '',
             left: 'center',
@@ -98,7 +95,8 @@
               }
             },
             data: this.allData.citys
-          }, {
+          },
+            {
             name: '线路',
             type: 'lines',
             coordinateSystem: 'geo',
@@ -113,7 +111,7 @@
             },
             lineStyle: {
               normal: {
-                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                color: new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [{
                   offset: 0, color: '#58B3CC'
                 }, {
                   offset: 1, color: '#F58158'

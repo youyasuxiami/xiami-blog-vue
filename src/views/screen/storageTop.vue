@@ -1,17 +1,16 @@
 <template>
 	<div class="stratop">
 		<div class="topTitle" >
-			
+
 		<svg-icon icon-class="alarun" style="color:#5cd9e8; "></svg-icon>
-			<span class="fs-xl text mx-2">城市利用率Top10</span> 
+			<span class="fs-xl text mx-2">最受欢迎十大作者</span>
 		</div>
 		<div id="bottomLeftChart" style="height:100%  "></div>
 	</div>
 </template>
 
 <script>
-	const echarts = require("echarts");
-	import api from "@/http/api";
+  import { getHotAuthorAndNum } from '@/api/home'
 	export default {
 		data() {
 			return {
@@ -22,9 +21,11 @@
 				type:0,
 			};
 		},
+		created() {
+			this.initData();
+		},
 		mounted() {
-
-			this.chart = echarts.init(document.getElementById("bottomLeftChart"));
+			this.chart = this.$echarts.init(document.getElementById("bottomLeftChart"));
 			this.option = {
 				title: {
 					text: "",
@@ -48,11 +49,11 @@
 					}
 				},
 				legend: {
-			
+
 					textStyle: {
 						color: "#B4B4B4"
 					},
-			
+
 				},
 				grid: {
 					x: "11%",
@@ -93,7 +94,7 @@
 							normal: {
 								opacity: 1,
 								barBorderRadius: 5,
-								color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+								color: new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [{
 										offset: 0,
 										color: "#5e69ff"
 									},
@@ -106,42 +107,30 @@
 						},
 						data:[]
 					},
-			
+
 				]
 			};
-			
-			var category=["驻马店",'南阳','郑州','洛阳','新乡','周口'];
-			var data=[10,12,18,20,17,16]
-			this.draw(category,data);
-			setInterval(this.changeColor,500);
 		},
 		methods: {
-			fetchData() {
-				api.summary.memoryTop10() //新接口，所有监控设备的内存 Top10
-					.then(response => {
-						if (response) {
-							this.item = response.itemSingle;
-							let kdata = [],
-								vdata = [];
-							kdata = Object.keys(this.item);
-							vdata = Object.values(this.item);
-							if (document.getElementById("bottomLeftChart")) {
-								this.draw(kdata, vdata);
-								setTimeout(this.fetchData, this.interval);
-							}
-						}
-					}).catch(err => {
-						if (document.getElementById("bottomLeftChart")) {
-							setTimeout(this.fetchData, this.interval);
-						}
-					})
-			},
+			initData() {
+				getHotAuthorAndNum().then(response => {//这是json字符串请求
+					let data1=response.data;
+					let category=[];
+					let data=[]
 
+					for (let i = 0; i < data1.length; i++) {
+						category.push(data1[i].name)
+						data.push(data1[i].value)
+					}
+					this.draw(category,data);
+					setInterval(this.changeColor,500);
+				})
+			},
 			draw(category, data) {
 				// 基于准备好的dom，初始化echarts实例
 				this.option.xAxis.data = category;
 				this.option.series[0].data = data;
-				this.chart.setOption(this.option); 
+				this.chart.setOption(this.option);
 
 			},
 			changeColor(){
@@ -157,8 +146,8 @@
 					this.chart.setOption(this.option,true);
 				}
 			},
-	
-		
+
+
 		destroyed() {
 			window.onresize = null;
 		}
@@ -174,7 +163,7 @@
 		.topTitle{
 			height: 10%;
 			padding: 10px;
-			
+
 		}
 		#bottomLeftChart{
 			flex: 2;

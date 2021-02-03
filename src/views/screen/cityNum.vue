@@ -2,7 +2,7 @@
 	<div style="height:100%">
 		<div class="title" style="padding-top: 20px; text-align: center;">
 			<svg-icon icon-class="invstu" style="color:#5cd9e8"></svg-icon>
-			<span class="fs-xl text mx-2">城市规则违法数量</span>
+			<span class="fs-xl text mx-2">黑名单用户数量</span>
 			<span style="position:absolute;right:20px;top:20px;">
 				总: 100</span>
 		</div>
@@ -12,8 +12,7 @@
 </template>
 
 <script>
-	const echarts = require("echarts");
-	import centerChart from "./sub/subAlarm.vue";
+  import centerChart from "./sub/subAlarm.vue";
 	export default {
 		components: {
 			centerChart,
@@ -37,7 +36,6 @@
 		  }, */
 		data() {
 			return {
-				myChart: null,
 				cards: [],
 				option: {
 					grid: {
@@ -87,7 +85,7 @@
 						offset: [5, 50],
 						symbolSize: 60,
 						opacity: 0.95,
-						color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+						color: new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [{
 								offset: 0,
 								color: "#29c0fb",
 							},
@@ -101,7 +99,7 @@
 						offset: [35, 50],
 						symbolSize: 60,
 						opacity: 0.95,
-						color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+						color: new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [{
 								offset: 0,
 								color: "#35d17e",
 							},
@@ -115,7 +113,7 @@
 						offset: [65, 50],
 						symbolSize: 60,
 						opacity: 0.95,
-						color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+						color: new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [{
 								offset: 0,
 								color: "#e5d273",
 							},
@@ -129,7 +127,7 @@
 						offset: [95, 50],
 						symbolSize: 60,
 						opacity: 0.95,
-						color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+						color: new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [{
 								offset: 0,
 								color: "#277aec",
 							},
@@ -143,7 +141,7 @@
 			};
 		},
 		mounted() {
-			this.myChart = echarts.init(document.getElementById('alarm'));
+			this.myChart = this.$echarts.init(document.getElementById('alarm'));
 
 			this.cards = [];
 			this.cards.push({
