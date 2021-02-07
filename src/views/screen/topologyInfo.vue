@@ -107,7 +107,7 @@
             map: mapdemo,
             label: {
               normal: {
-                show: false,
+                show: true,
                 textStyle: {
                   color: '#fff'
                 }
@@ -143,8 +143,8 @@
             {
               type: 'map',
               map: mapdemo,
-              geoIndex: 0,
               roam: true,//是否可拖动
+              geoIndex: 0, // (bug fixed:解决在地图上缩放重影问题
               itemStyle: {
                 normal: {//正常是颜色
                   areaColor: 'rgba(7,21,57,0.5)',

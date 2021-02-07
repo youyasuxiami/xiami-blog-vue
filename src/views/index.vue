@@ -13,11 +13,11 @@
                                 <div class="left"
                                      style=" height: 100%;flex: 2; flex-direction: column; align-items: stretch;">
                                     <!--                    本月新增-->
-                                    <dv-border-box-8 style="height: 30%;">
+                                    <dv-border-box-8 style="height: 20%;">
                                         <inven-status></inven-status>
                                     </dv-border-box-8>
                                     <!--                    文章类别-->
-                                    <dv-border-box-12 style="height: 30%;">
+                                    <dv-border-box-12 style="height: 40%;">
                                         <city-info></city-info>
                                     </dv-border-box-12>
                                     <!--                    文章标签-->

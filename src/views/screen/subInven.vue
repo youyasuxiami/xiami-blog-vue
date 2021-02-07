@@ -10,7 +10,10 @@
             本月新增用户
           </div>
 				</span>
-        <centerChart :id="rate[0].id" :tips="rate[0].tips" :colorObj="rate[0].colorData" style="margin-top: 2px"/>
+        <div style="display: flex;height: 40px;justify-content: center;line-height: 80px;height: 80px;">
+            123456
+        </div>
+        <!--<centerChart :id="rate[0].id" :tips="rate[0].tips" :colorObj="rate[0].colorData" style="margin-top: 2px"/>-->
       </div>
       <div class="item">
         <span>
@@ -22,7 +25,7 @@
           </div>
 
 				</span>
-        <centerChart :id="rate[1].id" :tips="rate[1].tips" :colorObj="rate[1].colorData" style="margin-top: 2px"/>
+        <!--<centerChart :id="rate[1].id" :tips="rate[1].tips" :colorObj="rate[1].colorData" style="margin-top: 2px"/>-->
       </div>
     </div>
   </div>
