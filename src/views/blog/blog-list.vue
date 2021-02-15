@@ -6,6 +6,7 @@
                label-width="80px"
                size="mini"
                :inline="true"
+               @keyup.enter.native="fetchData"
       >
         <el-form-item label="作者">
           <el-input v-model="searchForm.userName" clearable></el-input>
@@ -263,6 +264,7 @@
   import { getTypes } from '@/api/type'
   import Pagination from '@/components/Pagination/index' // secondary package based on el-pagination
   import blogAddUpdateView from '@/views/blog/blog-add-update-view'
+  import { MessageBox } from '_element-ui@2.13.0@element-ui'
 
   export default {
     name: 'blogList',
@@ -307,13 +309,6 @@
     methods: {
       table_index(index) {
         return (this.pageNum - 1) * this.pageSize + index + 1
-      },
-
-      handleSizeChange(val) {
-        // console.log(`每页 ${val} 条`)
-      },
-      handleCurrentChange(val) {
-        // console.log(`当前页: ${val}`)
       },
       fetchData() {
         // 请求参数
@@ -443,6 +438,12 @@
       },
 
       handleDeleteBlogs() {
+        if(this.multipleSelection.length==0){
+          MessageBox.confirm('请选择至少一条数据', '批量删除数据', {
+            type: 'warning'
+          })
+          return
+        }
         deleteBlogs({ ids: (this.multipleSelection) + '' }).then(data => {
           if (data.code == '20000') {
             this.$notify({

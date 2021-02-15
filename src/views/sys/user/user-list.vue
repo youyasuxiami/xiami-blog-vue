@@ -2,7 +2,8 @@
   <div class="app-container">
     <div>
 
-      <el-form ref="form" :model="searchForm" label-width="80px" size="mini" :inline="true">
+      <el-form ref="form" :model="searchForm" label-width="80px" size="mini" :inline="true" @keyup.enter.native="fetchData"
+      >
         <el-form-item label="用户名">
           <el-input v-model="searchForm.name" clearable></el-input>
         </el-form-item>
@@ -228,7 +229,7 @@
       <el-table-column class-name="status-col" label="账号状态" align="center">
         <template slot-scope="scope">{{ scope.row.status }}</template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="320" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="400px" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="handleAddEditUser(scope.row,'edit')">
             编辑
@@ -253,6 +254,10 @@
           &nbsp;
           <el-button size="mini" type="danger" @click="handleDeleteUser(scope.row)">
             删除
+          </el-button>
+
+          <el-button size="mini" type="danger" @click="handleResetUser(scope.row)">
+            重置密码
           </el-button>
         </template>
       </el-table-column>
@@ -287,11 +292,12 @@
     exportUsers,
     exportAllUsers,
     deleteUsers,
-    getRoles
+    getRoles,
+    resetUser
   } from '@/api/sys'
-  import { getTypeValue } from '@/utils/dictionary'
   import Pagination from '@/components/Pagination/index' // secondary package based on el-pagination
   import userAddUpdateView from '@/views/sys/user/user-add-update-view'
+  import { MessageBox } from '_element-ui@2.13.0@element-ui'
 
   export default {
     name: 'userList',
@@ -347,12 +353,12 @@
       // })
 
       // 获取性别下拉框
-      getTypeValue('sex').then(res => {
+      this.getTypeValue('sex').then(res => {
         this.sexList = res.data
       })
 
       // // 获取账号状态下拉框
-      getTypeValue('account_status').then(res => {
+      this.getTypeValue('account_status').then(res => {
         this.accountStatusList = res.data
       })
 
@@ -364,13 +370,6 @@
     methods: {
       table_index(index) {
         return (this.pageNum - 1) * this.pageSize + index + 1
-      },
-
-      handleSizeChange(val) {
-        console.log(`每页 ${val} 条`)
-      },
-      handleCurrentChange(val) {
-        console.log(`当前页: ${val}`)
       },
       fetchData() {
         // 请求参数
@@ -428,7 +427,6 @@
             let blob = new Blob([data], {
               type: 'application/vnd.ms-excel'
             }) // 这个content是下载的文件内容，自己修改
-            console.log('blob', blob)
             aTag.download = `用户表.xlsx` // 下载的文件名
             // aTag.style.display = "none";
             aTag.href = window.URL.createObjectURL(blob) //创建一个URL对象
@@ -437,13 +435,8 @@
             window.URL.revokeObjectURL(blob) //释放URL对象
             document.body.removeChild(aTag)
           } else {
-            console.log('-----------')
           }
         })
-        // .then(response => {//这是json字符串请求
-        // console.log(response)
-        // })
-        // window.location.href = "/user/exportUserToExcel"
       },
       // 导出全部数据
       exportAllExcel() {
@@ -463,7 +456,6 @@
             let blob = new Blob([data], {
               type: 'application/vnd.ms-excel'
             }) // 这个content是下载的文件内容，自己修改
-            console.log('blob', blob)
             aTag.download = `用户表.xlsx` // 下载的文件名
             // aTag.style.display = "none";
             aTag.href = window.URL.createObjectURL(blob) //创建一个URL对象
@@ -472,13 +464,8 @@
             window.URL.revokeObjectURL(blob) //释放URL对象
             document.body.removeChild(aTag)
           } else {
-            console.log('-----------')
           }
         })
-        // .then(response => {//这是json字符串请求
-        // console.log(response)
-        // })
-        // window.location.href = "/user/exportUserToExcel"
       },
 
       //禁用0、启用1
@@ -495,8 +482,6 @@
           status: status
         }
         updateUserStatus(params).then((data) => {
-          console.log('data')
-          console.log(data)
           if (data.code == '20000') {
             this.$notify({
               title: '成功',
@@ -578,8 +563,6 @@
         let uploadData = new FormData()
         uploadData.append('file', param.file)
         addUsers(uploadData).then((data) => {
-          console.log("data")
-          console.log(data)
           if (data.code == '20000') {
             this.$notify({
               title: '成功',
@@ -598,33 +581,6 @@
             })
           }
         })
-
-        // this.$http({
-        //     url: "/user/importExcel",
-        //     headers: {"Content-type": "multipart/form-data"},
-        //     method: "post",
-        //     data: uploadData
-        //   }).then((data) => {
-        //     console.log("--------------")
-        //     console.log(data)
-        //     return false
-        //     if (data.data.flag) {
-        //       this.$message({
-        //         type: "success",
-        //         message: "导入成功"
-        //       });
-        //       this.monthly = this.dataForm.monthly
-        //       // 获取列表数据
-        //       this.getDataList()
-        //
-        //
-        //     } else if (data.data.code == "506") {
-        //       this.$message.error(data.data.msg);
-        //     } else {
-        //       this.$message.error(data.data.msg);
-        //     }
-        //   })
-
       },
       //获得选中的行的id
       handleSelectionChange(val) {
@@ -634,6 +590,12 @@
         }
       },
       handleDeleteUsers() {
+        if(this.multipleSelection.length==0){
+          MessageBox.confirm('请选择至少一条数据', '批量删除数据', {
+            type: 'warning'
+          })
+          return
+        }
         deleteUsers({ ids: (this.multipleSelection) + '' }).then(data => {
           if (data.code == '20000') {
             this.$notify({
@@ -657,6 +619,51 @@
       //点击表格一行数据触发
       handleRowClick(row, column, event) {
         this.$refs.handSelectTest_multipleTable.toggleRowSelection(row)
+      },
+      // 重置密码
+      handleResetUser(row) {
+        let params = {
+          id: row.id
+        }
+        this.$confirm(
+          `确定重置该用户密码?`,
+          '提示',
+          {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }
+        )
+          .then(() => {
+            resetUser(params).then(data => {
+              if (data.code == '20000') {
+                // this.$notify({
+                //   title: '成功',
+                //   message: data.message,
+                //   type: 'success',
+                //   duration: 2000
+                // })
+                this.$message({
+                  message: data.message,
+                  type: "success",
+                  duration: 3000,
+                  onClose: () => {
+                    this.fetchData()
+                  }
+                });
+
+
+
+              } else {
+                this.$notify({
+                  title: '失败',
+                  message: data.message,
+                  type: 'error',
+                  duration: 2000
+                })
+              }
+            })
+          })
       }
     },
     watch: {

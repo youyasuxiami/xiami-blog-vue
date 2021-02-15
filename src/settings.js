@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: 'xiami-blog-vue',
+  title: '虾米博客后台管理系统',
 
   /**
    * @type {boolean} true | false

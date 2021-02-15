@@ -125,7 +125,7 @@
         },
         loading: false,
         redirect: undefined,
-        src: process.env.VUE_APP_BASE_API+'captcha.jpg',
+        src: process.env.VUE_APP_BASE_API+'/captcha.jpg',
         rsaKey: ''
       }
     },
@@ -144,7 +144,6 @@
       handleLogin() {
         this.$refs.loginForm.validate(valid => {
           if (valid) {
-            this.loading = true
             localStorage.setItem("activeIndex",'')
             let jsonData=Object.assign({},this.loginForm);
             //加密
@@ -162,17 +161,14 @@
         })
       },
       refreshCode() {
-        this.src = process.env.VUE_APP_BASE_API+'captcha.jpg?t=' + new Date().getTime()
+        this.src = process.env.VUE_APP_BASE_API+'/captcha.jpg?t=' + new Date().getTime()
       },
       // 获取公钥的方法
       getRsaKey() {
         getPublicKey().then(data => {
-          console.log("data")
-          console.log(data)
           if (data.code == '20000') {
             this.rsaKey = data.data
           } else {
-            console.log('获取公钥失败')
           }
         })
       },

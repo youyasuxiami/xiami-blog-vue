@@ -45,8 +45,6 @@ const actions = {
   // get user info
   getInfo({ commit, state },params) {
     return new Promise((resolve, reject) => {
-      console.log("打印请求信息")
-      console.log("-----------------------------------------------------")
       getInfo({"firstMenuId":params,"token":getToken()}).then(response => {
         const { data } = response
 
@@ -75,7 +73,6 @@ const actions = {
   logout({ commit, state, dispatch }) {
     return new Promise((resolve, reject) => {
       logout(state.token).then(() => {
-        commit('SET_TOKEN', '')
         commit('SET_NAME', '')
         commit('SET_AVATAR', '')
         commit('SET_ROLES', [])

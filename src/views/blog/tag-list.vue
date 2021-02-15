@@ -2,14 +2,14 @@
   <div class="app-container">
     <div>
 
-      <el-form ref="form" :model="searchForm" label-width="80px" size="mini" :inline="true">
+      <el-form ref="form" :model="searchForm" label-width="80px" size="mini" :inline="true" @keyup.enter.native="fetchData">
         <el-form-item label="标签名称">
           <el-input v-model="searchForm.tagName" clearable></el-input>
         </el-form-item>
 
         <el-form-item label="创建时间" prop="yearApply">
           <el-date-picker
-            v-model="createTime"
+            v-model="dateRange"
             type="daterange"
             format="yyyy-MM-dd"
             value-format="yyyy-MM-dd"
@@ -99,6 +99,7 @@
   import { getList,deleteTag,deleteTags } from '@/api/tag'
   import Pagination from '@/components/Pagination/index' // secondary package based on el-pagination
   import tagAddUpdateView from '@/views/blog/tag-add-update-view'
+  import { MessageBox } from '_element-ui@2.13.0@element-ui'
 
   export default {
     name: 'tagList',
@@ -126,13 +127,6 @@
     methods: {
       table_index(index) {
         return (this.pageNum - 1) * this.pageSize + index + 1
-      },
-
-      handleSizeChange(val) {
-        // console.log(`每页 ${val} 条`)
-      },
-      handleCurrentChange(val) {
-        // console.log(`当前页: ${val}`)
       },
       fetchData() {
         // 请求参数
@@ -206,6 +200,12 @@
         }
       },
       handleDeleteTags() {
+        if(this.multipleSelection.length==0){
+          MessageBox.confirm('请选择至少一条数据', '批量删除数据', {
+            type: 'warning'
+          })
+          return
+        }
         deleteTags({ ids: (this.multipleSelection) + '' }).then(data => {
           if (data.code == '20000') {
             this.$notify({

@@ -7,6 +7,7 @@
         :model="temp"
         label-width="120px"
         :rules="rule"
+        @keyup.enter.native="dialogStatus==='add'?addData():updateData()"
       >
         <el-form-item label="标签名称" prop="name">
           <el-input v-model="temp.name"></el-input>
@@ -68,24 +69,17 @@
         this.visible = true
 
         if (param) {//如果是新增传过来，那么param为undefined,将会走else
-          console.log('编辑/查看')
           this.dialogStatus = param
           this.temp = Object.assign({}, row) // copy obj
-          console.log('获得编辑的this.temp')
-          console.log(this.temp)
-
           switch (param) {
             case 'edit':
-              console.log('编辑界面')
               break
 
             case 'view':
-              console.log('查看界面')
               this.viewDisabled = true //不可编辑
               break
           }
         } else {
-          console.log('新增界面')
           this.dialogStatus = 'add'
           this.$refs.dataForm.resetFields()//对该表单项进行重置，将其值重置为初始值并移除校验结果
         }

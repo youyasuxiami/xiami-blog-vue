@@ -5,6 +5,7 @@
                :model="searchForm"
                size="mini"
                :inline="true"
+               @keyup.enter.native="fetchData"
       >
         <el-form-item label="举报人的用户名" label-width="120px"
         >
@@ -57,14 +58,12 @@
 
     <el-table
       ref="handSelectTest_multipleTable"
-      @row-click="handleRowClick"
       v-loading="listLoading"
       :data="list"
       element-loading-text="Loading"
       border
       fit
       highlight-current-row
-      @selection-change="handleSelectionChange"
     >
       <el-table-column align="center" label="序号" width="95" :index="table_index"
                        type="index" sortable="true">
@@ -204,7 +203,7 @@
         total: 0,
         roleList: [],//角色数组
         sexList: [],//性别数组
-        accountStatusList: [],//账号状态数组
+        statusList: [],//账号状态数组
         currentPage: 1,
         dialogFormVisible: false,//默认不弹窗
         multipleSelection: [],//用于存放选中的数据的id
@@ -232,13 +231,6 @@
     methods: {
       table_index(index) {
         return (this.pageNum - 1) * this.pageSize + index + 1
-      },
-
-      handleSizeChange(val) {
-        // console.log(`每页 ${val} 条`)
-      },
-      handleCurrentChange(val) {
-        // console.log(`当前页: ${val}`)
       },
       fetchData() {
         // 请求参数

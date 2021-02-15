@@ -1,0 +1,2 @@
+[0805/114902.155:ERROR:http_transport_win.cc(276)] WinHttpSendRequest: 操作成功完成。 (0x0)
+[1206/213938.365:ERROR:settings.cc(320)] Settings magic is not 1129342067

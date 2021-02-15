@@ -8,6 +8,7 @@
       :model="form"
       label-width="120px"
       :rules="rule"
+      @keyup.enter.native="onSubmit"
     >
       <el-form-item label="旧密码" prop="oldPassword">
         <el-input v-model="form.oldPassword" :type="passwordType1" :key="passwordType1" style="width: 200px;" ref="oldPassword"
@@ -136,7 +137,6 @@
           if (data.code == '20000') {
             this.rsaKey = data.data
           } else {
-            console.log('获取公钥失败')
           }
         })
       },

@@ -5,7 +5,7 @@ function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
-const name = defaultSettings.title || 'vue Admin Template' // page title
+const name = defaultSettings.title // page title
 
 const hostName = process.env.VUE_APP_HOST_NAME
 
@@ -21,8 +21,8 @@ module.exports = {
    * Detail: https://cli.vuejs.org/config/#publicpath
    */
   publicPath: '/',
-  outputDir: 'dist',
-  assetsDir: 'static',
+  // outputDir: 'dist',
+  // assetsDir: 'static',
   // 是否开启eslint检查
   // lintOnSave: process.env.NODE_ENV === 'development',
   // 如果不需要定位问题，并且不想被看到源码，就把productionSourceMap 置为false
@@ -30,27 +30,20 @@ module.exports = {
   devServer: {
     // port: port,
     // open: false,
-    overlay: {
-      warnings: false,
-      errors: true
-    },
-    proxy: {
-      // [process.env.VUE_APP_BASE_API+'/user/info']: {
-      //   target: `http://localhost:${port}/mock`,
-      //   changeOrigin: true,
-      //   pathRewrite: {
-      //     ['^' + process.env.VUE_APP_BASE_API]: ''
-      //   }
-      // },
-      [process.env.VUE_APP_BASE_API]:{
-        ws:false,
-        target: hostName,
-        changeOrigin: true,
-        pathRewrite: {
-          ['^' + process.env.VUE_APP_BASE_API]: ''
-        }
-      }
-    },
+    // overlay: {
+    //   warnings: false,
+    //   errors: true
+    // },
+    // proxy: {
+    //   [process.env.VUE_APP_BASE_API]:{
+    //     ws:false,
+    //     target: hostName,
+    //     changeOrigin: true,
+    //     pathRewrite: {
+    //       ['^' + process.env.VUE_APP_BASE_API]: ''
+    //     }
+    //   }
+    // },
     // after: require('./mock/mock-server.js')
   },
   configureWebpack: {

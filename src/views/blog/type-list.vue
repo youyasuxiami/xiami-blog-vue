@@ -2,7 +2,7 @@
   <div class="app-container">
     <div>
 
-      <el-form ref="form" :model="searchForm" label-width="80px" size="mini" :inline="true">
+      <el-form ref="form" :model="searchForm" label-width="80px" size="mini" :inline="true" @keyup.enter.native="fetchData">
         <el-form-item label="分类名称">
           <el-input v-model="searchForm.typeName" clearable></el-input>
         </el-form-item>
@@ -95,6 +95,7 @@
   import { getList,deleteType,deleteTypes } from '@/api/type'
   import Pagination from '@/components/Pagination/index' // secondary package based on el-pagination
   import typeAddUpdateView from '@/views/blog/type-add-update-view'
+  import { MessageBox } from '_element-ui@2.13.0@element-ui'
 
   export default {
     name: 'blogType',
@@ -122,13 +123,6 @@
     methods: {
       table_index(index) {
         return (this.pageNum - 1) * this.pageSize + index + 1
-      },
-
-      handleSizeChange(val) {
-        // console.log(`每页 ${val} 条`)
-      },
-      handleCurrentChange(val) {
-        // console.log(`当前页: ${val}`)
       },
       fetchData() {
         // 请求参数
@@ -201,6 +195,12 @@
         }
       },
       handleDeleteTypes() {
+        if(this.multipleSelection.length==0){
+          MessageBox.confirm('请选择至少一条数据', '批量删除数据', {
+            type: 'warning'
+          })
+          return
+        }
         deleteTypes({ ids: (this.multipleSelection) + '' }).then(data => {
           if (data.code == '20000') {
             this.$notify({

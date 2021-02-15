@@ -8,6 +8,7 @@
         label-position="right"
         label-width="120px"
         :rules="rule"
+        @keyup.enter.native="dialogStatus==='add'?addData():updateData()"
       >
         <el-row>
           <el-col :span="12">
@@ -58,7 +59,6 @@
 </template>
 <script>
   import { getMenuList, addRole, getMenusByRoleId } from '@/api/sys'
-  import { getTypeValue } from '@/utils/dictionary'
 
   export default {
     data() {
@@ -115,30 +115,24 @@
 
         // this.dialogStatus = param
         if (param) {//如果是新增传过来，那么param为undefined,将会走else
-          console.log('编辑/查看')
           this.dialogStatus = param
           this.temp = Object.assign({}, row) // copy obj
           //根据角色id获取角色拥有的菜单
           getMenusByRoleId({ id: row.id }).then(data => {//这是json字符串请求
             if (data.code == '20000') {
               this.menuKeys=data.data
-              // this.$refs.tree.setCheckedKeys(data.data)
             }else{
-              console.log("获取根据角色获取菜单失败")
             }
           })
           // 显示顶部文字
           switch (param) {
             case 'edit':
-              console.log('edit')
               break
             case 'view':
-              console.log('view')
               this.viewDisabled = true //不可编辑
               break
           }
         } else {
-          console.log('add')
           this.dialogStatus = 'add'
           this.$refs.dataForm.resetFields()//对该表单项进行重置，将其值重置为初始值并移除校验结果
           this.temp.avatar = 'http://youyasumi-oss.oss-cn-beijing.aliyuncs.com/76e11fce-e7fd-4985-84ec-2332b9dfef84.png'
@@ -148,9 +142,6 @@
       addData() {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
-            console.log(this.$refs.tree.getCheckedKeys())//完全选中
-            console.log(this.$refs.tree.getHalfCheckedKeys())//半选中
-            console.log(this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys()))
             this.menusSelect = this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys())
             addRole({
               roleName: this.temp.roleName,
@@ -183,9 +174,6 @@
       updateData: function() {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
-            // console.log(this.$refs.tree.getCheckedKeys())//完全选中
-            // console.log(this.$refs.tree.getHalfCheckedKeys())//半选中
-            // console.log(this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys()))
             this.menusSelect = this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys())
             addRole({
               id:this.temp.id,
@@ -231,8 +219,6 @@
         this.listLoading = true
         getMenuList({}).then(data => {//这是json字符串请求
           if (data) {
-            // console.log('菜单',JSON.parse(data.data))
-            // let record = JSON.parse(data.data)
             this.menuData = data.data.data
 
             // if(this.editVisible || this.detailVisible){
@@ -247,36 +233,11 @@
           this.listLoading = false
         })
       }
-      //获取已选择菜单的id
-      // getMenuId () {
-      //   console.log('获取菜单id')
-      //   this.$http({
-      //     url: '/power-grid/role/getRoleMenusJson',
-      //     method: 'get',
-      //     params:{
-      //       id: this.dataForm.id || null
-      //     }
-      //   }).then(( data ) => {
-      //     if (data) {
-      //       // console.log(data)
-      //       let menuList = []
-      //       menuList = data.data
-      //       for(var i in menuList){
-      //         this.menuKeys.push(menuList[i].menuId)
-      //       }
-      //       // console.log('this.menuKeys',this.menuKeys)
-      //       this.getCheck()
-      //
-      //     } else {
-      //       this.$message.error(`加载权限失败!`)
-      //     }
-      //   })
-      // }
     },
 
     created() {
       // // 获取账号状态下拉框
-      getTypeValue('account_status').then(res => {
+      this.getTypeValue('account_status').then(res => {
         this.accountStatusList = res.data
       })
     }

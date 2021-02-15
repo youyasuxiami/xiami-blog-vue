@@ -111,53 +111,33 @@ export const constantRoutes = [
 ]
 
 export const asyncRoutes = [
+  // 1、内容管理
   {
     path: '/blog',
     component: Layout,
     redirect: '/blog/info',
     meta: {
       title: '内容管理',
-      icon: 'user'
+      icon: 'blog'
     },
     children: [
-      // {
-      //   path: '/blog/publish',
-      //   name: 'blogPublish',
-      //   component: () => import('@/views/blog/blog-add-update-view'),
-      //   meta: {
-      //     title: '发布文章',
-      //     icon: 'profile',
-      //     affix: false
-      //   }
-      // },
       {
         path: '/blog/info',
         name: 'blogInfo',
         component: () => import('@/views/blog/blog-list'),
         meta: {
           title: '文章管理',
-          icon: 'profile',
+          icon: 'content',
           affix: false
         }
       },
-      // {
-      //   path: '/blog/draft',
-      //   name: 'blogDraft',
-      //   // component: () => import('@/views/profile/password'),
-      //   component: () => import('@/views/blog/blog-add-update-view'),
-      //   meta: {
-      //     title: '草稿箱',
-      //     icon: 'password',
-      //     affix: false
-      //   }
-      // }
       {
         path: '/blog/type',
         name: 'blogType',
         component: () => import('@/views/blog/type-list'),
         meta: {
           title: '分类管理',
-          icon: 'profile',
+          icon: 'type',
           affix: false
         }
       },
@@ -167,19 +147,20 @@ export const asyncRoutes = [
         component: () => import('@/views/blog/tag-list'),
         meta: {
           title: '标签管理',
-          icon: 'profile',
+          icon: 'tag',
           affix: false
         }
       }
     ]
   },
+  //2 、评论管理
   {
     path: '/comment',
     component: Layout,
     redirect: '/comment/info',
     meta: {
       title: '评论管理',
-      icon: 'user'
+      icon: 'comment'
     },
     children: [
       {
@@ -188,7 +169,7 @@ export const asyncRoutes = [
         component: () => import('@/views/comment/comment-list'),
         meta: {
           title: '评论列表',
-          icon: 'profile',
+          icon: 'commentInfo',
           affix: false
         }
       },
@@ -198,12 +179,66 @@ export const asyncRoutes = [
         component: () => import('@/views/comment/comment-report-list'),
         meta: {
           title: '举报列表',
-          icon: 'profile',
+          icon: 'commentReport',
           affix: false
         }
       }
     ]
   },
+// 3、推荐管理
+  {
+    path: '/recommend',
+    component: Layout,
+    redirect: '/recommend/banner',
+    meta: {
+      title: '推荐管理',
+      icon: 'recommend'
+    },
+    children: [
+      {
+        path: '/recommend/banner',
+        name: 'banner',
+        component: () => import('@/views/recommend/banner-list'),
+        meta: {
+          title: '轮播图管理',
+          icon: 'banner',
+          affix: false
+        }
+      },
+      {
+        path: '/recommend/secondRecommend',
+        name: 'secondRecommend',
+        component: () => import('@/views/recommend/second-list'),
+        meta: {
+          title: '二级推荐',
+          icon: 'secondRecommend',
+          affix: false
+        }
+      },
+      {
+        path: '/recommend/thirdRecommend',
+        name: 'thirdRecommend',
+        component: () => import('@/views/recommend/third-list'),
+        meta: {
+          title: '三级推荐',
+          icon: 'thirdRecommend',
+          affix: false
+        }
+      },
+      {
+        path: '/recommend/fourRecommend',
+        name: 'fourRecommend',
+        component: () => import('@/views/recommend/four-list'),
+        meta: {
+          title: '四级推荐',
+          icon: 'fourRecommend',
+          affix: false
+        }
+      }
+    ]
+  },
+
+  //4 、系统管理
   {
     path: '/sys',
     component: Layout,
@@ -234,7 +269,61 @@ export const asyncRoutes = [
       }
     ]
   },
-
+  // 5、运维监控
+  {
+    path: '/monitor',
+    component: Layout,
+    redirect: '/monitor/job',
+    meta: {
+      title: '运维监控',
+      icon: 'monitor'
+    },
+    children: [
+      {
+        path: '/monitor/job',
+        component: () => import('@/views/monitor/job/job-list'),
+        name: 'userList',
+        meta: { title: '定时任务', icon: 'quartz', affix: false }
+      },
+      {
+        path: '/monitor/data',
+        component: () => import('@/views/monitor/druid/druid'),
+        name: 'menuList',
+        meta: { title: '数据监控', icon: 'data', affix: false }
+      },
+      {
+        path: '/monitor/service',
+        component: () => import('@/views/monitor/server/server'),
+        name: 'roleList',
+        meta: { title: '服务监控', icon: 'service', affix: false }
+      },
+      {
+        path: '/monitor/redis',
+        component: () => import('@/views/monitor/redis/redis'),
+        name: 'roleList',
+        meta: { title: 'redis监控', icon: 'redis', affix: false }
+      },
+      {
+        path: '/monitor/api',
+        component: () => import('@/views/monitor/swagger/swagger'),
+        name: 'roleList',
+        meta: { title: 'api监控', icon: 'api', affix: false }
+      },
+      {
+        path: '/monitor/loginLog',
+        component: () => import('@/views/monitor/log/operator-log'),
+        name: 'roleList',
+        meta: { title: '登录日志', icon: 'log', affix: false }
+      }
+      ,
+      {
+        path: '/monitor/operateLog',
+        component: () => import('@/views/monitor/log/operator-log'),
+        name: 'roleList',
+        meta: { title: '操作日志', icon: 'log', affix: false }
+      }
+    ]
+  },
   { path: '*', redirect: '/404', hidden: true }
 ]
 const createRouter = () => new Router({

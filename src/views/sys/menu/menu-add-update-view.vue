@@ -8,6 +8,7 @@
         label-position="right"
         label-width="120px"
         :rules="rule"
+        @keyup.enter.native="dialogStatus==='add'?addData():updateData()"
       >
         <el-row>
           <el-col :span="24">
@@ -176,7 +177,6 @@
 
         // this.dialogStatus = param
         if (param) {//如果是新增传过来，那么param为undefined,将会走else
-          console.log('编辑/查看')
           this.dialogStatus = param
           this.temp = Object.assign({}, row) // copy obj
           switch (this.temp.type) {
@@ -196,21 +196,17 @@
 
           switch (param) {
             case 'edit':
-              console.log('edit')
               this.checkDisabled = true //不可编辑
               break
 
             case 'view':
-              console.log('view')
               this.viewDisabled = true //不可编辑
               this.checkDisabled = true //不可编辑
               break
           }
         } else {
-          console.log('add')
           this.dialogStatus = 'add'
           this.$refs.dataForm.resetFields()//对该表单项进行重置，将其值重置为初始值并移除校验结果
-          console.log(this.temp.type)
           this.temp.fatherMenuName = ''
         }
       },
@@ -256,22 +252,6 @@
               }
             }
             addMenu(this.temp).then((data) => {
-
-              // // 更新头像
-              // modifyIcon({
-              //   username: this.temp.name,
-              //   path: jsonData.data.path
-              // }).then(response => {
-              //   this.$message({
-              //     message: response.message,
-              //     type: 'success'
-              //   })
-              //   console.log(jsonData.data.path)
-              //   // 更新 vuex 中的头像
-              //   // this.$store.dispatch('user/setAvatar', jsonData.data.path)
-              // }).catch(() => {
-              // })
-
               if (data.code == '20000') {
                 this.$notify({
                   title: '成功',
@@ -316,7 +296,6 @@
         this.listLoading = true
         getMenuList({}).then(data => {//这是json字符串请求
           if (data) {
-            // console.log('菜单',JSON.parse(data.data))
             // let record = JSON.parse(data.data)
             this.menuData = data.data.data
 

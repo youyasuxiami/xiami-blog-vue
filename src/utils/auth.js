@@ -7,9 +7,9 @@ export function getToken() {
 }
 
 export function setToken(token) {
-  return Cookies.set(TokenKey, token)
+  return Cookies.set(TokenKey, token, { path: '/', domain: process.env.VUE_APP_DOMAIN, expires: 7 })
 }
 
 export function removeToken() {
-  return Cookies.remove(TokenKey)
+  return Cookies.remove(TokenKey, { path: '/', domain: process.env.VUE_APP_DOMAIN })
 }
