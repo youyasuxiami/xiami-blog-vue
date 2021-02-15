@@ -64,8 +64,8 @@
       </el-form>
 
 
-      <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-delete" @click="handledeleteLogs">批量删除
-      </el-button>
+<!--      <el-button class="m-add-btn" type="primary" size="small" icon="el-icon-delete" @click="handledeleteLogs">批量删除-->
+<!--      </el-button>-->
     </div>
 
     <el-table
@@ -202,9 +202,9 @@
           <el-button size="mini" type="primary" @click="handleDetailLog(scope.row)">
             详情
           </el-button>
-          <el-button size="mini" type="primary" @click="handleDeleteLog(scope.row)">
-            删除
-          </el-button>
+<!--          <el-button size="mini" type="primary" @click="handleDeleteLog(scope.row)">-->
+<!--            删除-->
+<!--          </el-button>-->
         </template>
       </el-table-column>
     </el-table>
